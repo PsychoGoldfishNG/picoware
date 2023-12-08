@@ -1,7 +1,7 @@
 module.exports = (()=>{
 
 	const uglifyJS = require("uglify-js");
-	const sass = require('node-sass');
+	const sass = require('sass');
 	const uglifycss = require('uglifycss');
 	const concat = require("concat");
 	const vm = require("vm");
@@ -74,6 +74,7 @@ module.exports = (()=>{
 
 	this.compileCSS = function(callback)
 	{
+		console.log("Compiling CSS");
 		sass.render({
 		  file: __dirname+"/"+_this.sass_src
 		}, function(err, result) { 

@@ -22,7 +22,10 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 	 */
 	create() 
 	{
-		// alias of this instance that can be used in nested functions
+		/**
+		 * alias of this instance that can be used in nested functions
+		 * @type {microgames.psychogoldfish_tests.push_the_button}
+		 */
 		let _this = this;
 
 		/** 

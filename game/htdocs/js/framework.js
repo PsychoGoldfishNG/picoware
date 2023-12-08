@@ -95,15 +95,30 @@ var __safariSoundHack = (()=>{
   };
 
 })();
-// a few methods for browser detection
+/**
+ * a few methods for browser detection
+ */
 const BrowserHelper = {
 
+	/**
+	 * @returns {boolean} true if this is detected as a mobile device
+	 */
 	isMobile: function() {
 		return (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) || (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.platform)))
 	},
 
+	/**
+	 * @returns {boolean} true if this is detected as an iOS device
+	 */
 	isIOS: function() {
-		return isMobile() && navigator.userAgent.indexOf("Safari") > -1;
+		return this.isMobile() && this.isSafari();
+	},
+
+	/**
+	 * @returns {boolean} true if this is detected as a Safari browser 
+	 */
+	isSafari: function() {
+		return navigator.userAgent.indexOf("Safari") > -1;
 	}
 
 }
@@ -1592,10 +1607,15 @@ class PWFramework {
 		this.screen = null;						// will be used to contain screen size information
 		this.paused = false;					// pause state of the game
 		this.in_transition = false;				// used to note when the game is transitioning between scenes/microgames
-		this.input = new PWInput(); 			// our user input object for on-screen gamepad and keyboard input
 		this.targetFPS = 60;					// the FPS we are basing all of our timing on.
 		this.gameSpeed = PWConfig.SPEED_NORMAL	// the current speed modifier, used when increasing level difficulty.
 		this.msPerTargetFrame = null;			// The number of ms we expect to happen during a single frame. this will be set when setGameSpeed is called
+		
+		/**
+		 * Handles input from on-screen gamepad and keyboard
+		 * @type PWInput
+		 */
+		this.input = new PWInput();
 		
 		// handler for when manifest files are loaded
 		this.onManifestsLoaded = ()=>{};
@@ -2378,22 +2398,36 @@ const PWConfig = {
  * 		'debug'	- Run in game mode with debugging enabled
  * 		'prod'	- Run in game mode with no debugging
  * 
+ * @type {PWFramework}
  */
 const PWGame = new PWFramework('dev');
 class PWCharacter {
-	
+    // TODO - create this class, should handle character presentation and animation
 }
-/** class for managing levels */
+/** 
+ * class for managing levels 
+ */
 class PWLevel {
 
 	/**
 	 * @param {object} manifest - the manifest object containing the level configuration
+	 * @param {string} manifest.character - the character animation sheet to use
+	 * @param {string} manifest.transition - the transition animation sheet to use
+	 * @param {string} manifest.logo - the logo image to use
+	 * @param {number} manifest.gamesPerRound - the number of microgames to play in each round
+	 * @param {array} manifest.microgames - an array of microgame paths to use
+	 * @param {object} manifest.bossgame - the bossgame manifest to use
+	 * @param {boolean} manifest.devMode - if true, level is running in developer mode
 	 */
 	constructor(manifest)
 	{
+		console.log("NEW MANIFEST",manifest);
+
 		if (!manifest) throw("Missing required manifest!");
 		
-		/** if true, level is running in developer mode */
+		/** 
+		 * @type {boolean} if true, level is running in developer mode
+		 */
 		this.devMode = false;
 
 		if (manifest.devMode) {
@@ -2409,10 +2443,16 @@ class PWLevel {
 		if (!manifest.transition) throw("Missing required transition!");
 		if (!manifest.microgames) throw("Missing required microgame array!");
 
-		/** current round (1 = normal speed, 2 & 3 = faster speeds, 4 = boss) */
+		/** 
+		 * current round (1 = normal speed, 2 & 3 = faster speeds, 4 = boss) 
+		 * @type {number}
+		 */
 		this.round = 1;
 
-		/** The number of microgames to play in each non-boss round */
+		/** 
+		 * The number of microgames to play in each non-boss round 
+		 * @type {number}
+		 */
 		this.gamesPerRound = typeof(manifest.gamesPerRound) !== 'undefined' ? manifest.gamesPerRound : 5;
 
 		/** The current number of games played  */

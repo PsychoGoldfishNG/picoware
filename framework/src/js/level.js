@@ -1,14 +1,27 @@
-/** class for managing levels */
+/** 
+ * class for managing levels 
+ */
 class PWLevel {
 
 	/**
 	 * @param {object} manifest - the manifest object containing the level configuration
+	 * @param {string} manifest.character - the character animation sheet to use
+	 * @param {string} manifest.transition - the transition animation sheet to use
+	 * @param {string} manifest.logo - the logo image to use
+	 * @param {number} manifest.gamesPerRound - the number of microgames to play in each round
+	 * @param {array} manifest.microgames - an array of microgame paths to use
+	 * @param {object} manifest.bossgame - the bossgame manifest to use
+	 * @param {boolean} manifest.devMode - if true, level is running in developer mode
 	 */
 	constructor(manifest)
 	{
+		console.log("NEW MANIFEST",manifest);
+
 		if (!manifest) throw("Missing required manifest!");
 		
-		/** if true, level is running in developer mode */
+		/** 
+		 * @type {boolean} if true, level is running in developer mode
+		 */
 		this.devMode = false;
 
 		if (manifest.devMode) {
@@ -24,10 +37,16 @@ class PWLevel {
 		if (!manifest.transition) throw("Missing required transition!");
 		if (!manifest.microgames) throw("Missing required microgame array!");
 
-		/** current round (1 = normal speed, 2 & 3 = faster speeds, 4 = boss) */
+		/** 
+		 * current round (1 = normal speed, 2 & 3 = faster speeds, 4 = boss) 
+		 * @type {number}
+		 */
 		this.round = 1;
 
-		/** The number of microgames to play in each non-boss round */
+		/** 
+		 * The number of microgames to play in each non-boss round 
+		 * @type {number}
+		 */
 		this.gamesPerRound = typeof(manifest.gamesPerRound) !== 'undefined' ? manifest.gamesPerRound : 5;
 
 		/** The current number of games played  */

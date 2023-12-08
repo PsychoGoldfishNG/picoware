@@ -12,7 +12,7 @@
     "child_process": "^1.0.2",
     "chokidar": "^3.5.1",
     "concat": "^1.0.3",
-    "node-sass": "^6.0.1",
+    "sass": "^1.49.9",
     "uglify-js": "^3.13.9",
     "uglifycss": "0.0.29",
     "vm": "^0.1.0"

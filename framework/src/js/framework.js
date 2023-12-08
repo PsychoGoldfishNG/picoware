@@ -19,10 +19,15 @@ class PWFramework {
 		this.screen = null;						// will be used to contain screen size information
 		this.paused = false;					// pause state of the game
 		this.in_transition = false;				// used to note when the game is transitioning between scenes/microgames
-		this.input = new PWInput(); 			// our user input object for on-screen gamepad and keyboard input
 		this.targetFPS = 60;					// the FPS we are basing all of our timing on.
 		this.gameSpeed = PWConfig.SPEED_NORMAL	// the current speed modifier, used when increasing level difficulty.
 		this.msPerTargetFrame = null;			// The number of ms we expect to happen during a single frame. this will be set when setGameSpeed is called
+		
+		/**
+		 * Handles input from on-screen gamepad and keyboard
+		 * @type PWInput
+		 */
+		this.input = new PWInput();
 		
 		// handler for when manifest files are loaded
 		this.onManifestsLoaded = ()=>{};

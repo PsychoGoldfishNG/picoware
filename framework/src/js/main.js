@@ -21,5 +21,6 @@ const PWConfig = {
  * 		'debug'	- Run in game mode with debugging enabled
  * 		'prod'	- Run in game mode with no debugging
  * 
+ * @type {PWFramework}
  */
 const PWGame = new PWFramework('dev');
