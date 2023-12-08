@@ -1,7 +1,11 @@
 /** Make sure the namespace object exists */
 if (typeof(microgames.psychogoldfish_tests) === 'undefined') microgames.psychogoldfish_tests = {};
 
-/** A 'push the button' microgame, by PsychoGoldfish */
+/** 
+ * A 'push the button' microgame, by PsychoGoldfish 
+ * 
+ * @extends Phaser.Scene
+ */
 microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 
 	/**
@@ -43,7 +47,10 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 		 */
 		this.mode = 'wait';
 
-		/** The button object */
+		/** 
+		 * The button object 
+		 * @type Phaser.GameObjects.Sprite
+		 */
 		this.button = {
 			/** the button sprite */
 			sprite: this.add.sprite(PWGame.screensize/2, 515, this.prefix+'button_up'),
