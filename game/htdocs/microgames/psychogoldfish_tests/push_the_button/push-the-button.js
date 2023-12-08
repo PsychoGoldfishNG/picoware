@@ -1,5 +1,5 @@
 /** Make sure the namespace object exists */
-if (typeof(microgames.psychogoldfish_tests) === undefined) microgames.psychogoldfish_tests = {};
+if (typeof(microgames.psychogoldfish_tests) === 'undefined') microgames.psychogoldfish_tests = {};
 
 /** A 'push the button' microgame, by PsychoGoldfish */
 microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
