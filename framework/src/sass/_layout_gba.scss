@@ -1,0 +1,427 @@
+/* styles for gameboy advance style body */
+#gameplay-skin.landscape 
+{
+
+	#ui-elements
+	{
+		pointer-events: none;
+		width: 100%;
+		height: 100%;
+
+		#screenframe {
+			position: absolute;
+			background-image: url("../img/skin_gba/screenframe.png");
+			background-size: 100% 100%;
+		}
+
+		#dpad-frame,
+		#ab-buttons-frame,
+		#start-select-buttons-frame,
+		#speaker-frame
+		{
+			position: absolute;
+			display: flex;
+			align-items: center;
+			text-align: center;
+		}
+
+		#dpad,
+		#ab-buttons,
+		#start-select-buttons,
+		#speaker
+		{
+			margin: 0px auto;
+		}
+
+		#start-select-buttons {
+			background-image: url("../img/skin_gba/start-select-buttons.png");
+		}
+
+		#led {
+			position: absolute;
+			background-image: url("../img/skin_gba/led.png");
+			background-size: 100% 100%;
+		}
+
+		#speaker {
+			background-image: url(../img/skin_gba/speaker.png);
+		}
+	}
+
+
+	#deco 
+	{
+
+		@include debugElems(blue);
+
+		width: 100%;
+		height: 100%;
+		
+		background-color: purple;
+
+		.middle {
+			flex: 1;
+		} 
+
+		.top {
+			@include debugElems(red);
+			.left, .middle, .right {
+				$height: 98px;
+				height: $height;
+				background-repeat: no-repeat;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					height: round($height * $mod); 
+				}
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					height: round($height * $mod); 
+				}
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					height: round($height * $mod); 
+				}
+			}
+
+			.left, .right {
+				width: 100%;
+				flex: 2;
+			}
+			.middle{
+				flex: 3;
+			} 
+
+			.left-corner, .right-corner {
+				$width: 60px;
+				width: $width;
+				
+				@include zoom-0-5 {
+					$mod: 0.5; 
+					width: round($width * $mod); 
+				}
+				@include zoom-0-8 {
+					$mod: 0.8; 
+					width: round($width * $mod); 
+				}
+				@include zoom-1-3 {
+					$mod: 1.3; 
+					width: round($width * $mod); 
+				}
+			}
+
+			.left-corner {
+				background-image: url("../img/skin_gba/top-left-corner.png");
+				$height: 98px;
+
+				background-size: 100% $height;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					background-size: 100% round($height * $mod); 
+				}
+			}
+
+			.left {
+				background-image: url("../img/skin_gba/top-left.png");
+				$height: 98px;
+
+				background-size: 100% $height;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					background-size: 100% round($height * $mod); 
+				}
+			}
+			.middle {
+				background-image: url("../img/skin_gba/top-edge.png");
+				$height: 30px;
+
+				background-size: 100% $height;
+				background-repeat: repeat-x;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					background-size: 100% round($height * $mod); 
+				}
+			}
+			.right {
+				background-image: url("../img/skin_gba/top-right.png");
+				$height: 98px;
+
+				background-size: 100% $height;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					background-size: 100% round($height * $mod); 
+				}
+			}
+
+			.right-corner {
+				background-image: url("../img/skin_gba/top-right-corner.png");
+				background-size: 100% 98px;
+
+				$height: 98px;
+				
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					background-size: 100% round($height * $mod); 
+				}
+				
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					background-size: 100% round($height * $mod); 
+				}
+				
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					background-size: 100% round($height * $mod); 
+				}
+			}
+		}
+
+		.center {
+			@include debugElems(yellow);
+			flex: 1;
+
+			.left, .middle, .right {
+				height: 100%;
+			}
+
+			.left, .right {
+				$width: 60px;
+				width: $width;
+				background-size: $width 100%;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					width: round($width * $mod);
+					background-size: round($width * $mod) 100%;
+				}
+
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					width: round($width * $mod);
+					background-size: round($width * $mod) 100%;
+				}
+
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					width: round($width * $mod);
+					background-size: round($width * $mod) 100%;
+				}
+			}
+
+			.left {
+				background-image: url("../img/skin_gba/left-edge.png");
+			}
+
+			.right {
+				background-image: url("../img/skin_gba/right-edge.png");
+			}
+		}
+
+		.bottom {
+			@include debugElems(green);
+			.left, .middle, .right, .left-corner, .right-corner {
+				background-repeat: no-repeat;
+
+				$height: 126px;
+				height: $height;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					height: round($height * $mod); 
+				}
+
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					height: round($height * $mod); 
+				}
+
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					height: round($height * $mod); 
+				}
+			}
+
+			.left, .right {
+				width: 100%;
+				flex: 2;
+			}
+			.middle{
+				flex: 9;
+			} 
+
+			.left-corner, .right-corner {
+				$width: 60px;
+				width: $width;
+				
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					width: round($width * $mod); 
+				}
+				
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					width: round($width * $mod); 
+				}
+				
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					width: round($width * $mod); 
+				}
+			}
+
+			.left-corner {
+				background-image: url("../img/skin_gba/bottom-left-corner.png");
+				
+				$height: 126px;
+				background-size: 100% $height;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					background-size: 100% round($height * $mod); 
+				}
+				
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					background-size: 100% round($height * $mod); 
+				}
+				
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					background-size: 100% round($height * $mod); 
+				}
+			}
+
+			.left {
+				background-image: url("../img/skin_gba/bottom-left.png");
+
+				$height: 126px;
+				background-size: 100% $height;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					background-size: 100% round($height * $mod); 
+				}
+			}
+			.middle {
+				background-image: url("../img/skin_gba/bottom-edge.png");
+				background-position: left bottom;
+				background-repeat: repeat-x;
+
+				$height: 66px;
+				background-size: 100% $height;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					background-size: 100% round($height * $mod); 
+				}
+			}
+			.right {
+				background-image: url("../img/skin_gba/bottom-right.png");
+
+				$height: 126px;
+				background-size: 100% $height;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					background-size: 100% round($height * $mod); 
+				}
+			}
+
+			.right-corner {
+				background-image: url("../img/skin_gba/bottom-right-corner.png");
+
+				$height: 126px;
+				background-size: 100% $height;
+
+				@include zoom-0-5 { 
+					$mod: 0.5;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-0-8 { 
+					$mod: 0.8;
+					background-size: 100% round($height * $mod); 
+				}
+
+				@include zoom-1-3 { 
+					$mod: 1.3;
+					background-size: 100% round($height * $mod); 
+				}
+			}
+		}
+	}
+}
