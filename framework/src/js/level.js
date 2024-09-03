@@ -246,11 +246,11 @@ class PWLevel {
 		this.imgs.logo.onload = checkPromises;
 
 		this.imgs.charsheet = new Image();
-		this.imgs.charsheet.src = this.manifest.character.team + "/characters/" + this.manifest.character.sheet;
+		this.imgs.charsheet.src = "teams/" + this.manifest.character.team + "/characters/" + this.manifest.character.sheet;
 		this.imgs.charsheet.onload = checkPromises;
 
 		this.imgs.transsheet = new Image();
-		this.imgs.transsheet.src = this.manifest.transition.team + "/transitions/" + this.manifest.transition.sheet;
+		this.imgs.transsheet.src = "teams/" + this.manifest.transition.team + "/transitions/" + this.manifest.transition.sheet;
 		this.imgs.transsheet.onload = checkPromises;
 	}
 

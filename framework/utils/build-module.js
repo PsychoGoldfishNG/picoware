@@ -22,9 +22,8 @@ module.exports = (() => {
 		'main.js'
 	];
 
-	this.microgames_src = "../../game/htdocs/microgames"; // location of our microgames
-	this.levels_src = "../../game/htdocs/levels"; // location of our character files
-	this.characters_src = "../../game/htdocs/characters"; // location of our character files
+	this.teams_src = "../../game/htdocs/teams"; // location of our team folders
+	this.microgames_dir = "microgames"; // directory where we'll find our microgames
 
 	this.js_src = "../src/js"; // location of our source JavaScript files
 	this.js_bin = "../../game/htdocs/js/framework.js"; // where to save compiled JavaScript 
@@ -37,21 +36,21 @@ module.exports = (() => {
 	this.sass_to_watch = "../src/sass/";
 
 	this.processManifests = function () {
-		let topdir = __dirname + "/" + _this.microgames_src
-		let microgame_creator_dirs = fs.readdirSync(topdir);
+		let topdir = __dirname + "/" + _this.teams_src
+		let team_dirs = fs.readdirSync(topdir);
 
 		var manifest_obj = {
 			microgames: {}
 		};
 
-		microgame_creator_dirs.forEach(creator_dir => {
+		team_dirs.forEach(creator_dir => {
 
 			manifest_obj.microgames[creator_dir] = manifest_obj.microgames[creator_dir] ?? {};
 
-			let gamesdir = topdir + "/" + creator_dir
-			let microgame_dirs = fs.readdirSync(gamesdir);
-			microgame_dirs.forEach(game_dir => {
-				let manifest = gamesdir + "/" + game_dir + "/manifest.json";
+			let microgames_dir = topdir + "/" + creator_dir + "/" + _this.microgames_dir;
+			let microgames_dirs = fs.readdirSync(microgames_dir);
+			microgames_dirs.forEach(game_dir => {
+				let manifest = microgames_dir + "/" + game_dir + "/manifest.json";
 				if (fs.existsSync(manifest)) {
 					let raw = fs.readFileSync(manifest);
 					let obj;

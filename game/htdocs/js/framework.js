@@ -1,6 +1,36 @@
 var _Manifests = {
      "microgames": {
-          "psychogoldfish_tests": {}
+          "psychogoldfish": {
+               "push_the_button": {
+                    "name": "Push the Button",
+                    "sceneClass": "microgames.psychogoldfish_tests.push_the_button",
+                    "input": "gamepad",
+                    "hint": "Push Da Button!",
+                    "jsFiles": [
+                         "push-the-button.js"
+                    ],
+                    "images": [
+                         {
+                              "key": "button_up",
+                              "image": "button_up.png"
+                         },
+                         {
+                              "key": "button_down",
+                              "image": "button_down.png"
+                         },
+                         {
+                              "key": "finger",
+                              "image": "finger.png"
+                         }
+                    ],
+                    "credits": [
+                         {
+                              "credit": "designer",
+                              "name": "PsychoGoldfish"
+                         }
+                    ]
+               }
+          }
      }
 };
 
@@ -3384,11 +3414,11 @@ class PWLevel {
 		this.imgs.logo.onload = checkPromises;
 
 		this.imgs.charsheet = new Image();
-		this.imgs.charsheet.src = "characters/" + this.manifest.character;
+		this.imgs.charsheet.src = "teams/" + this.manifest.character.team + "/characters/" + this.manifest.character.sheet;
 		this.imgs.charsheet.onload = checkPromises;
 
 		this.imgs.transsheet = new Image();
-		this.imgs.transsheet.src = "transitions/" + this.manifest.transition;
+		this.imgs.transsheet.src = "teams/" + this.manifest.transition.team + "/transitions/" + this.manifest.transition.sheet;
 		this.imgs.transsheet.onload = checkPromises;
 	}
 
@@ -3433,8 +3463,14 @@ class PWLevel {
 
 /** Default Manifest, used when testing */
 PWLevel.default_manifest = {
-	character: "angry_face/psychogoldfish_stickman.webp",
-	transition: "angry_face/psychogoldfish_bricks.webp",
+	character: {
+		team: "psychogoldfish",
+		sheet: "angry_face.webp"
+	},
+	transition: {
+		team: "psychogoldfish",
+		sheet: "yellow_bricks.webp"
+	},
 	gamesPerRound: 1,
 	microgames: null,
 	bossgame: null
