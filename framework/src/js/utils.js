@@ -5,16 +5,21 @@
  * @param {string} scriptUrl - The location of the scriot we are loading
  * @return Promise
  */
-function loaderScript(scriptUrl){
-   return new Promise(function (res, rej) {
+function loaderScript(scriptUrl) {
+  "use strict";
+
+  return new Promise(function (res, rej) {
+
+    /** @var {HTMLScriptElement} script */
     let script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = true;
-    script.addEventListener('error',rej);
-    script.addEventListener('load',res);
+    script.addEventListener('error', rej);
+    script.addEventListener('load', res);
     script.src = scriptUrl;
+
     document.head.appendChild(script);
- });
+  });
 }
 
 /**
@@ -26,13 +31,15 @@ function loaderScript(scriptUrl){
  * @return {(number|null)}
  */
 function containsAny(str, substrings) {
-    for (var i = 0; i != substrings.length; i++) {
-       var substring = substrings[i];
-       if (str.indexOf(substring) != - 1) {
-         return substring;
-       }
+  "use strict";
+
+  for (var i = 0; i != substrings.length; i++) {
+    var substring = substrings[i];
+    if (str.indexOf(substring) != - 1) {
+      return substring;
     }
-    return null; 
+  }
+  return null;
 }
 
 /**
@@ -40,7 +47,8 @@ function containsAny(str, substrings) {
  * @param {function} callback - Function to call when sound has been enabled.
  * @param {object} thisarg - The object to use as 'this' context in the callback function.
  */
-var __safariSoundHack = (()=>{
+var __safariSoundHack = (() => {
+  "use strict";
 
   let __safariAudiotag = document.createElement('audio');
   document.body.appendChild(__safariAudiotag);
@@ -50,9 +58,9 @@ var __safariSoundHack = (()=>{
    * @param {function} callback - Function to call when sound has been enabled.
    * @param {object} thisarg - The object to use as 'this' context in the callback function.
    */
-  return (callback,thisarg)=>{
+  return (callback, thisarg) => {
 
-    __safariAudiotag.onended = ()=>{
+    __safariAudiotag.onended = () => {
       thisarg ? callback.call(thisarg) : callback();
     };
     __safariAudiotag.play();

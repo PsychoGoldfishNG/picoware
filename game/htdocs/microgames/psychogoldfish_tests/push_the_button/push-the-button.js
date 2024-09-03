@@ -1,5 +1,5 @@
 /** Make sure the namespace object exists */
-if (typeof(microgames.psychogoldfish_tests) === 'undefined') microgames.psychogoldfish_tests = {};
+if (typeof (microgames.psychogoldfish_tests) === 'undefined') microgames.psychogoldfish_tests = {};
 
 /** 
  * A 'push the button' microgame, by PsychoGoldfish 
@@ -11,17 +11,15 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 	/**
 	 * register this class key with Phaser using microgames.{team_or_author_name}.{game_name} format.
 	 */
-	constructor() 
-	{
+	constructor() {
 		// note: this key needs to match the file path to this game's manifest.json file.
-		super({key: 'microgames.psychogoldfish_tests.push_the_button'});
+		super({ key: 'microgames.psychogoldfish_tests.push_the_button' });
 	}
 
 	/**
 	 * Called when the game is ready to start.
 	 */
-	create() 
-	{
+	create() {
 		/**
 		 * alias of this instance that can be used in nested functions
 		 * @type {microgames.psychogoldfish_tests.push_the_button}
@@ -36,11 +34,11 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 		 * 
 		 * Will be imported as "microgames.psychogoldfish_tests.push_the_button.button_up"
 		 */
-		this.prefix = 'microgames.psychogoldfish_tests.push_the_button.'; 
+		this.prefix = 'microgames.psychogoldfish_tests.push_the_button.';
 
 		// set the background to super dark red
 		this.cameras.main.setBackgroundColor(0x220000);
-		
+
 		/** 
 		 * current game mode. 
 		 * 'wait' = waiting for user input
@@ -56,10 +54,10 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 		 */
 		this.button = {
 			/** the button sprite */
-			sprite: this.add.sprite(PWGame.screensize/2, 515, this.prefix+'button_up'),
+			sprite: this.add.sprite(PWGame.screensize / 2, 415, this.prefix + 'button_up'),
 
 			/** the top of the button's hit box */
-			top: 390,
+			top: 290,
 
 			/** the left side of the button's hit box */
 			left: 205,
@@ -72,7 +70,7 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 		this.finger = {
 
 			/** The finger sprite */
-			sprite: this.add.sprite(PWGame.screensize/2 + 140, 160, this.prefix+'finger'),
+			sprite: this.add.sprite(PWGame.screensize / 2 + 140, 160, this.prefix + 'finger'),
 
 			/** The width of the finger's hitbox */
 			width: 84,
@@ -86,35 +84,35 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 			// ** the horizontal direction the finger is moving (-1 = left, 1 = right) */
 			xdir: Math.random() < 0.5 ? 1 : -1,
 		};
-		
+
 		// set the button's origin to the bottom center
-		this.button.sprite.setOrigin(0.5,1);
+		this.button.sprite.setOrigin(0.5, 1);
 
 		// scale the sprites to 50%.  If the overal game gets streteched above 720p, the sprites will still look sharp!
 		this.button.sprite.scaleX = 0.5;
 		this.button.sprite.scaleY = 0.5;
 		this.finger.sprite.scaleX = 0.5;
 		this.finger.sprite.scaleY = 0.5;
-		
+
 		/** bounding box for the finger */
 		this.bounds = {
-			left: this.finger.sprite.displayWidth/2,
-			right: PWGame.screensize - (this.finger.sprite.displayWidth/2),
+			left: this.finger.sprite.displayWidth / 2,
+			right: PWGame.screensize - (this.finger.sprite.displayWidth / 2),
 			top: this.finger.sprite.y,
-			bottom: 420
+			bottom: 320
 		};
 
 		// tell the input controller that there are 3 inputs that will work as 'press'
-		PWGame.input.setAlias('press',['down','A','B']);
+		PWGame.input.setAlias('press', ['down', 'A', 'B']);
 
 		// when one of the 'press' inputs are pushed...
-		PWGame.input.onPress('press', function() 
-		{
+		PWGame.input.onPress('press', function () {
 			// switch the game to 'press' mode if it is currently in wait mode
 			if (_this.mode === 'wait') _this.mode = 'press';
 		});
 
-		// tell the framework this game is ready to start
+		// at this point, the player will lose the game when the timer runs out
+		PWGame.lostGame();
 	}
 
 	/**
@@ -122,8 +120,7 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 	 * @param {number} timestamp - The current timestamp on the player's local machine
 	 * @param {number} delta - The number of microseconds that have elapsed since the last update event
 	 */
-	update(timestamp, delta)
-	{
+	update(timestamp, delta) {
 		// Check with the framework to see if we can actually run the game yet (It may be paused or doing a transition animation)
 		if (!PWGame.isReady()) return;
 
@@ -136,7 +133,7 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 		var speed_multiplier = PWGame.getDeltaMultiplier(delta);
 
 		// check the game mode and update accordingly...
-		switch(this.mode) {
+		switch (this.mode) {
 
 			// finger is moving side to side, waiting for the player to press a button
 			case 'wait':
@@ -144,7 +141,7 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 				// move the finger my multiplying it's target x speed by our delta multipler
 				// if the user's refresh rate is 120fps, the finger would move 8px at normal speed
 				this.finger.sprite.x += this.finger.xspeed * this.finger.xdir * speed_multiplier;
-				
+
 				// check if the finger has reached either screen edge and have it switch directions if needed
 				if (this.finger.sprite.x >= this.bounds.right) {
 					this.finger.sprite.x = this.bounds.right;
@@ -169,12 +166,12 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 
 					// put the finger sprite at the top of the button, and update the button's texture to the down state
 					this.finger.sprite.y = this.button.top;
-					this.button.sprite.setTexture(this.prefix+'button_down');
+					this.button.sprite.setTexture(this.prefix + 'button_down');
 
 					// update the game mode so it'll trigger the win screen next update
 					this.mode = 'pressed';
 
-				// check if the finger has hit the bottom of the screen
+					// check if the finger has hit the bottom of the screen
 				} else if (this.finger.sprite.y >= this.bounds.bottom) {
 
 					// put the finger on the bottom of the screen and set the mode to 'reset' so it will move back up
@@ -203,8 +200,10 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 			// player has pressed the button!
 			case 'pressed':
 
-				// update the mode so nothing happens on the next update and tell the framework that the player won
+				// update the mode so nothing happens on the next update (TODO: make the hand do a thumbs up or something)
 				this.mode = "endgame"
+
+				// tell the framework that the player will win the game when the timer runs out
 				PWGame.wonGame();
 		}
 	}

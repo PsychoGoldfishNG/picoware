@@ -35,3 +35,6 @@ Thumbs.db
 # Applications
 *.app
 *.war
+
+#vscode
+.vscode/

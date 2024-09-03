@@ -4,9 +4,8 @@
  * this is globally accessible as 'PWGame.input'
  */
 class PWInput {
-	
-	constructor() 
-	{	
+
+	constructor() {
 		// reference for functions/closures
 		let _this = this;
 
@@ -46,9 +45,9 @@ class PWInput {
 
 		// handle key press
 		function onKeyDown(e) {
-			for(const [input, key] of Object.entries(_this.keyMap)) {
+			for (const [input, key] of Object.entries(_this.keyMap)) {
 				if (e.code == key) {
-					_this.setInputState(input,true,e);
+					_this.setInputState(input, true, e);
 					break;
 				}
 			};
@@ -56,9 +55,9 @@ class PWInput {
 
 		// handle key release
 		function onKeyUp(e) {
-			for(const [input, key] of Object.entries(_this.keyMap)) {
+			for (const [input, key] of Object.entries(_this.keyMap)) {
 				if (e.code == key) {
-					_this.setInputState(input,false,e);
+					_this.setInputState(input, false, e);
 					break;
 				}
 			};
@@ -73,10 +72,9 @@ class PWInput {
 	 * use a pre-set keyboard map
 	 * @param {string} map - The name of the map to use ('arrows', 'wasd')
 	 */
-	setKeyMap(map)
-	{
+	setKeyMap(map) {
 		this.keyMap = {};
-		for(const [input, key] of Object.entries(this['keyMap_'+map])) {
+		for (const [input, key] of Object.entries(this['keyMap_' + map])) {
 			this.mapKey(key, input);
 		}
 	}
@@ -86,16 +84,14 @@ class PWInput {
 	 * @param {string} key - The keyboard key name
 	 * @param {string} input - The input to map the key to
 	 */
-	mapKey(key, input) 
-	{
+	mapKey(key, input) {
 		this.keyMap[input] = key;
 	}
 
 	/**
 	 * resets input states and callback events
 	 */
-	reset()
-	{
+	reset() {
 		this.inputs = {
 			up: false,
 			right: false,
@@ -126,12 +122,11 @@ class PWInput {
 	 * @param {string} alias - The alias name
 	 * @param {(Array.<string>|string)} inputs - The inputs you want to associate with the alias
 	 */
-	setAlias(alias, inputs)
-	{
-		if (typeof(inputs) == 'string') inputs = [inputs];
+	setAlias(alias, inputs) {
+		if (typeof (inputs) == 'string') inputs = [inputs];
 		let _this = this;
 
-		inputs.forEach((input)=>{
+		inputs.forEach((input) => {
 			if (!_this._aliases[input]) _this._aliases[input] = [];
 			if (_this._aliases[input].indexOf(alias) < 0) {
 				_this._aliases[input].push(alias);
@@ -147,16 +142,15 @@ class PWInput {
 	 * returns true if the provided input is down
 	 * @param {string} input - The input to check
 	 */
-	isDown(input)
-	{
+	isDown(input) {
 		if (this._alias_map[input]) {
-			
-			for(var i in this._alias_map[input]) {
+
+			for (var i in this._alias_map[input]) {
 				if (this.inputs[this._alias_map[input][i]]) return true;
 			}
 			return false;
 		}
-		return typeof(this.inputs[input]) !== 'undefined' ? this.inputs[input] : false;
+		return typeof (this.inputs[input]) !== 'undefined' ? this.inputs[input] : false;
 	}
 
 	/**
@@ -165,9 +159,8 @@ class PWInput {
 	 * @param {function} callback - The callback function to trigger
 	 * @param {object} thisarg - The object that will have the 'this' context in your callback
 	 */
-	onPress(input,callback,thisarg)
-	{
-		this._onPressThisArg[input] = typeof(thisarg) !== 'undefined' ? thisarg : this;
+	onPress(input, callback, thisarg) {
+		this._onPressThisArg[input] = typeof (thisarg) !== 'undefined' ? thisarg : this;
 		this._onPress[input] = callback;
 	}
 
@@ -177,9 +170,8 @@ class PWInput {
 	 * @param {function} callback - The callback function to trigger
 	 * @param {object} thisarg - The object that will have the 'this' context in your callback
 	 */
-	onRelease(input,callback,thisarg)
-	{
-		this._onReleaseThisArg[input] = typeof(thisarg) !== 'undefined' ? thisarg : this;
+	onRelease(input, callback, thisarg) {
+		this._onReleaseThisArg[input] = typeof (thisarg) !== 'undefined' ? thisarg : this;
 		this._onRelease[input] = callback;
 	}
 
@@ -190,12 +182,12 @@ class PWInput {
 	 * @param {event} event - Any input events used to trigger this
 	 */
 	setInputState(input, state, event) {
-		
+
 		this.checkInputState(input, state, event);
 
 		if (this._aliases[input]) {
 			let _this = this;
-			this._aliases[input].forEach(function(k) {
+			this._aliases[input].forEach(function (k) {
 				_this.checkInputState(k, state, event);
 			});
 		}
@@ -206,7 +198,7 @@ class PWInput {
 	 * @param {string} input - The input to check
 	 * @param {boolean} state - Set to true if input is down
 	 * @param {event} event - Any input events used to trigger this
-	 */ 
+	 */
 	checkInputState(input, state, event) {
 		if (this.inputs[input] === state) return;
 
@@ -221,14 +213,13 @@ class PWInput {
 	 * Update input states when triggered by touch UI
 	 * @param {object} states - An object of input names and their states in touchscreen context
 	 */
-	onLayoutInputChanged(states)
-	{
+	onLayoutInputChanged(states) {
 		let _this = this;
 
 		// go through each input state from the touch controls and update the state data in this class
-		for(const [key, state] of Object.entries(states)) {
+		for (const [key, state] of Object.entries(states)) {
 			if (state !== _this.inputs[key]) {
-				_this.setInputState(key,state,null);
+				_this.setInputState(key, state, null);
 			}
 		};
 	}

@@ -1,11 +1,11 @@
-/** A scene that preloads other scenes using data from manifests */ 
+/** A scene that preloads other scenes using data from manifests */
 class PWGameSceneloader extends Phaser.Scene {
-	
+
 	/**
 	 * registers PWGameSceneloader scene key via parent constructor
 	 */
 	constructor() {
-		super({key: 'PWGameSceneloader'});
+		super({ key: 'PWGameSceneloader' });
 	}
 
 	/**
@@ -15,11 +15,11 @@ class PWGameSceneloader extends Phaser.Scene {
 		let _this = this;
 
 		// cycle through any manifests for the scene we are preloading
-		PWGameSceneloader.manifests.forEach(manifest=>{
+		PWGameSceneloader.manifests.forEach(manifest => {
 
 			// add any images we need to load
 			if (manifest.images) {
-				manifest.images.forEach(image=>{
+				manifest.images.forEach(image => {
 					_this.load.image(manifest.sceneClass + '.' + image.key, manifest.path + image.image);
 				});
 			}
