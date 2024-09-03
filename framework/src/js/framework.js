@@ -297,9 +297,10 @@ class PWFramework {
 			let path = "teams/" + microgameTeam.value + "/microgames/" + microgameDir.value;
 			path = validatePath(path);
 			if (!path) return;
+
 			// create a fake level manifest that only uses the level we want to test
+			// Note: missing properties will be filled in by the PWLevel.default_manifest object
 			let manifest = {
-				logo: "img/devmode_icon.webp",
 				microgames: [
 					path
 				],
@@ -367,6 +368,12 @@ class PWFramework {
 
 					// tell the wrapper what sprite sheet to use for the between-game transitions
 					GameWrapper.setTransitionImage(_this.level.imgs.transsheet);
+
+					// tell the wrapper what character sheet to use
+					GameWrapper.setCharacterImage(_this.level.imgs.charsheet);
+
+					// tell the wrapper what character sheet to use
+					GameWrapper.setLogoImage(_this.level.imgs.logo);
 
 					// if the level has an intro movie, play it, then start the next phase
 					if (_this.level.hasIntro()) {
@@ -481,10 +488,16 @@ class PWFramework {
 
 						// looks like they won the game?
 						if (phase === 'finish') {
+
 							GameWrapper.playTransitionIdle(function () {
 								GameWrapper.crossFade(function () {
+
+									GameWrapper.stopCharacterAnimation();
+
 									if (data === 'devmode') {
 										_this.startDevScreen();
+									} else {
+										// TODO - show the win screen
 									}
 								});
 							});
@@ -526,6 +539,7 @@ class PWFramework {
 					// reset the step tracker
 					_this.msPerStep = _this.msPerTargetFrame * PWConfig.FRAMES_PER_STEP;
 					_this.stepTracker = 0;
+					GameWrapper.startCharacterAnimation();
 
 					// start the game timer
 					GameWrapper.startGameTimer();
@@ -996,18 +1010,24 @@ class PWFramework {
 	/**
 	 * Call this if the player will lose the game when the timer runs out.
 	 * This could be at the start of the game if they need to accomplish something to win, or at the end if they need to survive.
+	 * 
+	 * @param {boolean} play_win_animation - If true, the character will play the lose animation instantly
 	 * @return {void}
 	 */
-	lostGame() {
+	lostGame(play_win_animation = false) {
+		if (play_win_animation === true) GameWrapper.characterAnimation = 3;
 		this.winOnTimeUp = false;
 	}
 
 	/**
 	 * Call this if the player will win the game when the timer runs out.
 	 * This could be at the start of the game if they need to survive, or at the end if they need to accomplish something to win.
+	 * 
+	 * @param {boolean} play_win_animation - If true, the character will play the win animation instantly
 	 * @return {void}
 	 */
-	wonGame() {
+	wonGame(play_win_animation = false) {
+		if (play_win_animation === true) GameWrapper.characterAnimation = 2;
 		this.winOnTimeUp = true;
 	}
 }

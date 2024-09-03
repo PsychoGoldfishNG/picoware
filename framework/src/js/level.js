@@ -34,6 +34,7 @@ class PWLevel {
 
 		// check for required items
 		if (!manifest.character) throw ("Missing required character!");
+		if (!manifest.logo) throw ("Missing required logo!");
 		if (!manifest.transition) throw ("Missing required transition!");
 		if (!manifest.microgames && manifest.devMode !== 'bossgame') throw ("Missing required microgame array!");
 		if (!manifest.bossgame && manifest.devMode !== 'game') throw ("Missing required bossgame!");
@@ -182,6 +183,7 @@ class PWLevel {
 	 * @param {boolean} success - set to true if the player won
 	 */
 	gameCompleted(success) {
+		GameWrapper.characterAnimation = success ? 2 : 3;
 		if (this.game_complete_callback) this.game_complete_callback(success);
 	}
 
@@ -242,7 +244,7 @@ class PWLevel {
 
 		// preload and remember all the images we need for the skin stuff
 		this.imgs.logo = new Image();
-		this.imgs.logo.src = typeof (this.manifest.logo) !== 'undefined' ? this.manifest.logo : "FIXME!!!";
+		this.imgs.logo.src = "teams/" + this.manifest.logo.team + "/logos/" + this.manifest.logo.image;
 		this.imgs.logo.onload = checkPromises;
 
 		this.imgs.charsheet = new Image();
@@ -293,11 +295,16 @@ class PWLevel {
 	}
 }
 
-/** Default Manifest, used when testing */
+/** Default Level Manifest (used when testing) */
 PWLevel.default_manifest = {
+	logo: {
+		team: "psychogoldfish",
+		image: "sir_reginald_emojiman.png"
+	},
 	character: {
 		team: "psychogoldfish",
-		sheet: "angry_face.webp"
+		sheet: "sir_reginald_emojiman_sheet.webp",
+		icon: "sir_reginald_emojiman_icon.png"
 	},
 	transition: {
 		team: "psychogoldfish",

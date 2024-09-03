@@ -3,7 +3,7 @@ var _Manifests = {
           "psychogoldfish": {
                "push_the_button": {
                     "name": "Push the Button",
-                    "sceneClass": "microgames.psychogoldfish_tests.push_the_button",
+                    "sceneClass": "microgames.psychogoldfish.push_the_button",
                     "input": "gamepad",
                     "hint": "Push Da Button!",
                     "jsFiles": [

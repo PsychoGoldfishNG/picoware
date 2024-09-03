@@ -3,7 +3,7 @@ var _Manifests = {
           "psychogoldfish": {
                "push_the_button": {
                     "name": "Push the Button",
-                    "sceneClass": "microgames.psychogoldfish_tests.push_the_button",
+                    "sceneClass": "microgames.psychogoldfish.push_the_button",
                     "input": "gamepad",
                     "hint": "Push Da Button!",
                     "jsFiles": [
@@ -176,7 +176,43 @@ const GameWrapper = {
 		 * distance of screen from top of page 100% 
 		 * @type {number}
 		 */
-		screenTop: 8
+		screenTop: 8,
+
+		/**
+		 * The width of each frame in the character spritesheet
+		 * @type {number}
+		*/
+		characterFrameWidth: 320,
+
+		/**
+		 * The height of each frame in the character spritesheet
+		 * @type {number}
+		 */
+		characterFrameHeight: 580,
+
+		/**
+		 * The width of the character sprite
+		 * @type {number}
+		 */
+		characterWidth: 160,
+
+		/**
+		 * The height of the character sprite
+		 * @type {number}
+		 */
+		characterHeight: 290,
+
+		/**
+		 * The width of the level logo 
+		 * @type {number}
+		 */
+		logoWidth: 320,
+
+		/**
+		 * The height of the level logo 
+		 * @type {number}
+		 */
+		logoHeight: 180
 	},
 
 	/** 
@@ -711,6 +747,12 @@ const GameWrapper = {
 		 * @type {HTMLElement}
 		 */
 		this.character = document.getElementById('character');
+
+		/**
+		 * The container for the level logo when the game is running in PC mode
+		 * @type {HTMLElement}
+		 */
+		this.logo = document.getElementById('logo');
 
 		/**
 		 * The element that holds the hint text and shadow
@@ -1355,10 +1397,28 @@ const GameWrapper = {
 		// get sizes for our input containers
 		let characterWidth = Math.round(lo.characterWidth * scale);
 		let characterHeight = Math.round(lo.characterHeight * scale);
+		let imgScale = characterWidth / lo.characterFrameWidth;
+
+		// set the size of the character
+		this.character.style.width = characterWidth + "px";
+		this.character.style.height = characterHeight + "px";
+		this.character.style.position = "absolute";
+		this.character.style.bottom = Math.round(32 * scale) + "px";
+		this.character.style.right = Math.round(32 * scale) + "px";
+
+		let logoWidth = Math.round(lo.logoWidth * imgScale);
+		let logoHeight = Math.round(lo.logoHeight * imgScale);
+		this.logo.style.width = logoWidth + "px";
+		this.logo.style.height = logoHeight + "px";
+		this.logo.style.position = "absolute";
+		this.logo.style.top = Math.round(32 * scale) + "px";
+		this.logo.style.left = Math.round(32 * scale) + "px";
 
 		// let the core game engine know the screen changed so it can update itself as needed.
 		this.onScreenUpdated.call(this.onScreenUpdatedThisArg, screen);
 		this.updateGameTimerElement(screen.size);
+		this.setCharacterScale(imgScale);
+		this.setLogoScale(imgScale);
 	},
 
 	/**
@@ -1367,18 +1427,18 @@ const GameWrapper = {
 	 * @returns {void}
 	 */
 	updateGameTimerElement(width = 0) {
+
+		let _this = this;
+
 		// this is the size the bomb image would be at 100% scale
 		let timerSize = { width: 1048, height: 160 };
 		let timeOverSize = { width: 240, height: 240 };
 
-		let _this = this;
-
 		// calculate the scale to use
 		let scale = width / timerSize.width;
+
 		this.gameTimerWidth = Math.floor(timerSize.width * scale);
 		this.gameTimerHeight = Math.floor(timerSize.height * scale);
-
-		console.log('screenElementWidth', width, 'scale', scale, 'this.gameTimerWidth', this.gameTimerWidth, 'this.gameTimerHeight', this.gameTimerHeight);
 
 		// set the new size of the gameTimer element
 		this.gameTimer.style.width = this.gameTimerWidth + "px";
@@ -1554,6 +1614,9 @@ const GameWrapper = {
 			_this.screenHint.style.transition = "0.2s";
 			_this.screenHint.style.transitionTimingFunction = "ease-in";
 			_this.screenHint.style.top = "-" + (size * 2) + "px";
+
+			// reset the character animation
+			GameWrapper.characterAnimation = 1;
 		}, 800);
 	},
 
@@ -1836,6 +1899,136 @@ const GameWrapper = {
 	 */
 	endTransition: function () {
 		this.screenTransition.style.display = "none";
+	},
+
+	/**
+	 * The current character image
+	 * @type {Image}
+	 */
+	characterImage: new Image(),
+
+	/**
+	 * The current animation to use for the character (1-3)
+	 * @type {number}
+	 */
+	characterAnimation: 1,
+
+	/**
+	 * The current frame of the character animation
+	 * @type {number}
+	 */
+	characterFrame: 0,
+
+	/**
+	 * Used to time out the character animation
+	 * @type {number}
+	 */
+	characterInterval: null,
+
+	/**
+	 * The scale of the character sprite
+	 * @type {number}
+	 */
+	characterScale: 1,
+
+	/**
+	 * The number of steps per frame of the character animation
+	 * @type {number}
+	 */
+	characterSteps: 12,
+
+	/**
+	 * The size of each frame of the character sprite, when scaled
+	 * @type {object}
+	 * @property {number} x - The width of the frame
+	 * @property {number} y - The height of the frame
+	 */
+	characterSize: { x: 160, y: 290 },
+
+	/** 
+	 * Set the Image file that will be used for transition animations
+	 * @param {HTMLImageElement} image - A preloaded Image element
+	 * @returns {void}
+	 */
+	setCharacterImage: function (image) {
+		if (BrowserHelper.isMobile()) return;
+		if (!image.src || !image.naturalHeight) throw ("Image not loaded!");
+		this.characterImage = image;
+		this.character.style.backgroundImage = 'url("' + this.characterImage.src + '")';
+		this.startCharacterAnimation();
+	},
+
+	startCharacterAnimation: function () {
+
+		if (BrowserHelper.isMobile()) return;
+
+		let _this = this;
+
+		this.stopCharacterAnimation();
+
+		this.characterInterval = setInterval(function () {
+			_this.characterFrame++;
+			if (_this.characterFrame > 2) _this.characterFrame = 1;
+			_this.updateCharacterAnimation();
+		}, Math.round(PWGame.msPerTargetFrame * this.characterSteps));
+
+		this.updateCharacterAnimation();
+	},
+
+	stopCharacterAnimation: function () {
+
+		if (BrowserHelper.isMobile()) return;
+		if (this.characterInterval) clearInterval(this.characterInterval);
+	},
+
+	/**
+	 * Scales the character sprite 
+	 * @param {number} scale - The scale to use (0-1)
+	 * @returns {void}
+	 */
+	setCharacterScale: function (scale) {
+		if (BrowserHelper.isMobile()) return;
+		let lo = this.layoutDesktop;
+		this.characterSize.x = Math.round(lo.characterFrameWidth * scale);
+		this.characterSize.y = Math.round(lo.characterFrameHeight * scale);
+		this.character.style.backgroundSize = (this.characterSize.x * 3) + "px " + (this.characterSize.y * 2) + "px";
+		this.characterScale = scale;
+	},
+
+	updateCharacterAnimation: function () {
+		let y = (this.characterFrame - 1) * this.characterSize.y;
+		let x = (this.characterAnimation - 1) * this.characterSize.x;
+
+		this.character.style.backgroundPosition = "-" + x + "px -" + y + "px";
+	},
+
+	logoImage: new Image(),
+	logoScale: 1,
+	logoSize: { x: 320, y: 180 },
+	/** 
+	 * Set the Image file that will be used for transition animations
+	 * @param {HTMLImageElement} image - A preloaded Image element
+	 * @returns {void}
+	 */
+	setLogoImage: function (image) {
+		if (BrowserHelper.isMobile()) return;
+		if (!image.src || !image.naturalHeight) throw ("Image not loaded!");
+		this.logoImage = image;
+		this.logo.style.backgroundImage = 'url("' + this.logoImage.src + '")';
+	},
+
+	/**
+	 * Scales the logo sprite 
+	 * @param {number} scale - The scale to use (0-1)
+	 * @returns {void}
+	 */
+	setLogoScale: function (scale) {
+		if (BrowserHelper.isMobile()) return;
+		let lo = this.layoutDesktop;
+		this.logoSize.x = Math.round(lo.logoWidth * scale);
+		this.logoSize.y = Math.round(lo.logoHeight * scale);
+		this.logo.style.backgroundSize = this.logoSize.x + "px " + this.logoSize.y + "px";
+		this.logoScale = scale;
 	},
 
 	/**
@@ -2427,9 +2620,10 @@ class PWFramework {
 			let path = "teams/" + microgameTeam.value + "/microgames/" + microgameDir.value;
 			path = validatePath(path);
 			if (!path) return;
+
 			// create a fake level manifest that only uses the level we want to test
+			// Note: missing properties will be filled in by the PWLevel.default_manifest object
 			let manifest = {
-				logo: "img/devmode_icon.webp",
 				microgames: [
 					path
 				],
@@ -2497,6 +2691,12 @@ class PWFramework {
 
 					// tell the wrapper what sprite sheet to use for the between-game transitions
 					GameWrapper.setTransitionImage(_this.level.imgs.transsheet);
+
+					// tell the wrapper what character sheet to use
+					GameWrapper.setCharacterImage(_this.level.imgs.charsheet);
+
+					// tell the wrapper what character sheet to use
+					GameWrapper.setLogoImage(_this.level.imgs.logo);
 
 					// if the level has an intro movie, play it, then start the next phase
 					if (_this.level.hasIntro()) {
@@ -2611,10 +2811,16 @@ class PWFramework {
 
 						// looks like they won the game?
 						if (phase === 'finish') {
+
 							GameWrapper.playTransitionIdle(function () {
 								GameWrapper.crossFade(function () {
+
+									GameWrapper.stopCharacterAnimation();
+
 									if (data === 'devmode') {
 										_this.startDevScreen();
+									} else {
+										// TODO - show the win screen
 									}
 								});
 							});
@@ -2656,6 +2862,7 @@ class PWFramework {
 					// reset the step tracker
 					_this.msPerStep = _this.msPerTargetFrame * PWConfig.FRAMES_PER_STEP;
 					_this.stepTracker = 0;
+					GameWrapper.startCharacterAnimation();
 
 					// start the game timer
 					GameWrapper.startGameTimer();
@@ -3126,18 +3333,24 @@ class PWFramework {
 	/**
 	 * Call this if the player will lose the game when the timer runs out.
 	 * This could be at the start of the game if they need to accomplish something to win, or at the end if they need to survive.
+	 * 
+	 * @param {boolean} play_win_animation - If true, the character will play the lose animation instantly
 	 * @return {void}
 	 */
-	lostGame() {
+	lostGame(play_win_animation = false) {
+		if (play_win_animation === true) GameWrapper.characterAnimation = 3;
 		this.winOnTimeUp = false;
 	}
 
 	/**
 	 * Call this if the player will win the game when the timer runs out.
 	 * This could be at the start of the game if they need to survive, or at the end if they need to accomplish something to win.
+	 * 
+	 * @param {boolean} play_win_animation - If true, the character will play the win animation instantly
 	 * @return {void}
 	 */
-	wonGame() {
+	wonGame(play_win_animation = false) {
+		if (play_win_animation === true) GameWrapper.characterAnimation = 2;
 		this.winOnTimeUp = true;
 	}
 }
@@ -3202,6 +3415,7 @@ class PWLevel {
 
 		// check for required items
 		if (!manifest.character) throw ("Missing required character!");
+		if (!manifest.logo) throw ("Missing required logo!");
 		if (!manifest.transition) throw ("Missing required transition!");
 		if (!manifest.microgames && manifest.devMode !== 'bossgame') throw ("Missing required microgame array!");
 		if (!manifest.bossgame && manifest.devMode !== 'game') throw ("Missing required bossgame!");
@@ -3350,6 +3564,7 @@ class PWLevel {
 	 * @param {boolean} success - set to true if the player won
 	 */
 	gameCompleted(success) {
+		GameWrapper.characterAnimation = success ? 2 : 3;
 		if (this.game_complete_callback) this.game_complete_callback(success);
 	}
 
@@ -3410,7 +3625,7 @@ class PWLevel {
 
 		// preload and remember all the images we need for the skin stuff
 		this.imgs.logo = new Image();
-		this.imgs.logo.src = typeof (this.manifest.logo) !== 'undefined' ? this.manifest.logo : "FIXME!!!";
+		this.imgs.logo.src = "teams/" + this.manifest.logo.team + "/logos/" + this.manifest.logo.image;
 		this.imgs.logo.onload = checkPromises;
 
 		this.imgs.charsheet = new Image();
@@ -3461,11 +3676,16 @@ class PWLevel {
 	}
 }
 
-/** Default Manifest, used when testing */
+/** Default Level Manifest (used when testing) */
 PWLevel.default_manifest = {
+	logo: {
+		team: "psychogoldfish",
+		image: "sir_reginald_emojiman.png"
+	},
 	character: {
 		team: "psychogoldfish",
-		sheet: "angry_face.webp"
+		sheet: "sir_reginald_emojiman_sheet.webp",
+		icon: "sir_reginald_emojiman_icon.png"
 	},
 	transition: {
 		team: "psychogoldfish",

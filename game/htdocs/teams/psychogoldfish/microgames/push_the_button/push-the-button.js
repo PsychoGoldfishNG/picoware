@@ -1,19 +1,28 @@
 /** Make sure the namespace object exists */
-if (typeof (microgames.psychogoldfish_tests) === 'undefined') microgames.psychogoldfish_tests = {};
+if (typeof (microgames.psychogoldfish) === 'undefined') microgames.psychogoldfish = {};
+
+/** @var PWFramework PWGame */
 
 /** 
  * A 'push the button' microgame, by PsychoGoldfish 
  * 
+ * Difficulty: EASY
+ * 
+ * A finger will move from side to side, and a player must push down or the action button
+ * when the finger is over the on-screen button. 
+ * 
+ * If the player misses, the finger will move back up so they can try again
+ * 
  * @extends Phaser.Scene
  */
-microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
+microgames.psychogoldfish.push_the_button = class extends Phaser.Scene {
 
 	/**
 	 * register this class key with Phaser using microgames.{team_or_author_name}.{game_name} format.
 	 */
 	constructor() {
-		// note: this key needs to match the file path to this game's manifest.json file.
-		super({ key: 'microgames.psychogoldfish_tests.push_the_button' });
+		// note: this key needs to be in microgames.{team}.{microgame} format.
+		super({ key: 'microgames.psychogoldfish.push_the_button' });
 	}
 
 	/**
@@ -22,7 +31,7 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 	create() {
 		/**
 		 * alias of this instance that can be used in nested functions
-		 * @type {microgames.psychogoldfish_tests.push_the_button}
+		 * @type {microgames.psychogoldfish.push_the_button}
 		 */
 		let _this = this;
 
@@ -32,9 +41,9 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 		 * 
 		 *   {"key": "button_up",		"image": "button_up.png"}
 		 * 
-		 * Will be imported as "microgames.psychogoldfish_tests.push_the_button.button_up"
+		 * Will be imported as "microgames.psychogoldfish.push_the_button.button_up"
 		 */
-		this.prefix = 'microgames.psychogoldfish_tests.push_the_button.';
+		this.prefix = 'microgames.psychogoldfish.push_the_button.';
 
 		// set the background to super dark red
 		this.cameras.main.setBackgroundColor(0x220000);
@@ -204,7 +213,8 @@ microgames.psychogoldfish_tests.push_the_button = class extends Phaser.Scene {
 				this.mode = "endgame"
 
 				// tell the framework that the player will win the game when the timer runs out
-				PWGame.wonGame();
+				// (the true tells the game to play the win animation early)
+				PWGame.wonGame(true);
 		}
 	}
 }
