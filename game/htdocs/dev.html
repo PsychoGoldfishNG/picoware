@@ -9,6 +9,25 @@
 	<title>Picoware</title>
 	<script src="./phaser/phaser.min.js"></script>
 	<link rel="stylesheet" href="./css/framework.css" />
+
+	<style>
+		label {
+			display: inline-block;
+			min-width: 128px;
+		}
+
+		button {
+			cursor: pointer;
+		}
+
+		form {
+			display: block;
+		}
+
+		form>div {
+			margin: 8px 0px;
+		}
+	</style>
 </head>
 
 <body>
@@ -17,24 +36,25 @@
 
 	<!-- Start HTML for Developer Mode -->
 
-	<div id="dev-interface" class="gamefont"
+	<div id="dev-interface"
 		style="display:none; position: absolute; top: 0px; left: 0px; padding: 18px; width: calc(100% - 36px)">
-		<p>
-		<h3>Load Level</h3>
-		<div style="display:flex">
-			<input type="text" placeholder="user_or_team/name_of_level" id="level-path"
-				style="flex:1; margin-right: 8px;">
-			<button id="load-level-path">GO!</button>
-		</div>
-		</p>
-		<p>
-		<h3>Load Microgame</h3>
-		<div style="display:flex">
-			<input type="text" placeholder="user_or_team/name_of_game" id="game-path"
-				value="psychogoldfish_tests/push_the_button" style="flex:1; margin-right: 8px;">
-			<button id="load-game-path">GO!</button>
-		</div>
-		</p>
+
+
+		<!-- for for testing a microgame -->
+		<form>
+			<h3 class="gamefont">Test Your Microgame</h3>
+			<div>
+				<label for="microgame-team">Team:</label>
+				<input type="text" placeholder="team" id="microgame-team" value="psychogoldfish">
+			</div>
+			<div>
+				<label for="microgame-dir">Microgame:</label>
+				<input type="text" placeholder="microgame" id="microgame-dir" value="push_the_button">
+			</div>
+			<div>
+				<button id="microgame-btn">Start Test</button>
+			</div>
+		</form>
 	</div>
 
 	<!-- End HTML for Developer Mode -->

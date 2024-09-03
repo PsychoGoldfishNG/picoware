@@ -1,36 +1,6 @@
 var _Manifests = {
      "microgames": {
-          "psychogoldfish_tests": {
-               "push_the_button": {
-                    "name": "Push the Button",
-                    "sceneClass": "microgames.psychogoldfish_tests.push_the_button",
-                    "input": "gamepad",
-                    "hint": "Push Da Button!",
-                    "jsFiles": [
-                         "push-the-button.js"
-                    ],
-                    "images": [
-                         {
-                              "key": "button_up",
-                              "image": "button_up.png"
-                         },
-                         {
-                              "key": "button_down",
-                              "image": "button_down.png"
-                         },
-                         {
-                              "key": "finger",
-                              "image": "finger.png"
-                         }
-                    ],
-                    "credits": [
-                         {
-                              "credit": "designer",
-                              "name": "PsychoGoldfish"
-                         }
-                    ]
-               }
-          }
+          "psychogoldfish_tests": {}
      }
 };
 
@@ -2369,27 +2339,21 @@ class PWFramework {
 
 		/**
 		 * @type HTMLElement
-		 * The input for level path to load
+		 * The input for team dir to use when loading a microgame
 		 */
-		let levelInput = document.getElementById("level-path");
+		let microgameTeam = document.getElementById("microgame-team");
 
 		/**
 		 * @type HTMLElement
-		 * The button to load a level
+		 * The input for microgame dir to use
 		 */
-		let levelButton = document.getElementById("load-level-path");
-
-		/**
-		 * @type HTMLElement
-		 * The input for microgame path to load
-		 */
-		let gameInput = document.getElementById("game-path");
+		let microgameDir = document.getElementById("microgame-dir");
 
 		/**
 		 * @type HTMLElement
 		 * The button to load a microgame
 		 */
-		let gameButton = document.getElementById("load-game-path");
+		let microgameBtn = document.getElementById("microgame-btn");
 
 		// show the developer options
 		devFrame.style.display = "";
@@ -2409,12 +2373,11 @@ class PWFramework {
 		 */
 		function validatePath(path) {
 			path = path.split("/");
-			if (path.length !== 2) {
+			if (path.length !== 4) {
 				console.error("Invalid path!", path);
-				alert("Invalid path!");
 				return false;
 			}
-			return path;
+			return [path[1], path[3]];
 		}
 
 		/**
@@ -2423,7 +2386,7 @@ class PWFramework {
 		 * @callback
 		 * @returns {void}
 		 */
-		gameButton.onclick = function (click_event) {
+		microgameBtn.onclick = function (click_event) {
 			if (loading) return; // ignore clicks if we're already loading the game
 
 			// cancel out the click event so nothing else can get triggered
@@ -2431,9 +2394,9 @@ class PWFramework {
 			click_event.stopPropagation();
 
 			// check if user inputed a valid path. Return if it's invalid
-			let path = validatePath(gameInput.value);
+			let path = "teams/" + microgameTeam.value + "/microgames/" + microgameDir.value;
+			path = validatePath(path);
 			if (!path) return;
-
 			// create a fake level manifest that only uses the level we want to test
 			let manifest = {
 				logo: "img/devmode_icon.webp",
@@ -2468,6 +2431,8 @@ class PWFramework {
 	 * @returns {void}
 	 */
 	startLevel(manifest) {
+
+		console.log("Starting level", manifest);
 
 		// Levels will always start with either a cutscene or a transition animation
 		this.in_transition = true;
@@ -2847,7 +2812,7 @@ class PWFramework {
 		error_callback = typeof (error_callback) !== 'undefined' ? error_callback : function (error) { alert(error); };
 
 		// this is the directory that the manifest file should be in
-		let dir = 'microgames/' + path[0] + '/' + path[1] + '/';
+		let dir = 'teams/' + path[0] + '/microgames/' + path[1] + '/';
 
 		// if the manifest hasn't been loaded yet, or we're forcing a fresh load....
 		if (force || !_Manifests.microgames[path[0]][path[1]]) {
@@ -2867,7 +2832,7 @@ class PWFramework {
 
 				// manifest failed to load or decode
 				console.error(e);
-				console.error("Couldn't find file: " + 'microgames/' + path[0] + '/' + path[1] + '/manifest.json');
+				console.error("Couldn't find file: " + dir + '/manifest.json');
 				error_callback("Could not load game at " + path[0] + '/' + path[1]);
 			});
 
@@ -2878,7 +2843,7 @@ class PWFramework {
 			_Manifests.microgames[path[0]][path[1]].path = dir;
 
 			// fire the callback
-			callback(_Manifests.microgames[path[0]][path[1]], 'microgames/' + path[0] + '/' + path[1] + '/');
+			callback(_Manifests.microgames[path[0]][path[1]], dir);
 		}
 	}
 

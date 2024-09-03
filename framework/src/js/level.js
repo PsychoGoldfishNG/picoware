@@ -246,11 +246,11 @@ class PWLevel {
 		this.imgs.logo.onload = checkPromises;
 
 		this.imgs.charsheet = new Image();
-		this.imgs.charsheet.src = "characters/" + this.manifest.character;
+		this.imgs.charsheet.src = this.manifest.character.team + "/characters/" + this.manifest.character.sheet;
 		this.imgs.charsheet.onload = checkPromises;
 
 		this.imgs.transsheet = new Image();
-		this.imgs.transsheet.src = "transitions/" + this.manifest.transition;
+		this.imgs.transsheet.src = this.manifest.transition.team + "/transitions/" + this.manifest.transition.sheet;
 		this.imgs.transsheet.onload = checkPromises;
 	}
 
@@ -295,8 +295,14 @@ class PWLevel {
 
 /** Default Manifest, used when testing */
 PWLevel.default_manifest = {
-	character: "angry_face/psychogoldfish_stickman.webp",
-	transition: "angry_face/psychogoldfish_bricks.webp",
+	character: {
+		team: "psychogoldfish",
+		sheet: "angry_face.webp"
+	},
+	transition: {
+		team: "psychogoldfish",
+		sheet: "yellow_bricks.webp"
+	},
 	gamesPerRound: 1,
 	microgames: null,
 	bossgame: null
