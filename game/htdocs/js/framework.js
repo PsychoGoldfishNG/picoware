@@ -1,26 +1,139 @@
 var _Manifests = {
+     "levels": {
+          "dingus": {},
+          "psychogoldfish": {}
+     },
      "microgames": {
+          "dingus": {},
           "psychogoldfish": {
                "push_the_button": {
                     "name": "Push the Button",
                     "sceneClass": "microgames.psychogoldfish.push_the_button",
-                    "input": "gamepad",
-                    "hint": "Push Da Button!",
                     "jsFiles": [
                          "push-the-button.js"
                     ],
+                    "atlases": [
+                         {
+                              "key": "gameSprites",
+                              "texture": "gameSprites.png",
+                              "atlas": "gameSprites.json"
+                         }
+                    ],
+                    "credits": [
+                         {
+                              "credit": "designer",
+                              "name": "PsychoGoldfish"
+                         }
+                    ]
+               },
+               "thwomp-stomp": {
+                    "name": "Thwomp Stomp",
+                    "sceneClass": "microgames.psychogoldfish.thwomp_stomp",
+                    "parent": {
+                         "team": "psychogoldfish",
+                         "name": "push_the_button"
+                    },
+                    "jsFiles": [
+                         "thwomp-stomp.js"
+                    ],
+                    "atlases": [
+                         {
+                              "key": "gameSprites",
+                              "texture": "gameSprites.png",
+                              "atlas": "gameSprites.json"
+                         }
+                    ],
+                    "credits": [
+                         {
+                              "credit": "designer",
+                              "name": "PsychoGoldfish"
+                         }
+                    ]
+               }
+          }
+     },
+     "bossgames": {
+          "dingus": {},
+          "psychogoldfish": {
+               "space_face": {
+                    "name": "Space Face",
+                    "sceneClass": "bossgames.psychogoldfish.space_face",
+                    "jsFiles": [
+                         "space-face.js"
+                    ],
+                    "atlases": [
+                         {
+                              "key": "gameSprites",
+                              "texture": "gameSprites.png",
+                              "atlas": "gameSprites.json"
+                         }
+                    ],
+                    "credits": [
+                         {
+                              "credit": "designer",
+                              "name": "PsychoGoldfish"
+                         }
+                    ]
+               }
+          }
+     },
+     "transitions": {
+          "dingus": {},
+          "psychogoldfish": {
+               "emojis": {
+                    "name": "Emojis",
+                    "sceneClass": "transitions.psychogoldfish.emojis",
+                    "jsFiles": [
+                         "emojis.js"
+                    ],
+                    "spritesheets": [
+                         {
+                              "key": "numberStrip",
+                              "image": "numberStrip.png",
+                              "frameWidth": 90,
+                              "frameHeight": 140
+                         },
+                         {
+                              "key": "hearts",
+                              "image": "hearts.png",
+                              "frameWidth": 120,
+                              "frameHeight": 120
+                         },
+                         {
+                              "key": "levelPhrases",
+                              "image": "levelPhrases.png",
+                              "frameWidth": 500,
+                              "frameHeight": 80
+                         }
+                    ],
                     "images": [
                          {
-                              "key": "button_up",
-                              "image": "button_up.png"
+                              "key": "happyface",
+                              "image": "happyface.png"
                          },
                          {
-                              "key": "button_down",
-                              "image": "button_down.png"
+                              "key": "catface",
+                              "image": "catface.png"
                          },
                          {
-                              "key": "finger",
-                              "image": "finger.png"
+                              "key": "angryface",
+                              "image": "angryface.png"
+                         },
+                         {
+                              "key": "sadface",
+                              "image": "sadface.png"
+                         },
+                         {
+                              "key": "evilface",
+                              "image": "evilface.png"
+                         },
+                         {
+                              "key": "brickhole",
+                              "image": "brickhole.png"
+                         },
+                         {
+                              "key": "gameOver",
+                              "image": "gameOver.png"
                          }
                     ],
                     "credits": [
@@ -149,6 +262,12 @@ const GameWrapper = {
 	view: 'game',
 
 	/** 
+	 * size of the gameplay screen when scales to 100% 
+	 * @type {number}
+	 */
+	screenSize: 524,
+
+	/** 
 	 * Config for desktop view 
 	 * @type {object}
 	 */
@@ -165,12 +284,6 @@ const GameWrapper = {
 		 * @type {number}
 		 */
 		baseHeight: 540,
-
-		/** 
-		 * size of inner game screen (it's a square) at 100% 
-		 * @type {number}
-		 */
-		screenSize: 524,
 
 		/** 
 		 * distance of screen from top of page 100% 
@@ -232,12 +345,6 @@ const GameWrapper = {
 		 * @type {number}
 		 */
 		baseHeight: 1280,
-
-		/** 
-		 * size of the game screen (it's a square) at 100% 
-		 * @type {number}
-		 */
-		screenSize: 524,
 
 		/** 
 		 * distance of screen from top of the GBC at 100% 
@@ -372,12 +479,6 @@ const GameWrapper = {
 		 * @type {number}
 		 */
 		baseHeight: 720,
-
-		/** 
-		 * size of the game screen (it's a square) at 100% 
-		 * @type {number}
-		 */
-		screenSize: 524,
 
 		/** 
 		 * distance of screen from top of the GBA at 100% 
@@ -773,6 +874,18 @@ const GameWrapper = {
 		this.hintShadow = document.getElementById('hintShadow');
 
 		/**
+		 * The control hint container
+		 * @type {HTMLElement}
+		 */
+		this.hintControls = document.getElementById('hintControls');
+
+		/**
+		 * The control hint graphic
+		 * @type {HTMLElement}
+		 */
+		this.hintControlsInner = document.getElementById('hintControlsInner');
+
+		/**
 		 * The bomb/fuse animation container
 		 * @type {HTMLElement}
 		 */
@@ -819,6 +932,8 @@ const GameWrapper = {
 		 * @property {boolean} B - true if the B button is pressed
 		 * @property {boolean} select - true if the select button is pressed
 		 * @property {boolean} start - true if the start button is pressed
+		 * @property {boolean} action - true if A or B is pressed
+		 * @property {boolean} pause - true if the start button is pressed
 		 */
 		this.ui = {
 			up: false,
@@ -828,7 +943,10 @@ const GameWrapper = {
 			A: false,
 			B: false,
 			select: false,
-			start: false
+			start: false,
+
+			action: false,
+			pause: false
 		};
 
 		/**
@@ -846,7 +964,9 @@ const GameWrapper = {
 			A: { x: 0, y: 0, size: 0, touch: false },
 			B: { x: 0, y: 0, size: 0, touch: false },
 			select: { x: 0, y: 0, size: 0, touch: false },
-			start: { x: 0, y: 0, size: 0, touch: false }
+			start: { x: 0, y: 0, size: 0, touch: false },
+			action: { x: 0, y: 0, size: 0, touch: false },
+			pause: { x: 0, y: 0, size: 0, touch: false }
 		};
 
 		// handle screen size changes and orientation updates
@@ -920,6 +1040,9 @@ const GameWrapper = {
 				let elem = key.toLowerCase() + "Button";
 				_this[elem].style.display = "block";
 				_this.ui[key] = true;
+
+				if (['A', 'B'].includes(key)) _this.ui.action = true;
+				if (key === 'start') _this.ui.pause = true;
 			}
 
 			// fire any callback functions with the current UI states and return true.
@@ -953,6 +1076,9 @@ const GameWrapper = {
 				let elem = key.toLowerCase() + "Button";
 				_this[elem].style.display = "none";
 				_this.ui[key] = false;
+
+				if (['A', 'B'].includes(key)) _this.ui.action = false;
+				if (key === 'start') _this.ui.pause = false;
 			}
 
 			// fire any callback functions with the current UI states and return true.
@@ -1113,7 +1239,7 @@ const GameWrapper = {
 		// record the game screen size and position
 		let screen = {
 			// make sure the size is a factor of 2 to avoid blurring the canvas when centering
-			size: Math.round((lo.screenSize * scale) / 2) * 2
+			size: Math.round((this.screenSize * scale) / 2) * 2
 		};
 		screen.top = skinMarginY + Math.round(lo.screenTop * scale);
 		screen.left = Math.round(((size.ew - screen.size) / 2));
@@ -1264,7 +1390,7 @@ const GameWrapper = {
 		// update the game screen 
 		let screen = {
 			// make sure the size is a factor of 2 to avoid blurring the canvas when centering
-			size: Math.round((lo.screenSize * scale) / 2) * 2
+			size: Math.round((this.screenSize * scale) / 2) * 2
 		};
 		screen.top = skinMarginY + Math.round(lo.screenTop * scale);
 		screen.left = Math.round(((size.ew - screen.size) / 2));
@@ -1386,7 +1512,7 @@ const GameWrapper = {
 		// update the game screen 
 		let screen = {
 			// make sure the size is a factor of 2 to avoid blurring the canvas when centering
-			size: Math.round((lo.screenSize * scale) / 2) * 2
+			size: Math.round((this.screenSize * scale) / 2) * 2
 		};
 		screen.top = skinMarginY + Math.round(lo.screenTop * scale);
 		screen.left = Math.round(((size.ew - screen.size) / 2));
@@ -1588,317 +1714,104 @@ const GameWrapper = {
 	/**
 	 * Sets the text of the hint element and animates it
 	 * @param {string} hintText - The text to display
+	 * @param {string} controls - The control type to display
+	 * @param {function} hintDisplayedCallback - A function to call when the hint is in the middle of the screen
+	 * @param {function} hintCompleteCallback - A function to call when the animation is complete
 	 * @returns {void}
 	 */
-	setHintText: function (hintText) {
+	setHintText: function (hintText, controls, hintDisplayedCallback, hintCompleteCallback) {
+
+		controls = PWGame.input.getControlHint(controls);
+
+		let controlHints = [
+			'wasd',
+			'arrows',
+			'gamepad',
+			'mouse',
+			'touch'
+		];
+
+		let controlIndex = controlHints.indexOf(controls);
+
+		let _this = this;
+
+		// get the screen scale
+		let scale = parseInt(this.screen.style.width.replace("px", "")) / this.screenSize;
+
+		// update hint control graphic size
+		let hintControlSize = { width: Math.round(210 * scale), height: Math.round(100 * scale) };
+
+		this.hintControlsInner.style.width = hintControlSize.width + "px";
+		this.hintControlsInner.style.height = hintControlSize.height + "px";
+		this.hintControlsInner.style.backgroundSize = hintControlSize.width + "px " + (hintControlSize.height * 5) + "px";
+		this.hintControlsInner.style.backgroundPosition = "0px -" + (hintControlSize.height * controlIndex) + "px";
+
+		// space between hint elements
+		let margin = Math.round(30 * scale);
+
+		// approximate text height
+		let size = Math.floor(36 * scale);
+
+		// set the hint text
+		this.screenHint.style.fontSize = size + "px";
 		this.hintText.innerHTML = this.hintShadow.innerHTML = "";
-		this.screenHint.style.fontSize = "";
+		this.hintText.textContent = this.hintShadow.textContent = hintText;
+
+		// get the starting position of the hint elements
+		let hintControlsTop = -(hintControlSize.height + margin);
+		let hintTextTop = hintControlsTop - margin - hintControlSize.height;
+
+		// reset the element positions and transitions
 		this.screenHint.style.display = "";
 		this.screenHint.style.transition = "";
 		this.screenHint.style.transitionTimingFunction = "";
+		this.screenHint.style.top = hintTextTop + "px";
 
-		let size = Math.floor(this.screenHint.offsetHeight);
-		this.screenHint.style.fontSize = size + "px";
-		this.hintText.textContent = this.hintShadow.textContent = hintText;
+		this.hintControls.style.display = "";
+		this.hintControls.style.transition = "";
+		this.hintControls.style.transitionTimingFunction = "";
+		this.hintControls.style.top = hintControlsTop + "px";
 
-		this.screenHint.style.top = "-" + (size * 2) + "px";
-		let _this = this;
+		// ms of ease animation
+		let ease_time = 260;
+		let display_time = 1000;
+		let ease_css = (ease_time / 1000) + "s";
 
+		// TODO - apply the gamespeed to these animations
+
+		// start reasing in the hint elements right away
 		setTimeout(() => {
-			_this.screenHint.style.transition = "0.2s";
+			_this.screenHint.style.transition = ease_css;
 			_this.screenHint.style.transitionTimingFunction = "ease-out";
-			_this.screenHint.style.top = "";
+			_this.screenHint.style.top = "calc(46% - " + size + "px)";
+
+			_this.hintControls.style.transition = ease_css;
+			_this.hintControls.style.transitionTimingFunction = "ease-out";
+			_this.hintControls.style.top = "calc(46% + " + margin + "px)";
 		}, 1);
 
+		// after we've eased in and passed our display time, ease out
 		setTimeout(() => {
-			_this.screenHint.style.transition = "0.2s";
+			_this.screenHint.style.transition = ease_css;
 			_this.screenHint.style.transitionTimingFunction = "ease-in";
-			_this.screenHint.style.top = "-" + (size * 2) + "px";
+			_this.screenHint.style.top = hintTextTop + "px";
+
+			_this.hintControls.style.transition = ease_css;
+			_this.hintControls.style.transitionTimingFunction = "ease-in";
+			_this.hintControls.style.top = hintControlsTop + "px";
 
 			// reset the character animation
 			GameWrapper.characterAnimation = 1;
-		}, 800);
-	},
 
-	/** 
-	 * The current transition image 
-	 * @type {Image}
-	 */
-	transitionImage: new Image(),
+			// we can call the displayed callback
+			if (typeof (hintDisplayedCallback) === 'function') hintDisplayedCallback();
 
-	/** 
-	 * The base width/height of each transition frame 
-	 * @type {number}
-	 */
-	transitionSize: 524,
+		}, ease_time + display_time);
 
-	/** 
-	 * The zoom level of the transition
-	 * @type {number}
-	 */
-	transitionZoom: 1,
-
-	/** 
-	 * The current animation frame of the transition
-	 * @type {number}
-	 */
-	transitionFrame: 1,
-
-	/** 
-	 * Used to manage the framerate of the 2 transition animations
-	 * @type {object}
-	 * @property {number} a - The framerate of the first animation
-	 * @property {number} b - The framerate of the second animation
-	 */
-	transitionFramerates: { a: 8, b: 8 },
-
-	/**
-	 * Exits a transition by setting it to frame 5, then zooming in
-	 * @param {function} callback - A function to call when zooming in is complete
-	 * @param {zoom} number - The zoom level to end at (default = 2)
-	 * @param {time} number - The duration of the zoom animation in milliseconds
-	 * @returns {void}
-	 */
-	exitTransition: function (callback, zoom, time) {
-		if (!callback) throw ("Missing required callback");
-
-		this.screenTransition.style.display = "";
-
-		if (!zoom) zoom = 2;
-		if (!time) time = 250;
-
-		let fps = 1000 / 60;
-		let range = zoom - 1;
-		let frames = time / fps;
-		let step = range / frames;
-
-		let _this = this;
-
-		_this.setTransitionZoom(1, 5);
-
-		let zoomInterval = setInterval(
-
-			function () {
-				if (_this.transitionZoom >= zoom) {
-					clearInterval(zoomInterval);
-					callback();
-				} else {
-					_this.setTransitionZoom(_this.transitionZoom + step, 5);
-				}
-			},
-
-			fps
-		)
-	},
-
-	/**
-	 * Enters a transition by setting it to frame 5 zoomed in, then zooming out to 100%
-	 * @param {function} callback - A function to call when zooming out is complete
-	 * @param {zoom} number - The zoom level to start at (default = 2)
-	 * @param {time} number - The duration of the zoom animation in milliseconds
-	 * @returns {void}
-	 */
-	enterTransition: function (callback, zoom, time) {
-		if (!callback) throw ("Missing required callback");
-
-		this.screenTransition.style.display = "";
-
-		if (!zoom) zoom = 2;
-		if (!time) time = 250;
-
-		let fps = 1000 / 60;
-		let range = zoom - 1;
-		let frames = time / fps;
-		let step = range / frames;
-
-		let _this = this;
-
-		_this.setTransitionZoom(zoom, 5);
-
-		let zoomInterval = setInterval(
-
-			function () {
-				if (zoom === 1) {
-					clearInterval(zoomInterval);
-					callback();
-				} else {
-					zoom -= step;
-					if (zoom < 1) zoom = 1;
-					_this.setTransitionZoom(zoom, 5);
-				}
-			},
-
-			fps
-		)
-	},
-
-	/**
-	 * Plays the idle animation for the transition 
-	 * (frames 1 and 2 on a loop)
-	 * @param {function} callback - A function to execute when the animation time expires
-	 * @param {number} framerate - The framerate to animate at normal speed (default=8)
-	 * @param {number} time - The number of milliseconds to play this animation for at normal speed (default=1500)
-	 * @returns {void}
-	 */
-	playTransitionIdle: function (callback, framerate, time) {
-		if (!callback) throw ("Missing required callback");
-
-		this.screenTransition.style.display = "";
-
-		if (!time) time = 1500;
-		if (!framerate) framerate = 8;
-		let _this = this;
-
-		let animationInterval = setInterval(
-
-			function () {
-				_this.setTransitionFrame(_this.transitionFrame === 1 ? 2 : 1);
-			},
-
-			1000 / framerate
-		);
-
-		let animationTimer = setTimeout(
-			function () {
-				clearInterval(animationInterval);
-				callback();
-			},
-
-			time
-		)
-	},
-
-	/**
-	 * Plays the 'open' animation that exposes the next game
-	 * (frames 2, 3 and 4)
-	 * @param {function} callback - A function to execute when the animation time expires
-	 * @param {number} framerate - The framerate to animate at normal speed (default=15)
-	 * @param {number} time - The number of milliseconds to wait before running the callback (default = 500)
-	 * @returns {void}
-	 */
-	playTransitionOpen: function (callback, framerate, time) {
-		if (!callback) throw ("Missing required callback");
-
-		this.screenTransition.style.display = "";
-
-		if (!time) time = 500;
-		if (!framerate) framerate = 15;
-		let _this = this;
-
-		this.setTransitionFrame(3);
-
-		let animationInterval = setInterval(
-
-			function () {
-				_this.setTransitionFrame(_this.transitionFrame + 1);
-				if (_this.transitionFrame > 4) clearInterval(animationInterval);
-			},
-
-			1000 / framerate
-		);
-
-		let animationTimer = setTimeout(
-			function () {
-				clearInterval(animationInterval);
-				callback();
-			},
-
-			time
-		)
-	},
-
-	/**
-	 * Plays the 'close' animation that exposes the next game
-	 * (frames 4, 3 and 2)
-	 * @param {function} callback - A function to execute when the animation ends
-	 * @param {number} framerate - The framerate to animate at normal speed (default=15)
-	 * @returns {void}
-	 */
-	playTransitionClose: function (callback, framerate, time) {
-		if (!callback) throw ("Missing required callback");
-
-		this.screenTransition.style.display = "";
-
-		if (!time) time = 500;
-		if (!framerate) framerate = 15;
-		let _this = this;
-
-		this.setTransitionFrame(5);
-
-		let animationInterval = setInterval(
-
-			function () {
-				_this.setTransitionFrame(_this.transitionFrame - 1);
-				if (_this.transitionFrame < 3) {
-					clearInterval(animationInterval);
-					callback();
-				}
-			},
-
-			1000 / framerate
-		);
-	},
-
-	/** 
-	 * Set the Image file that will be used for transition animations
-	 * @param {HTMLImageElement} image - A preloaded Image element
-	 * @returns {void}
-	 */
-	setTransitionImage: function (image) {
-		if (!image.src || !image.naturalHeight) throw ("Image not loaded!");
-		this.transitionImage = image;
-		this.screenTransition.style.background = 'url("' + this.transitionImage.src + '")';
-		this.screenTransition.style.backgroundColor = 'rgba(0,0,0,0.01)';
-		this.setTransitionZoom(1);
-	},
-
-	/**
-	 * Set the zoom level of the transition
-	 * @param {number} zoom - The zoom level (1 = 100%)
-	 * @param {number} frame - A number between 1 and 5 (optional)
-	 * @returns {void}
-	 */
-	setTransitionZoom(zoom, frame) {
-		if (!this.transitionImage.src || !this.transitionImage.naturalHeight) throw ("Image not loaded!");
-
-		this.transitionZoom = zoom;
-
-		this.transitionSize = Math.ceil(this.screenTransition.offsetHeight * zoom);
-
-		let width = this.transitionSize * 5;
-		let height = this.transitionSize;
-
-		this.screenTransition.style.backgroundSize = width + "px " + height + "px";
-
-		this.setTransitionFrame(typeof (frame) !== 'undefined' ? frame : null);
-	},
-
-	/**
-	 * Set the current animation frame of the transition Element
-	 * @param {number} frame - A number between 1 and 5
-	 * @returns {void}
-	 */
-	setTransitionFrame: function (frame) {
-		if (!this.transitionImage.src || !this.transitionImage.naturalHeight) throw ("Image not loaded!");
-
-		if (frame === null) frame = 1;
-		if (frame < 1 || frame > 5) throw ("Frame must be a number between 1 and 5");
-		this.transitionFrame = frame;
-
-		let margin = (this.screenTransition.offsetHeight - this.transitionSize) / 2;
-
-		let x = -(((this.transitionFrame - 1) * this.transitionSize) - margin);
-		let y = margin;
-
-		this.screenTransition.style.backgroundPosition = "top " + y + "px left " + x + "px";
-	},
-
-	/**
-	 * Hides the transition element
-	 * @returns {void}
-	 */
-	endTransition: function () {
-		this.screenTransition.style.display = "none";
+		// whan all of this is done, we can call the complete callback
+		setTimeout(() => {
+			if (typeof (hintCompleteCallback) === 'function') hintCompleteCallback();
+		}, (ease_time * 2) + display_time);
 	},
 
 	/**
@@ -2098,6 +2011,24 @@ const GameWrapper = {
  */
 class PWInput {
 
+	static UP = 'up';
+	static DOWN = 'down';
+	static LEFT = 'left';
+	static RIGHT = 'right';
+	static ACTION = 'action';
+	static PAUSE = 'pause';
+
+	static inputImages = {
+		'wasd': 0,
+		'arrows': 1,
+		'gamepad': 2,
+		'mouse': 3,
+		'touch': 4
+	};
+
+	static #touchType = 'touch';
+	static #gamepadType = 'gamepad';
+
 	constructor() {
 		// reference for functions/closures
 		let _this = this;
@@ -2110,36 +2041,37 @@ class PWInput {
 		// keymap for people using arrows, A, S, Z & X
 		this.keyMap_arrows = {
 			up: 'ArrowUp',
-			right: 'ArrowRight',
-			down: 'ArrowDown',
 			left: 'ArrowLeft',
-			B: 'KeyS',
-			A: 'KeyA',
-			select: "KeyZ",
-			start: "KeyX"
+			down: 'ArrowDown',
+			right: 'ArrowRight',
+			action: 'Space',
+			pause: "Escape"
 		};
 
 		// keymap for people using WASD, O, P, K & L
 		this.keyMap_wasd = {
 			up: 'KeyW',
-			right: 'KeyD',
-			down: 'KeyS',
 			left: 'KeyA',
-			B: 'KeyO',
-			A: 'KeyP',
-			select: "KeyK",
-			start: "KeyL"
+			down: 'KeyS',
+			right: 'KeyD',
+			action: 'Space',
+			pause: "Escape"
 		};
 
 		// map keyboard input to arrows by default
-		this.setKeyMap('arrows');
+		this.setKeyMap('wasd');
 
 		// TODO - check for user-defined keymap
 
 		// handle key press
 		function onKeyDown(e) {
+
 			for (const [input, key] of Object.entries(_this.keyMap)) {
 				if (e.code == key) {
+
+					PWInput.#gamepadType = _this.keymapName === 'wasd' ? 'wasd' : 'arrows';
+					PWInput.#touchType = 'mouse';
+
 					_this.setInputState(input, true, e);
 					break;
 				}
@@ -2159,6 +2091,129 @@ class PWInput {
 		// event listeners
 		document.addEventListener('keydown', onKeyDown);
 		document.addEventListener('keyup', onKeyUp);
+
+		// trigger the action button on mouse clicks (desktop only)
+		if (!BrowserHelper.isMobile()) {
+			// add listeners for mouse buttons.  map left click to B and right click to A
+			document.addEventListener('mousedown', function (e) {
+
+				PWInput.#touchType = 'mouse';
+				PWInput.#gamepadType = _this.keymapName === 'wasd' ? 'wasd' : 'arrows';
+
+				if (e.button === 0) _this.setInputState('action', true, e);
+			});
+
+			document.addEventListener('mouseup', function (e) {
+				if (e.button === 0) _this.setInputState('action', false, e);
+			});
+		}
+
+		this.axisMap_standard = {
+			horiz: 0,
+			vert: 1
+		};
+
+		this.buttonMap_standard = {
+			up: 12,
+			right: 15,
+			down: 13,
+			left: 14,
+			action: 0,
+			pause: 9
+		};
+
+		var deadzone = 0.25;
+		var deadRange = 1 - deadzone;
+		var activeGamepad = {
+			buttons: [],
+			axes: []
+		}
+
+		function buttonChanged(i, value) {
+
+			PWInput.#gamepadType = 'gamepad';
+
+			for (const [input, key] of Object.entries(_this.buttonMap_standard)) {
+				if (i == key) {
+					_this.setInputState(input, value > 0);
+					break;
+				}
+			}
+		}
+
+		function axisChanged(i, value) {
+
+			PWInput.#gamepadType = 'gamepad';
+
+			if (i === _this.axisMap_standard.horiz) {
+				if (!value) {
+					_this.setInputState('left', false);
+					_this.setInputState('right', false);
+					return;
+				}
+				let input = value > 0 ? 'right' : 'left';
+				_this.setInputState(input, true);
+			} else if (i === _this.axisMap_standard.vert) {
+				if (!value) {
+					_this.setInputState('up', false);
+					_this.setInputState('down', false);
+					return;
+				}
+				let input = value > 0 ? 'down' : 'up';
+				_this.setInputState(input, true);
+			}
+		}
+
+		function checkGamepad() {
+
+			let gamepads = navigator.getGamepads();
+			if (gamepads && gamepads[0]) {
+				let gp = gamepads[0];
+				let i;
+				for (i = 0; i < gp.buttons.length; i++) {
+					if (typeof (activeGamepad.buttons[i]) == 'undefined') activeGamepad.buttons[i] = 0;
+
+					let value = Math.abs(gp.buttons[i].value) > deadzone ? gp.buttons[i].value : 0;
+					if (value) {
+						value = value > 0 ? value - deadzone : value + deadzone;
+						value = value / deadRange;
+					}
+
+					if (value !== activeGamepad.buttons[i]) {
+						buttonChanged(i, value);
+						activeGamepad.buttons[i] = value;
+					}
+
+				}
+
+				for (i = 0; i < gp.axes.length; i++) {
+					if (typeof (activeGamepad.axes[i]) == 'undefined') activeGamepad.axes[i] = 0;
+
+					let value = Math.abs(gp.axes[i]) > deadzone ? gp.axes[i] : 0;
+					if (value) {
+						value = value > 0 ? value - deadzone : value + deadzone;
+						value = value / deadRange;
+					}
+
+					if (value !== activeGamepad.axes[i]) {
+						axisChanged(i, value);
+						activeGamepad.axes[i] = value;
+					}
+				}
+			}
+			requestAnimationFrame(checkGamepad);
+		}
+		requestAnimationFrame(checkGamepad);
+	}
+
+	getControlHint(type) {
+		type = type === PWInput.TYPE_GAMEPAD ? PWInput.TYPE_GAMEPAD : PWInput.TYPE_TOUCH;
+
+		if (type === PWInput.TYPE_GAMEPAD) {
+			return PWInput.#gamepadType;
+		}
+
+		return PWInput.#touchType;
 	}
 
 	/**
@@ -2166,6 +2221,7 @@ class PWInput {
 	 * @param {string} map - The name of the map to use ('arrows', 'wasd')
 	 */
 	setKeyMap(map) {
+		this.keymapName = map;
 		this.keyMap = {};
 		for (const [input, key] of Object.entries(this['keyMap_' + map])) {
 			this.mapKey(key, input);
@@ -2190,10 +2246,17 @@ class PWInput {
 			right: false,
 			down: false,
 			left: false,
-			B: false,
-			A: false,
-			select: false,
-			start: false
+			action: false,
+			pause: false
+		};
+
+		this.justChanged = {
+			up: 0,
+			right: 0,
+			down: 0,
+			left: 0,
+			action: 0,
+			pause: 0
 		};
 
 		this._onPress = {};
@@ -2209,8 +2272,8 @@ class PWInput {
 	/**
 	 * set an alias for multiple inputs. For example: 
 	 * 
-	 * 		// make A and B buttons both work as an 'action' button
-	 * 		PWGame.input.setAlias('action', ['A','B']); 
+	 * 		// make up and and buttons both work as a 'jump' button
+	 * 		PWGame.input.setAlias('jump', ['up','action']); 
 	 * 
 	 * @param {string} alias - The alias name
 	 * @param {(Array.<string>|string)} inputs - The inputs you want to associate with the alias
@@ -2227,8 +2290,6 @@ class PWInput {
 		});
 
 		this._alias_map[alias] = inputs;
-
-		console.log(this._aliases);
 	}
 
 	/**
@@ -2244,6 +2305,40 @@ class PWInput {
 			return false;
 		}
 		return typeof (this.inputs[input]) !== 'undefined' ? this.inputs[input] : false;
+	}
+
+	/**
+	 * returns true if the provided input was just pressed
+	 * @param {string} input - The input to check
+	 * @returns {boolean}
+	 */
+	justPressed(input) {
+		if (this._alias_map[input]) {
+			for (var i in this._alias_map[input]) {
+				if (this.justPressed(this._alias_map[input][i])) return true;
+			}
+			return false;
+		}
+		let was = this.isDown(input) && this.justChanged[input];
+		if (this.justChanged[input]) clearTimeout(this.justChanged[input]);
+		return was;
+	}
+
+	/**
+	 * returns true if the provided input was just released
+	 * @param {string} input - The input to check
+	 * @returns {boolean}
+	 */
+	justReleased(input) {
+		if (this._alias_map[input]) {
+			for (var i in this._alias_map[input]) {
+				if (this.justReleased(this._alias_map[input][i])) return true;
+			}
+			return false;
+		}
+		let was = !this.isDown(input) && this.justChanged[input];
+		if (this.justChanged[input]) clearTimeout(this.justChanged[input]);
+		return was;
 	}
 
 	/**
@@ -2296,6 +2391,8 @@ class PWInput {
 		if (this.inputs[input] === state) return;
 
 		this.inputs[input] = state;
+		if (this.justChanged[input]) clearTimeout(this.justChanged[input]);
+		this.justChanged[input] = setTimeout(() => { }, 100);
 
 		if (state && this._onPress[input]) this._onPress[input].call(this._onPressThisArg[input], input, event);
 		else if (!state && this._onRelease[input]) this._onRelease[input].call(this._onReleaseThisArg[input], input, event);
@@ -2319,14 +2416,1049 @@ class PWInput {
 
 }
 
-PWInput.PLAYMODE_GAMEPAD = 'gamepad';
-PWInput.PLAYMODE_TOUCH = 'touch';
+PWInput.TYPE_GAMEPAD = 'gamepad';
+PWInput.TYPE_TOUCH = 'touch';
+/** 
+ * class for managing levels 
+ */
+class PWLevel {
+
+	// ============================== STATIC PROPERTIES ============================== \\
+
+	// the different game modes:
+
+	// game plays normally with rounds of microgames and a boss level
+	static MODE_NORMAL = 'normal';
+
+	// game plays with endless microgame cycle, incementing difficulty each playthrough, then incrementing speed and resetting difficulty
+	static MODE_ENDLESS = 'endless';
+
+	// same as endless, but uses bossgames in place of microgames
+	static MODE_BOSSRUSH = 'bossrush';
+
+	// ============================== INSTANCE PROPERTIES ============================== \\
+
+	/** 
+	 * @type {boolean} if true, level is running in developer mode
+	 * @default false
+	 */
+	#devMode = false;
+
+	/**
+	 * @type {string} the mode of the game (one of the following: 'normal', 'endless', 'bossrush')
+	 * @default 'normal'
+	 * @readonly
+	 * @private
+	 */
+	get devMode() { return this.#devMode; }
+
+	/**
+	 * @type {object} the level manifest
+	 * @private
+	 */
+	#manifest = {};
+
+	/**
+	 * @type {object} the level manifest
+	 * @readonly
+	 */
+	get manifest() { return this.#manifest; }
+
+	/**
+	 * @type {string} the mode of the game (one of the PWLevel.MODE_XXXXX values)
+	 * @private
+	 * @default PWLevel.MODE_NORMAL
+	 */
+	#mode = PWLevel.MODE_NORMAL;
+
+	/**
+	 * @type {string} the mode of the game (one of the PWLevel.MODE_XXXXX values)
+	 * @readonly
+	 * @default PWLevel.MODE_NORMAL
+	 */
+	get mode() { return this.#mode; }
+
+	/**
+	 * @type {number} The current round of the level (a round is a typically clump of microgames or a boss game that are played between 'faster' messages)
+	 * @private
+	 * @default 1
+	 */
+	#round = 1;
+
+	/**
+	 * @type {number} The current round of the level (a round is a typically clump of microgames or a boss game that are played between 'faster' messages)
+	 * @readonly
+	 * @default 1
+	 */
+	get round() { return this.#round; }
+
+	/**
+	 * @type {number} The round value at the start of the last game.  Useful to show round changes in transition scenes
+	 * @private
+	 * @default 1
+	 */
+	#lastRound = 1;
+
+	/**
+	 * @type {number} The round value at the start of the last game.  Useful to show round changes in transition scenes
+	 * @readonly
+	 * @default 1
+	 */
+	get lastRound() { return this.#lastRound; }
+
+	/**
+	 * @type {boolean} if true, the current round is a boss game
+	 * @private
+	 * @default 0
+	 */
+	#bossRound = false;
+
+	/**
+	 * @type {boolean} if true, the current round is a boss game
+	 * @readonly
+	 * @default 0
+	 */
+	get bossRound() { return this.#bossRound; }
+
+	/**
+	 * @type {boolean} if true, the current level has been completed
+	 * @private
+	 * @default false
+	 */
+	#complete = false;
+
+	/**
+	 * @type {boolean} if true, the current level has been completed
+	 * @readonly
+	 * @default false
+	 */
+	get complete() { return this.#complete; }
+
+	/**
+	 * @type {number} The difficulty level of the level (0 = easy, 1 = normal, 2 = hard)
+	 * @private
+	 * @default 0
+	 */
+	#difficulty = 0;
+
+	/**
+	 * @type {number} The difficulty level of the level (0 = easy, 1 = normal, 2 = hard)
+	 * @readonly
+	 * @default 0
+	 */
+	get difficulty() { return this.#difficulty; }
+
+	/**
+	 * @type {number} The difficulty level at the start of the last game.  Useful to show difficulty changes in transition scenes
+	 * @private
+	 * @default 0
+	 */
+	#lastDifficulty = 0;
+
+	/**
+	 * @type {number} The difficulty level at the start of the last game.  Useful to show difficulty changes in transition scenes
+	 * @readonly
+	 * @default 0
+	 */
+	get lastDifficulty() { return this.#lastDifficulty; }
+
+	/**
+	 * @param {number} difficulty - the difficulty level of the level (0 = easy, 1 = normal, 2 = hard)
+	 * @param {boolean} setLast - set to true to set the lastDifficulty value to the current difficulty
+	 * @private
+	 */
+	__setDifficulty(difficulty, setLast = false) {
+
+		// setLast is false, so we'll record the previous difficulty
+		if (!setLast) this.#lastDifficulty = this.#difficulty;
+
+		// make sure the difficulty is within bounds
+		if (difficulty < 0) difficulty = 0;
+		if (difficulty > 2) difficulty = 2;
+
+		this.#difficulty = difficulty;
+
+		// setLast is true so we'll set it the same as the current difficulty
+		if (setLast) this.#lastDifficulty = this.#difficulty;
+	}
+
+	/**
+	 * @type {number} The number of microgames to play in a non-endless level before moving on to the boss game
+	 * @private
+	 * @default 0
+	 */
+	#microgameRounds = 0;
+
+	/**
+	 * @type {number} The number of microgames to play in a non-endless level before moving on to the boss game
+	 * @readonly
+	 * @default 0
+	 */
+	get microgameRounds() { return this.#microgameRounds; }
+
+	/**
+	 * @type {number} The total number of microgames to play in the current round
+	 * @private
+	 * @default 0
+	 */
+	#gamesPerRound = 0;
+
+	/**
+	 * @type {number} The total number of microgames to play in the current round
+	 * @readonly
+	 * @default 0
+	 */
+	get gamesPerRound() { return this.#gamesPerRound; }
+
+	/**
+	 * @type {number} The total number of microgames left to play in the current round
+	 * @private
+	 * @default 0
+	 */
+	#gamesRemaining = 0;
+
+	/**
+	 * @type {number} The total number of microgames left to play in the current round
+	 * @readonly
+	 * @default 0
+	 */
+	get gamesRemaining() { return this.#gamesRemaining; }
+
+	/**
+	 * @type {array} A list of microgames that haven't been used yet (may be recycled when the list is empty)
+	 * @private
+	 * @default []
+	 */
+	#microgameManifests = [];
+
+	/**
+	 * @type {array} A list of microgames that haven't been used yet (may be recycled when the list is empty)
+	 * @readonly
+	 * @default []
+	 */
+	get microgameManifests() { return this.#microgameManifests; }
+
+	/**
+	 * @type {array} A list of microgames that have been used (gets copied to microgameManifests when it's empty)
+	 * @private
+	 * @default []
+	 */
+	#microgameManifestsUsed = [];
+
+	/**
+	 * @type {array} A list of microgames that have been used (gets copied to microgameManifests when it's empty)
+	 * @readonly
+	 * @default []
+	 */
+	get microgameManifestsUsed() { return this.#microgameManifestsUsed; }
+
+	/**
+	/**
+	 * @type {array} A list of bossgames that haven't been used yet (may be recycled when the list is empty)
+	 * @private
+	 * @default []
+	 */
+	#bossgameManifests = [];
+
+	/**
+	 * @type {array} A list of bossgames that haven't been used yet (may be recycled when the list is empty)
+	 * @readonly
+	 * @default []
+	 */
+	get bossgameManifests() { return this.#bossgameManifests; }
+
+	/**
+	 * @type {array} A list of bossgames that have been used (gets copied to bossgameManifests when it's empty)
+	 * @private
+	 * @default []
+	 */
+	#bossgameManifestsUsed = [];
+
+	/**
+	 * @type {array} A list of bossgames that have been used (gets copied to bossgameManifests when it's empty)
+	 * @readonly
+	 * @default []
+	 */
+	get bossgameManifestsUsed() { return this.#bossgameManifestsUsed; }
+
+	/**
+	 * @type {number} The number of games completed by the player
+	 * @private
+	 * @default 0
+	 */
+	#score = 0;
+
+	/**
+	 * @type {number} The number of games completed by the player
+	 * @readonly
+	 * @default 0
+	 */
+	get score() { return this.#score; }
+
+	/**
+	 * @type {number} The score value at the start of the last game.  Compare this to the current score to see if the player won a game
+	 * @readonly
+	 * @default 0
+	 */
+	#lastScore = 0;
+
+	/**
+	 * @type {number} The score value at the start of the last game.  Useful to show score changes in transition scenes
+	 * @readonly
+	 * @default 0
+	 */
+	get lastScore() { return this.#lastScore; }
+
+	/**
+	 * @type {number} The number of times the player can fail before losing the level
+	 * @private
+	 * @default 4
+	 */
+	#health = 4;
+
+	/**
+	 * @type {number} The number of times the player can fail before losing the level
+	 * @readonly
+	 * @default 4
+	 */
+	get health() { return this.#health; }
+
+	/**
+	 * @type {number} The health value at the start of the last game.  Compare this to the current health to see if the player lost a game
+	 * @private
+	 * @default 4
+	 */
+	#lastHealth = 4;
+
+	/**
+	 * @type {number} The health value at the start of the last game.  Compare this to the current health to see if the player lost a game
+	 * @readonly
+	 * @default 4
+	 */
+	get lastHealth() { return this.#lastHealth; }
+
+	/**
+	 * @type {object} A container for images used in the game wrapper, such as the logo and character sheet
+	 * @private
+	 * @property {Image} logo - level logo image
+	 * @property {Image} character - character animation sheet
+	 */
+	#imgs = { logo: null, character: null };
+
+	/**
+	 * @type {object} A container for images used in the game wrapper, such as the logo and character sheet
+	 * @readonly
+	 * @property {Image} logo - level logo image
+	 * @property {Image} character - character animation sheet
+	 */
+	get imgs() { return this.#imgs; }
+
+	/**
+	 * @param {object} manifest - the manifest object containing the level configuration
+	 * @param {number} manifest.difficulty - the difficulty level of the level
+	 * @param {string} manifest.character - the character animation sheet to use
+	 * @param {string} manifest.transition - the transition Scene to use
+	 * @param {string} manifest.logo - the logo image to use
+	 * @param {array} manifest.microgames - an array of microgame rules
+	 * @param {object} manifest.bossgame - the bossgame manifest
+	 * @param {boolean} manifest.mode - the mode of the game (one of the following: 'normal', 'endless', 'bossrush')
+	 * @param {boolean|string} manifest.devMode - can be false, 'game', 'bossgame' or 'level'. Either string will enable developer mode, but 'game' will allow testing a microgame with no boss level, and 'bossgame' will allow testing a boss level with no microgames.
+	 * 
+	 * @param {object} overrides - optional object to override any values in the manifest
+	 */
+	constructor(manifest, overrides) {
+
+		// By default, all levels will start at difficulty 1.
+		// This can be changed in the level manifest for games running in normal mode
+		this.__setDifficulty(0, true);
+
+		// make sure we have a proper manifest object
+		if (!manifest) throw ("Missing required manifest!");
+		if (typeof (manifest) !== 'object') throw ("Manifest must be an object!");
+
+		// if we have an overrides object, merge it with the manifest (without changing the original)
+		if (typeof (overrides) === 'object') {
+			let new_manifest = {};
+			Object.assign(new_manifest, manifest, overrides);
+			manifest = new_manifest;
+		}
+
+		// if we're in dev mode, this is probably a test level, so we'll need to fill in some defaults
+		if (manifest.devMode) {
+
+			// not what devmode we are in (game, bossgame, or level)
+			this.#devMode = manifest.devMode;
+
+			// while developing, the manifest can be incomplete. But we still need to pull all the defaults
+			for (const [key, val] of Object.entries(PWLevel.default_manifest)) {
+				if (typeof (manifest[key]) === 'undefined') manifest[key] = val;
+			}
+		}
+
+		// now we can make sure all the required properties are set
+		if (!manifest.character) throw ("Missing required character!");
+		if (!manifest.logo) throw ("Missing required logo!");
+		if (!manifest.transition) throw ("Missing required transition!");
+
+		// set the game mode
+		if (manifest.mode === PWLevel.MODE_ENDLESS || manifest.mode === PWLevel.MODE_BOSSRUSH) {
+			this.#mode = manifest.mode;
+		}
+		// always fall back to normal mode
+		else {
+			this.#mode = PWLevel.MODE_NORMAL;
+
+			// we might have a non-default difficulty set in the manifest, check for that
+			if (manifest.difficulty && manifest.difficulty > 0 && manifest.difficulty <= 3) this.__setDifficulty(manifest.difficulty, true);
+		}
+
+		// If we have a microgame config, validate it (these will never be used in a boss rush game)
+		if (this.mode !== PWLevel.MODE_BOSSRUSH) {
+
+			// make sure we have a microgame array
+			if (!manifest.microgames) throw ("Missing required microgame array!");
+
+			// if this is normal mode, we need to make sure we have a bossgame defined
+			if (!manifest.bossgame && manifest.mode === PWLevel.MODE_NORMAL) throw ("Missing required bossgame!");
+
+			if (manifest.microgames) {
+
+				if (!Array.isArray(manifest.microgames)) throw ("Microgames must be an array!");
+				if (manifest.microgames.length === 0) throw ("Microgames array must have at least one item!");
+
+				manifest.microgames.forEach(function (game, mi) {
+					if (!game.numGames) throw ("Microgame manifest[" + mi + "] missing numGames!");
+					if (!game.gameList) throw ("Microgame manifest[" + mi + "] missing gameList!");
+					if (!Array.isArray(game.gameList)) throw ("Microgame manifest[" + mi + "] gameList is not an array!");
+					if (game.gameList.length === 0) throw ("Microgame manifest[" + mi + "] gameList is empty!");
+
+					game.gameList.forEach(function (game, gi) {
+						if (!game.team) throw ("Microgame manifest[" + mi + "][" + gi + "] missing team property!");
+						if (!game.game) throw ("Microgame manifest[" + mi + "][" + gi + "] missing game property!");
+					});
+				});
+			}
+
+			// Get the number of microgame rounds in this level
+			this.#microgameRounds = manifest.microgames.length;
+			this.#gamesPerRound = manifest.microgames[0].numGames
+
+			// this is also the same number of games we have left to play in this round, imagine that!
+			this.#gamesRemaining = this.#gamesPerRound;
+
+		}
+
+		// set our initial game data arrays
+
+		// The available microgames for this round wil be added here
+		this.#microgameManifests = [];
+
+		// when a game is pulled from ther above list, it will be moved here to avoid too much repetition
+		this.#microgameManifestsUsed = [];
+
+
+		this.#bossgameManifests = [];
+		this.#bossgameManifestsUsed = [];
+
+		// set the score counterw to zero
+		this.#score = 0;
+		this.#lastScore = 0;
+
+		// assign full health
+		this.#health = 4;
+		this.#lastHealth = this.#health;
+
+		// add a reference to the manifest the rest of this class can use
+		this.#manifest = manifest;
+
+		// set up out skin images for desktop mode
+		this.#imgs = {
+			logo: new Image(),
+			character: new Image()
+		};
+	}
+
+	/**
+	 * Gets the next phase of the level
+	 * @param {function} callback - A handler function that will recieve 2 params: mode and data.
+	 * @returns {void}
+	 */
+	getNext(callback) {
+
+		// If we're at a stage where we're laying a boss game we'll update this
+		let bossgame = null;
+
+		// handle microgame rounds if we're not playing boss rush
+		if (this.#mode !== PWLevel.MODE_BOSSRUSH) {
+
+			// record what the last round was for comparisons in our scenes
+			this.#lastRound = this.#round;
+
+			let index = this.#round - 1;
+			let microgames = typeof (this.#manifest.microgames[index]) !== 'undefined' ? this.#manifest.microgames[index] : null;
+
+			// we're currently in the microgame phase...
+			if (index < this.#microgameRounds) {
+
+				// except, we have no microgames...
+				if (!microgames || microgames.length === 0) {
+					console.error("No microgames!");
+					callback('error', "No microgames!");
+					return;
+				}
+
+				// we haven't played the full number of games for this round yet
+				if (this.#gamesRemaining > 0) {
+
+					// count down the games remaining
+					this.#gamesRemaining--;
+				}
+
+				// we've played all the games for this round, start a new round
+				else {
+
+					this.#round++;
+
+					// if we played through all the defined rounds in endless mode, start it all over
+					if (this.#round >= this.#microgameRounds && this.#mode === PWLevel.MODE_ENDLESS) {
+
+						// reset the round counter
+						this.#round = 1;
+
+						// we need to make this zero so the transition scene can still tell this is a new round
+						this.#lastRound = 0;
+
+						// reset the difficulty
+						this.__setDifficulty(0, true);
+					}
+
+					// get the index for this round's microgames
+					index = this.#round - 1;
+
+					// see if we have any microgames defined for this new round number...
+
+					// we do, so start the new round
+					if (index < this.#microgameRounds) {
+
+						// grab the manifest info for the current round of microgames
+						microgames = this.#manifest.microgames[index];
+
+						// update the number of games this round wants us to play
+						this.#gamesRemaining = microgames.numGames;
+
+						callback("newround", "microgame");
+
+						// we're done here
+						return;
+					}
+
+					// if we get here, we're playing a normal mode game and have reached the boss level
+					else {
+						// TODO - define the boss game
+					}
+				}
+			}
+		}
+
+		// this is a buss rush game
+		else {
+
+			this.#lastRound = this.#round;
+
+			// if our unused games list is empty, we'll recycle the used list
+			if (this.#bossgameManifests.length < 1) {
+
+				// if we're at the higest difficulty, we'll start a new round at a faster speed
+				if (this.difficulty === 2) {
+
+					// reset the round counter
+					this.__setDifficulty(0, true);
+
+					// update the round
+					this.#round++;
+
+					// fire the callback in newround mode
+					callback("newround", "microgame");
+
+					// we're done here
+					return;
+				}
+				// we can increase the difficylty still
+				else {
+
+					// reset the manifest lists
+					this.#bossgameManifests = this.#bossgameManifestsUsed;
+					this.#bossgameManifestsUsed = [];
+
+					// increase the difficulty
+					this.__setDifficulty(this.difficulty + 1, false);
+				}
+			}
+
+			// now, pull a random manifest from the list of boss games
+			bossgame = this.#bossgameManifests.splice(Math.floor(Math.random() * this.#bossgameManifests.length), 1)[0];
+
+			// and put it into the used list
+			this.#bossgameManifestsUsed.push(bossgame);
+		}
+
+		// if we have a boss game, play that
+		if (bossgame) {
+			this.#bossRound = true;
+			callback('bossgame', bossgame);
+		}
+
+		// otherwise start the next microgame
+		else {
+			callback('microgame', this.getRandomMicrogameManifest());
+		}
+	}
+
+	/**
+	 * Sets a callback handler for when the current micro/boss game is completed
+	 * @param {function} callback
+	 */
+	onGameComplete(callback) {
+		this.game_complete_callback = callback;
+	}
+
+	/**
+	 * call this when a microgame or boss game is completed
+	 * @param {boolean} success - set to true if the player won
+	 */
+	gameCompleted(success) {
+		GameWrapper.characterAnimation = success ? 2 : 3;
+
+		this.#lastScore = this.#score;
+		this.#lastHealth = this.#health;
+
+		this.#score++;
+		if (!success) this.#health--;
+
+		if (this.bossRound && this.#mode !== PWLevel.MODE_BOSSRUSH) {
+			this.complete = true;
+		}
+		if (this.game_complete_callback) this.game_complete_callback(success);
+	}
+
+	/**
+	 * Loads any assets this level will use
+	 * @param {Function} callback - callback to execute when items are preloaded. Will pass a value between 0 and 1.
+	 * @param {boolean} force - set to true to ignore cached items
+	 */
+	preload(callback, force) {
+		let _this = this;
+
+		// this will count the number of promises we need to wait for
+		// we start with 1 so everything below can run without one item falsely completing
+		var promises = 1;
+
+		// run this when all the manifest data has been pulled
+		function startPhaserPreload() {
+			PWGame.preloadManifests(callback);
+		}
+
+		// run this when every promise completes to see if we're done
+		function checkPromises() {
+			promises--;
+
+			if (promises < 1) {
+				startPhaserPreload();
+			}
+		}
+
+		// run this if something fucks up
+		function handleError(err) {
+			console.error(err);
+			promises--;
+			if (promises < 1) {
+				console.error("Loaded with errors!");
+				alert("Loaded with errors!");
+			}
+		}
+
+		let loaded = [];
+
+		promises++;
+		let loadTransition = new Promise((resolve, reject) => {
+			PWGame.loadTransition(
+				_this.#manifest.transition,
+				function () {
+					resolve();
+				},
+				function (err) {
+					console.error(err);
+					alert("Transition Scene Failed:\n" + err + "\n\nCheck dev console for more information");
+					reject();
+				},
+				typeof (force) !== 'undefined' ? force : false
+			);
+		});
+		loadTransition.then(checkPromises, handleError);
+
+		// preload all the microgames asynchronously
+		if (this.#manifest.microgames) {
+			this.#manifest.microgames.forEach(function (microgames) {
+
+				microgames.gameList.forEach(function (gameInfo) {
+
+					let path = gameInfo.team + "/microgames/" + gameInfo.game;
+
+					// check if we've started loading this already
+					if (loaded.indexOf(path) >= 0) return;
+
+					// if we haven't, make a note that we are now
+					loaded.push(path);
+					promises++;
+
+					// wrap the microgame loading in a new promise
+					let loadMicrogame = new Promise((resolve, reject) => {
+
+						PWGame.loadMicroGame(
+							gameInfo,
+							function (manifest) {
+								_this.#microgameManifests.push(manifest);
+								resolve();
+							},
+							function (err) {
+								console.error(err);
+								alert("Microgame Failed:\n" + err + "\n\nCheck dev console for more info.");
+								reject();
+							},
+							typeof (force) !== 'undefined' ? force : false
+						);
+
+					});
+
+					loadMicrogame.then(checkPromises, handleError);
+				});
+			});
+		}
+
+		// put any boss games in here
+		let bossgames = [];
+
+		// normal mode games have one bossgame
+		if (this.#manifest.bossgame) bossgames.push(this.#manifest.bossgame);
+
+		// bsoss rush games have a list of bossgames
+		else if (this.#manifest.bossgames) bossgames = this.#manifest.bossgames;
+
+		// preload all the bossgames asynchronously
+		if (bossgames) {
+			bossgames.forEach(function (gameInfo) {
+
+				let path = gameInfo.team + "/bossgames/" + gameInfo.game;
+
+				// check if we've started loading this already
+				if (loaded.indexOf(path) >= 0) return;
+
+				// if we haven't, make a note that we are now
+				loaded.push(path);
+				promises++;
+
+				// wrap the bossgame loading in a new promise
+				let loadBossgame = new Promise((resolve, reject) => {
+
+					PWGame.loadBossGame(
+						gameInfo,
+						function (manifest) {
+							_this.#bossgameManifests.push(manifest);
+							resolve();
+						},
+						function (err) {
+							console.error(err);
+							alert("Boss Game Failed:\n" + err + "\n\nCheck dev console for more info.");
+							reject();
+						},
+						typeof (force) !== 'undefined' ? force : false
+					);
+
+				});
+
+				loadBossgame.then(checkPromises, handleError);
+			});
+		}
+
+		// preload and remember all the images we need for the skin stuff
+		promises++;
+		this.#imgs.logo = new Image();
+		this.#imgs.logo.src = "teams/" + this.#manifest.logo.team + "/logos/" + this.#manifest.logo.image;
+		this.#imgs.logo.onload = checkPromises;
+
+		promises++;
+		this.#imgs.charsheet = new Image();
+		this.#imgs.charsheet.src = "teams/" + this.#manifest.character.team + "/characters/" + this.#manifest.character.sheet;
+		this.#imgs.charsheet.onload = checkPromises;
+
+		// we call this here to remove that default promise we started with now that everything else is registered
+		checkPromises();
+	}
+
+	/**
+	 * Returns true if level has an into movie
+	 * @return {boolean}
+	 */
+	hasIntro() {
+		return false;
+	}
+
+	/**
+	 * Returns a random microgame manifest, or false if no microgames exist in the level set 
+	 * (Will go through every game before returning a duplicate)
+	 * @return {(object|boolean)}
+	 */
+	getRandomMicrogameManifest() {
+		if (!this.#manifest.microgames || this.#manifest.microgames.length === 0) return false;
+
+		var i;
+
+		if (this.#microgameManifests.length < 1) {
+			this.#microgameManifests = this.#microgameManifestsUsed;
+			this.#microgameManifestsUsed = [];
+		}
+		if (this.#microgameManifests.length < 1) throw ("Level has no microgame manifests loaded");
+
+		let used = this.#microgameManifests.splice(Math.floor(Math.random() * this.#microgameManifests.length), 1)[0];
+
+		this.#microgameManifestsUsed.push(used);
+		return used;
+	}
+
+	/**
+	 * Returns the boss game manifest for this level, or false if none exists
+	 * @return {(object|boolen)}
+	 */
+	getBossgameManifest() {
+		return this.#manifest.bossgame ? this.#manifest.bossgame : false;
+	}
+}
+
+/** Default Level Manifest (used when testing) */
+PWLevel.default_manifest = {
+	difficulty: 0,
+	mode: PWLevel.MODE_NORMAL,
+	logo: {
+		team: "psychogoldfish",
+		image: "sir_reginald_emojiman.png"
+	},
+	character: {
+		team: "psychogoldfish",
+		sheet: "sir_reginald_emojiman_sheet.webp",
+		icon: "sir_reginald_emojiman_icon.png"
+	},
+	transition: {
+		team: "psychogoldfish",
+		name: "emojis"
+	},
+	microgames: null,
+	bossgame: null
+};
+/** A scene that preloads other scenes using data from manifests */
+class PWTransitionScene extends Phaser.Scene {
+
+	/** The level has just started */
+	static PHASE_START = 'start';
+
+	/** showing the current health/score info and calling hint text */
+	static PHASE_INFO = 'info';
+
+	/** We are exiting the transition */
+	static PHASE_EXIT = 'exit';
+
+	/** We are entering the transition */
+	static PHASE_ENTER = 'enter';
+
+	/** We're speeding up */
+	static PHASE_FASTER = 'faster';
+
+	/** We're increaing difficulty */
+	static PHASE_LEVEL_UP = 'level-up';
+
+	/** We're starting a boss level */
+	static PHASE_BOSS_LEVEL = 'boss-game';
+
+	/** We lost the game :( */
+	static PHASE_GAME_OVER = 'game-over';
+
+	/** We won the game :) */
+	static PHASE_WINNER = 'winner';
+
+	/**
+	 * registers PWGameSceneloader scene key via parent constructor
+	 */
+	constructor(config) {
+
+		// needs to be called before we can reference 'this' anywhere in the constructor
+		super(config);
+
+		// make sure we have all our required methods built in
+		let err = false;
+
+		if (typeof (this.enter) !== 'function') {
+			err = 'You must add an enter(transition_name) method to your transition scene. The framework will call this to show the enter-in transition.';
+		}
+
+		if (err) {
+			alert("ERROR: " + err);
+			throw err;
+		}
+	}
+}
+/** A scene that preloads other scenes using data from manifests */
+class PWGameSceneloader extends Phaser.Scene {
+
+	/**
+	 * registers PWGameSceneloader scene key via parent constructor
+	 */
+	constructor(key) {
+		super({ key: key ? key : 'PWGameSceneloader' });
+	}
+
+	/**
+	 * Uses Phaser to preload items from pending manifests
+	 */
+	preload() {
+		let _this = this;
+
+		// pass the preload progress to the framework
+		this.load.on('progress', function (value) {
+			PWGame.onManifestsLoaded(value);
+		});
+
+		function getPath(item, default_path) {
+			let path = default_path;
+
+			if (item.team) {
+				path = 'teams/' + item.team + '/';
+
+				if (item.microgame) {
+					path += 'microgames/' + item.microgame + '/';
+				}
+				else if (item.bossgame) {
+					path += 'bossgames/' + item.bossgame + '/';
+				}
+				else if (item.transition) {
+					path += 'transitions/' + item.transition + '/';
+				}
+			}
+
+			return path;
+		}
+
+		// cycle through any manifests for the scene we are preloading
+		PWGameSceneloader.manifests.forEach(manifest => {
+
+			let prefix = manifest.prefix ? manifest.prefix : manifest.sceneClass + '.';
+
+			// add any images we need to load
+			if (manifest.images) {
+
+				// note: we are prefixing all the assets with the scene class path
+				manifest.images.forEach(image => {
+
+					// if no key is provided, use the image name
+					let key = image.key ? image.key : image.image;
+
+					// extract the appropriate prefix and path for the image
+					let path = getPath(image, manifest.path);
+
+					// required config info
+					let config = {
+						key: prefix + key,
+						url: path + image.image
+					};
+
+					// optional attributes for images
+					if (typeof (image.normalMap) !== 'undefined') {
+						image.normalMap = path + image.normalMap;
+					}
+
+					// load the image
+					_this.load.image(config);
+					PWGame.textureTypes[prefix + key] = 'image';
+				});
+			}
+
+			if (manifest.spritesheets) {
+				manifest.spritesheets.forEach(spritesheet => {
+					let key = spritesheet.key ? spritesheet.key : spritesheet.image;
+
+					// extract the appropriate prefix and path for the image
+					let path = getPath(spritesheet, manifest.path);
+
+					// required config info
+					let config = {
+						key: prefix + key,
+						url: path + spritesheet.image,
+						frameConfig: {
+							frameWidth: spritesheet.frameWidth,
+							frameHeight: spritesheet.frameHeight
+						}
+					};
+
+					// optional attributes for spritesheet
+
+					if (typeof (spritesheet.startFrame) !== 'undefined') config.frameConfig.startFrame = spritesheet.startFrame;
+					if (typeof (spritesheet.endFrame) !== 'undefined') config.frameConfig.endFrame = spritesheet.endFrame;
+					if (typeof (spritesheet.margin) !== 'undefined') config.frameConfig.margin = spritesheet.margin;
+					if (typeof (spritesheet.spacing) !== 'undefined') config.frameConfig.spacing = spritesheet.spacing;
+
+					if (typeof (spritesheet.normalMap) !== 'undefined') {
+						spritesheet.normalMap = path + spritesheet.normalMap;
+					}
+
+					// load the sheet
+					_this.load.spritesheet(config);
+					PWGame.textureTypes[prefix + key] = 'spritesheet';
+				});
+			}
+
+			if (manifest.atlases) {
+				manifest.atlases.forEach(atlas => {
+					let key = atlas.key ? atlas.key : atlas.texture;
+
+					// extract the appropriate prefix and path for the image
+					let path = getPath(atlas, manifest.path);
+
+					// required config info
+					let config = {
+						key: prefix + key,
+						textureURL: path + atlas.texture,
+						atlasURL: path + atlas.atlas
+					};
+
+					// optional attributes for atlas
+					if (typeof (atlas.normalMap) !== 'undefined') {
+						atlas.normalMap = path + atlas.normalMap;
+					}
+
+					// load the atlas
+					_this.load.atlas(config);
+					PWGame.textureTypes[prefix + key] = 'atlas';
+				});
+			}
+
+			// add any sounds
+
+		});
+	}
+
+}
+
+// container for loaded scene classes
+PWGameSceneloader.loaded = {};
+
+// queue manifests that need to have assets loaded in here
+PWGameSceneloader.manifests = [];
 /** 
  * Picoware Framework Controller 
  * 
  * An instance of this will be globally accessible as 'PWGame'
  */
 class PWFramework {
+
+	//============================================ static properties ================================================//
 
 	/**
 	 * Production mode, the game will run normally without any extra console logging or debugging features
@@ -2349,99 +3481,287 @@ class PWFramework {
 	 */
 	static USERMODE_DEV = 'dev';
 
+
+	//============================================ instance properties ================================================//
+
 	/**
 	 * Reference to the Phaser game instance
 	 * @type Phaser.Game
 	 * @default null
+	 * @private
 	 */
-	phaser = null;
+	#phaser = null;
+
+	/**
+	 * Reference to the Phaser game instance
+	 * @type Phaser.Game
+	 * @default null
+	 * @readonly
+	 */
+	get phaser() { return this.#phaser; }
+
+	/**
+	 * stores what type of texture each key is attached to
+	 * @type object
+	 * @default {}
+	 * @public
+	 */
+	textureTypes = {};
+
+	/** 
+	 * The mode the game is running in. Should be one of the USERMODE_ constants
+	 * @type {string} 
+	 * @default 'prod'
+	 * @private
+	 */
+	#usermode = PWFramework.USERMODE_PROD;
+
+	get usermode() { return this.#usermode; }
+
+	/**
+	 * The width and height of the microgame screen
+	 * @type {number}
+	 * @default 524
+	 * @private
+	 */
+	#screenSize = 524;					// width and height of the microgame screen
+
+	/**
+	 * The width and height of the microgame screen
+	 * @type {number}
+	 * @default 524
+	 * @readonly
+	 */
+	get screenSize() { return this.#screenSize; }
+
+	/**
+	 * Will be used to contain screen size information
+	 * @type {object}
+	 * @default null
+	 * @private
+	 */
+	#screen = null;
+
+	/**
+	 * The screen size object
+	 * @type {object}
+	 * @default null
+	 * @readonly
+	 */
+	get screen() { return this.#screen; }
+
+	/**
+	 * Pause state of the game
+	 * @type {boolean}
+	 * @default false
+	 * @private
+	 */
+	#paused = false;
+
+	/**
+	 * Pause state of the game
+	 * @type {boolean}
+	 * @default false
+	 * @readonly
+	 */
+	get paused() { return this.#paused; }
+
+	/**
+	 * Used to note when the game is transitioning between scenes/microgames
+	 * @type {boolean}
+	 * @default false
+	 */
+	#inTransition = false;
+
+	/**
+	 * Used to note when the game is transitioning between scenes/microgames
+	 * @type {boolean}
+	 * @default false
+	 * @readonly
+	 */
+	get inTransition() { return this.#inTransition; }
+
+	/**
+	 * The FPS we are basing all of our timing on (actual fps may be different).
+	 * @type {number}
+	 * @default 60
+	 * @private
+	 */
+	#targetFPS = 60;
+
+	/**
+	 * The FPS we are basing all of our timing on (actual fps may be different).
+	 * @type {number}
+	 * @default 60
+	 * @readonly
+	 */
+	get targetFPS() { return this.#targetFPS; }
+
+	/**
+	 * The current speed modifier, used when increasing level difficulty.
+	 * @type {number}
+	 * @default 1 - normal speed
+	 * @private
+	 */
+	#gameSpeed = 1;
+
+	/**
+	 * The current speed modifier, used when increasing level difficulty.
+	 * @type {number}
+	 * @default 1 - normal speed
+	 * @readonly
+	 */
+	get gameSpeed() { return this.#gameSpeed; }
+
+	/**
+	 * If true, this game has just started
+	 * @type boolean
+	 * @default true
+	 * @private
+	 */
+	#newGame = true;
+
+	/**
+	 * If true, this game has just started
+	 * @type {boolean}
+	 * @default true
+	 * @readonly
+	 */
+	get newGame() { return this.#newGame; }
+
+	/**
+	 * If true, this is a new level
+	 * @type {boolean}
+	 * @default true
+	 * @private
+	 */
+	#newLevel = true;
+
+	/**
+	 * If true, this is a new level
+	 * @type {boolean}
+	 * @default true
+	 * @readonly
+	 */
+	get newLevel() { return this.#newLevel; }
+
+	/**
+	 * The number of ms we expect to happen during a single frame. this will be set when increaseGameSpeed is called
+	 * @type {number}
+	 * @default 0
+	 * @private
+	 */
+	#msPerTargetFrame = 0;
+
+	/**
+	 * The number of ms we expect to happen during a single frame. this will be set when increaseGameSpeed is called
+	 * @type {number}
+	 * @default 0
+	 * @readonly
+	 */
+	get msPerTargetFrame() { return this.#msPerTargetFrame; }
+
+	/**
+	 * The number of ms we expect to happen during a single step.
+	 * @type {number}
+	 * @default 0
+	 * @private
+	 */
+	#msPerStep = 0;
+
+	/**
+	 * The number of ms we expect to happen during a single step.
+	 * @type {number}
+	 * @default 0
+	 * @readonly
+	 */
+	get msPerStep() { return this.#msPerStep; }
+
+	/**
+	 * tracks the number of ms that have passed since the last step started
+	 * @type {number}
+	 * @default 0
+	 * @private
+	 */
+	#stepTracker = 0;
+
+	/**
+	 * tracks the number of ms that have passed since the last step started
+	 * @type {number}
+	 * @default 0
+	 * @readonly
+	 */
+	get stepTracker() { return this.#stepTracker; }
+
+	/**
+	 * Handles input from on-screen gamepad and keyboard
+	 * @type {PWInput}
+	 * @private
+	 */
+	#input = new PWInput();
+
+	/**
+	 * Handles input from on-screen gamepad and keyboard
+	 * @type {PWInput}
+	 * @readonly
+	 */
+	get input() { return this.#input; }
+
+	/**
+	 * The key name of the active micro/boss game scene
+	 * @type {string}
+	 * @private
+	 * @default null
+	 */
+	#activeGameScene = null;
+
+	/**
+	 * The key name of the active micro/boss game scene
+	 * @type {string}
+	 * @default null
+	 * @readonly
+	 */
+	get activeGameScene() { return this.#activeGameScene; }
+
+	/**
+	 * the key name of the active transition scene
+	 * @type {string}
+	 * @default null
+	 * @private
+	 */
+	#activeTransition = null;
+
+	/**
+	 * the key name of the active transition scene
+	 * @type {string}
+	 * @default null
+	 * @readonly
+	 */
+	get activeTransition() { return this.#activeTransition; }
+
+	/**
+	 * If true, the player wil win the game when the timer runs out
+	 * @type {boolean}
+	 * @default false
+	 * @private
+	 */
+	#winOnTimeUp = false;
+
+	/**
+	 * If true, the player wil win the game when the timer runs out
+	 * @type {boolean}
+	 * @default false
+	 * @readonly
+	 */
+	get winOnTimeUp() { return this.#winOnTimeUp; }
+
+
+	//============================================ instance methods ================================================//
 
 	/**
 	 * Create instance of the framework
 	 */
 	constructor() {
-
-		/** 
-		 * The mode the game is running in. Should be one of the USERMODE_ constants
-		 * @type string 
-		 * @default 'prod'
-		 */
-		this.usermode = 'prod';
-
-		/**
-		 * The width and height of the microgame screen
-		 * @type number
-		 * @default 524
-		 * @readonly
-		 */
-		this.screensize = 524;					// width and height of the microgame screen
-
-		/**
-		 * Will be used to contain screen size information
-		 * @type object
-		 * @default null
-		 */
-		this.screen = null;
-
-		/**
-		 * Pause state of the game
-		 * @type boolean
-		 * @default false
-		 */
-		this.paused = false;
-
-		/**
-		 * Used to note when the game is transitioning between scenes/microgames
-		 * @type boolean
-		 * @default false
-		 */
-		this.in_transition = false;
-
-		/**
-		 * The FPS we are basing all of our timing on (actual fps may be different).
-		 * @type number
-		 * @default 60
-		 */
-		this.targetFPS = 60;
-
-		/**
-		 * The current speed modifier, used when increasing level difficulty.
-		 * @type number
-		 * @default 1 - normal speed
-		 */
-		this.gameSpeed = PWConfig.SPEED_NORMAL;
-
-		/**
-		 * The number of ms we expect to happen during a single frame. this will be set when setGameSpeed is called
-		 * @type number
-		 * @default null
-		 */
-		this.msPerTargetFrame = null;
-
-		/**
-		 * The number of ms we expect to happen during a single step.
-		 * @type number
-		 */
-		this.msPerStep = null;
-
-		/**
-		 * tracks the number of ms that have passed since the last step started
-		 * @type number
-		 */
-		this.stepTracker = null;
-
-		/**
-		 * Handles input from on-screen gamepad and keyboard
-		 * @type PWInput
-		 */
-		this.input = new PWInput();
-
-		/**
-		 * If true, the player wil win the game when the timer runs out
-		 * @type boolean
-		 * @default false
-		 */
-		this.winOnTimeUp = false;
 
 		/** 
 		 * Handler for when manifest files are loaded
@@ -2450,7 +3770,7 @@ class PWFramework {
 		 */
 		this.onManifestsLoaded = () => { };
 
-		// set the default BPM for our microgames/music
+		// set the default speed for our microgames/music (1=normal speed, 2=double speed, etc)
 		this.setGameSpeed(this.gameSpeed);
 	}
 
@@ -2460,13 +3780,13 @@ class PWFramework {
 	 * @throws {string} - If an invalid usermode is passed
 	 * @returns {void}
 	 */
-	start(usermode = 'prod') {
+	start(usermode = PWFramework.USERMODE_PROD) {
 
 		if ([PWFramework.USERMODE_PROD, PWFramework.USERMODE_DEBUG, PWFramework.USERMODE_DEV].indexOf(usermode) === -1) {
 			throw ("Invalid usermode: " + usermode);
 		}
 
-		this.usermode = usermode;
+		this.#usermode = usermode;
 
 		/**
 		 * @type PWFramework
@@ -2479,8 +3799,8 @@ class PWFramework {
 		GameWrapper.init({
 			onScreenUpdated: this.onScreenUpdated,
 			onScreenUpdatedThisArg: this,
-			onInputChanged: this.input.onLayoutInputChanged,
-			onInputChangedThisArg: this.input
+			onInputChanged: this.#input.onLayoutInputChanged,
+			onInputChangedThisArg: this.#input
 		});
 
 		/**
@@ -2491,34 +3811,46 @@ class PWFramework {
 		 */
 		function PhaserReady() {
 
-			// register the generic preloader scene with Phaser(see sceneloader.js)
-			_this.phaser.scene.add('PWGameSceneloader', new PWGameSceneloader());
+			// add the generic preloading scene
+			_this.phaser.scene.add('___loaderScene___', _this.loaderScene);
 
 			// start the game in the appropriate mode
-			if (_this.usermode === PWFramework.USERMODE_DEV) {
+			if (_this.#usermode === PWFramework.USERMODE_DEV) {
 				_this.startDevScreen();
 			} else {
 				// TODO: start the game in normal mode
+				console.error("This mode isn't supported yet!");
 				alert("This mode isn't supported yet!");
 			}
 		}
 
-		// start our Phaser instance
+		// create a base scene to start the game with
+		this.baseScene = new Phaser.Scene('___baseScene___');
+		this.baseScene.create = function () {
+			PhaserReady();
+		};
+
+		this.loaderScene = new PWGameSceneloader('___loaderScene___');
 
 		/**
 		 * @type Phaser.Game
 		 * Reference to the Phaser game instance
 		 */
-		this.phaser = new Phaser.Game({
+		this.#phaser = new Phaser.Game({
 			parent: "screen",
 			type: Phaser.AUTO,
-			width: this.screensize,
-			height: this.screensize,
+			width: this.#screenSize,
+			height: this.#screenSize,
 			id: "PhaserCanvas",
 			backgroundColor: '#000000',
-			scene: {
-				create: PhaserReady
-			}
+			scene: [this.baseScene], // we're only adding the baseScene right now so Phaser is ready without preloading anything
+			physics: {
+				default: 'arcade',
+				arcade: {
+					gravity: { y: 0 },
+					debug: localStorage.getItem("debug-physics") ? true : false
+				}
+			},
 		});
 	}
 
@@ -2528,7 +3860,7 @@ class PWFramework {
 	 * @returns {void}
 	 */
 	onScreenUpdated(screen) {
-		this.screen = screen;
+		this.#screen = screen;
 		if (this.phaser && this.phaser.canvas) {
 			this.phaser.canvas.style.width = screen.size + "px";
 			this.phaser.canvas.style.height = screen.size + "px";
@@ -2546,6 +3878,9 @@ class PWFramework {
 		 */
 		let _this = this;
 
+		// we'll use this for localStorage values
+		let lsVal;
+
 		/**
 		 * @type boolean
 		 * Used to prevent multiple clicks from triggering the same action
@@ -2560,11 +3895,35 @@ class PWFramework {
 		 */
 		let devFrame = document.getElementById("dev-interface");
 
+		// stop mouse clicks from rickling to the body, where they get cancelled
+		devFrame.onclick = function (e) {
+			e.stopPropagation();
+		}
+
+		let debugPhysics = document.getElementById("debug-physics");
+		lsVal = localStorage.getItem("debug-physics");
+		if (lsVal) debugPhysics.checked = true;
+
+		debugPhysics.onchange = function () {
+			if (debugPhysics.checked) {
+				localStorage.setItem("debug-physics", "true");
+			} else {
+				localStorage.removeItem("debug-physics");
+			}
+
+			// refresh page
+			location.reload();
+		}
+
 		/**
 		 * @type HTMLElement
 		 * The input for team dir to use when loading a microgame
 		 */
 		let microgameTeam = document.getElementById("microgame-team");
+
+		// check if there is a team in local storage and set it as the default value
+		lsVal = localStorage.getItem("microgame-team");
+		if (lsVal) microgameTeam.value = lsVal;
 
 		/**
 		 * @type HTMLElement
@@ -2572,11 +3931,42 @@ class PWFramework {
 		 */
 		let microgameDir = document.getElementById("microgame-dir");
 
+		// check if there is a dir in local storage and set it as the default value
+		lsVal = localStorage.getItem("microgame-dir");
+		if (lsVal) microgameDir.value = lsVal;
+
+
 		/**
 		 * @type HTMLElement
 		 * The button to load a microgame
 		 */
 		let microgameBtn = document.getElementById("microgame-btn");
+
+		/**
+		 * @type HTMLElement
+		 * The input for team dir to use when loading a boss game
+		 */
+		let bossgameTeam = document.getElementById("bossgame-team");
+
+		// check if there is a team in local storage and set it as the default value
+		lsVal = localStorage.getItem("bossgame-team");
+		if (lsVal) bossgameTeam.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for boss game dir to use
+		 */
+		let bossgameDir = document.getElementById("bossgame-dir");
+
+		// check if there is a dir in local storage and set it as the default value
+		lsVal = localStorage.getItem("bossgame-dir");
+		if (lsVal) bossgameDir.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The button to load a boss game
+		 */
+		let bossgameBtn = document.getElementById("bossgame-btn");
 
 		// show the developer options
 		devFrame.style.display = "";
@@ -2612,6 +4002,11 @@ class PWFramework {
 		microgameBtn.onclick = function (click_event) {
 			if (loading) return; // ignore clicks if we're already loading the game
 
+			// save the team and microgame so we can quickly use them next time
+			localStorage.setItem("microgame-team", microgameTeam.value);
+			localStorage.setItem("microgame-dir", microgameDir.value);
+
+
 			// cancel out the click event so nothing else can get triggered
 			click_event.preventDefault();
 			click_event.stopPropagation();
@@ -2624,11 +4019,64 @@ class PWFramework {
 			// create a fake level manifest that only uses the level we want to test
 			// Note: missing properties will be filled in by the PWLevel.default_manifest object
 			let manifest = {
+				mode: PWLevel.MODE_ENDLESS,
 				microgames: [
-					path
+					{
+						numGames: 3,
+						gameList: [
+							{ team: microgameTeam.value, game: microgameDir.value }
+						]
+					}
 				],
-				gamesPerRound: 1,
 				devMode: 'game'
+			};
+
+			// disable pointer events to loack the developer forms for now
+			devFrame.style.pointerEvents = "none";
+
+			// do our fade out/fade in effect, and then...
+			GameWrapper.crossFade(function () {
+
+				// hide the developer menu while we're playing.
+				devFrame.style.display = "none";
+
+				// turn pointer events back on so the dev menu will work when we go back to it later
+				devFrame.style.pointerEvents = "";
+
+				// start our fake level
+				_this.startLevel(manifest);
+			});
+		}
+
+		/**
+		 * Handle the Load Microgame button
+		 * @param {Event} click_event - The click event
+		 * @callback
+		 * @returns {void}
+		 */
+		bossgameBtn.onclick = function (click_event) {
+			if (loading) return; // ignore clicks if we're already loading the game
+
+			// save the team and bossgame so we can quickly use them next time
+			localStorage.setItem("bossgame-team", bossgameTeam.value);
+			localStorage.setItem("bossgame-dir", bossgameDir.value);
+
+			// cancel out the click event so nothing else can get triggered
+			click_event.preventDefault();
+			click_event.stopPropagation();
+
+			// check if user inputed a valid path. Return if it's invalid
+			let path = "teams/" + bossgameTeam.value + "/bossgames/" + bossgameDir.value;
+			path = validatePath(path);
+			if (!path) return;
+			// create a fake level manifest that only uses the level we want to test
+			// Note: missing properties will be filled in by the PWLevel.default_manifest object
+			let manifest = {
+				mode: PWLevel.MODE_BOSSRUSH,
+				bossgames: [
+					{ team: bossgameTeam.value, game: bossgameDir.value }
+				],
+				devMode: 'bossgame'
 			};
 
 			// disable pointer events to loack the developer forms for now
@@ -2649,6 +4097,7 @@ class PWFramework {
 		}
 	}
 
+
 	/**
 	 * Starts a level
 	 * @param {object} manifest - The manifest assciated with the level
@@ -2656,10 +4105,8 @@ class PWFramework {
 	 */
 	startLevel(manifest) {
 
-		console.log("Starting level", manifest);
-
 		// Levels will always start with either a cutscene or a transition animation
-		this.in_transition = true;
+		this.#inTransition = true;
 
 		// referenece to self for use in closures and functions
 		let _this = this;
@@ -2667,12 +4114,15 @@ class PWFramework {
 		// get our actual level instance (see level.js)
 		this.level = new PWLevel(manifest);
 
+		this.#newLevel = true;
+
 		// show the appropriate game layout (a frame on desktop, GBC for mobile in portrait mode, GBA for mobile in landscape)
 		this.showGameLayout();
 
 		// show our generic loading screen and set our initial 'loaded' value to zero
 		GameWrapper.showLoadScreen();
 		GameWrapper.setLoadedValue(0);
+
 
 		// run this function as our level is preloading all of its required files and assets
 		this.level.preload(function (complete) {
@@ -2683,20 +4133,20 @@ class PWFramework {
 			// if complete equals 1, we've loaded everything
 			if (complete === 1) {
 
+
 				// do our fade out/fade in effect
 				GameWrapper.crossFade(() => {
 
 					// hide the preloader screen
 					GameWrapper.hideLoadScreen();
 
-					// tell the wrapper what sprite sheet to use for the between-game transitions
-					GameWrapper.setTransitionImage(_this.level.imgs.transsheet);
-
 					// tell the wrapper what character sheet to use
 					GameWrapper.setCharacterImage(_this.level.imgs.charsheet);
 
 					// tell the wrapper what character sheet to use
 					GameWrapper.setLogoImage(_this.level.imgs.logo);
+
+					_this.#activeTransition = 'transitions.' + manifest.transition.team + '.' + manifest.transition.name;
 
 					// if the level has an intro movie, play it, then start the next phase
 					if (_this.level.hasIntro()) {
@@ -2731,6 +4181,14 @@ class PWFramework {
 		this.phaser.canvas.style.display = "";
 	}
 
+	transitionIn(transition_in, callback) {
+		if (transition_in) {
+			setTimeout(callback, 3000);
+		} else {
+			callback();
+		}
+	}
+
 	/**
 	 * Move to the next phase of the current level
 	 * @param {boolean} transition_in - if True, play our transition animation before starting the next phase
@@ -2748,31 +4206,34 @@ class PWFramework {
 			// if we're starting a new round (faster games or boss levels), we'll note that with this
 			let new_round = null;
 
-			// set that we are starting a new transition
-			_this.in_transition = true;
+			// set that we are transitioning between phases
+			_this.#inTransition = true;
 
 			// check the current phase
 			switch (phase) {
 				// TODO - add a case for end of level
 
+				case 'bossgame':
+					new_round = "Boss Level!";
+					game_manifest = data;
+					break;
+
 				// we are still in the same round, and starting another microgame, so we need to record the manifest
 				case 'microgame':
+
+					// if we're in endless mode, we need to increase the difficulty on each play
+					// (we can skip this for the very first game, since the difficulty is already set)
+					if (_this.level.mode === PWLevel.MODE_ENDLESS && !_this.newLevel) {
+						_this.level.__setDifficulty(_this.level.difficulty + 1);
+					}
 					game_manifest = data;
 					break;
 
 				// this is a new round
 				case 'newround':
 
-					// we are at the boss level 
-					if (data === 'bossgame') {
-						new_round = "Boss Level!";
-
-						// We need to speed up the game now!
-					} else {
-						new_round = "Faster!";
-						var speeds = [null, PWConfig.SPEED_NORMAL, PWConfig.SPEED_FASTER, PWConfig.SPEED_FASTEST];
-						_this.setGameSpeed(speeds[_this.level.round]);
-					}
+					_this.increaseGameSpeed();
+					new_round = "Faster!";
 					break;
 
 				// we finished all the games!
@@ -2781,94 +4242,121 @@ class PWFramework {
 					break;
 			}
 
-			// we are starting a new micro or boss game
+			// If we have a manifest, we are starting a new microgame or bossgame
 			if (game_manifest) {
-
-				// start the transition animation if it's not already running, then start the game
-				if (transition_in) {
-					GameWrapper.enterTransition(function () {
-						GameWrapper.playTransitionClose(function () {
-							_this.nextGame(game_manifest);
-						});
-					});
-
-					// or, just start the game
-				} else {
-					_this.nextGame(game_manifest);
-				}
-
-				// we are starting a new round and need to show some text (faster, boss level, etc)
-			} else if (new_round) {
-
-				// start the transition (zooms the transition frame out)
-				GameWrapper.enterTransition(function () {
-
-					// show the new round text
-					GameWrapper.setHintText(new_round);
-
-					// continue the transition (covers the hole in the frame) and move to the next phase (which should be a game)
-					GameWrapper.playTransitionClose(function () {
-
-						// looks like they won the game?
-						if (phase === 'finish') {
-
-							GameWrapper.playTransitionIdle(function () {
-								GameWrapper.crossFade(function () {
-
-									GameWrapper.stopCharacterAnimation();
-
-									if (data === 'devmode') {
-										_this.startDevScreen();
-									} else {
-										// TODO - show the win screen
-									}
-								});
-							});
-						} else {
-							_this.nextPhase(false);
-						}
-					});
-				});
+				_this.nextGame(game_manifest, transition_in);
 			}
 
+			// we are starting a new round and need to show some text (faster, boss level, etc)
+			else if (new_round) {
+
+				// start the transition
+				_this.showTransactionScene(PWTransitionScene.PHASE_NEXT_GAME);
+
+
+				/**
+				// looks like they won the game?
+				if (phase === 'finish') {
+	
+					// TODO - wrap this in a transition?
+	
+					GameWrapper.crossFade(function () {
+	
+						GameWrapper.stopCharacterAnimation();
+	
+						if (data === 'devmode') {
+							_this.startDevScreen();
+						} else {
+							// TODO - show the win screen
+						}
+					});
+				} else {
+					_this.nextPhase(false);
+				}
+				*/
+
+			}
+
+			_this.#newGame = false;
 		});
+
+		_this.#newLevel = false;
 	}
 
 	/**
 	 * Prepares the next micro or boss game to start
 	 * @param {object} manifest - The manifest for the game we want to start
+	 * @param {boolean} transition_in - If true, play the transition-in animation before starting the game
 	 * @returns {void}
 	 */
-	nextGame(game_manifest) {
+	nextGame(game_manifest, transition_in) {
+		let _this = this;
+		this.activeManifest = game_manifest;
+		this.showTransactionScene(transition_in ? PWTransitionScene.PHASE_NEXT_GAME : PWTransitionScene.PHASE_START);
+	}
+
+	stopGame() {
+		if (this.#activeGameScene) {
+			this.phaser.scene.stop(this.#activeGameScene);
+		}
+	}
+
+	endTransition() {
+
+		this.#inTransition = false;
+
+		if (this.#activeTransition) {
+			this.phaser.scene.stop(this.#activeTransition);
+		}
+
+		// start the game timer if we're playing microgames
+		if (!this.level.bossRound) GameWrapper.startGameTimer();
+	}
+
+	showHints(hintDisplayedCallback, hintCompleteCallback) {
+
+		let hint = "Get Ready!";
+		let controls = "gamepad";
+
+		let scene = this.phaser.scene.getScene(this.#activeGameScene);
+
+		if (scene) {
+			if (scene.getHintText) {
+				hint = scene.getHintText();
+			}
+			if (scene.getControls) {
+				controls = scene.getControls();
+			}
+		}
+
+		GameWrapper.setHintText(hint, controls, hintDisplayedCallback, hintCompleteCallback);
+	}
+
+	startGame() {
+
 		let _this = this;
 
-		// We should always be in the middle of the transition animation here. 
-		// This tells the game to play the 'idle' part for a while before we start the actual game
-		GameWrapper.playTransitionIdle(function () {
-			// start the actual game, and show it's hint text
-			_this.startActualGame(game_manifest);
-			GameWrapper.setHintText(game_manifest.hint);
+		// start the actual game, and show it's hint text
+		this.startActualGame(this.activeManifest);
 
-			// play the animation to open the hole in our transition frame
-			GameWrapper.playTransitionOpen(function () {
+		// TODO - do we need to completely end the transition now?
 
-				// zoom the frame in so we can see the full game
-				GameWrapper.exitTransition(function () {
+		// reset the step tracker
+		this.#msPerStep = this.msPerTargetFrame * PWConfig.FRAMES_PER_STEP;
 
-					// we are no longer in the transition animation!
-					_this.in_transition = false;
-					GameWrapper.endTransition();
+		_this.#stepTracker = 0;
+		GameWrapper.startCharacterAnimation();
+	}
 
-					// reset the step tracker
-					_this.msPerStep = _this.msPerTargetFrame * PWConfig.FRAMES_PER_STEP;
-					_this.stepTracker = 0;
-					GameWrapper.startCharacterAnimation();
+	showTransactionScene(transition_name) {
 
-					// start the game timer
-					GameWrapper.startGameTimer();
-				});
-			});
-		});
+		if (!this.phaser.scene.isActive(this.#activeTransition)) {
+			this.phaser.scene.start(this.#activeTransition);
+		}
+		this.phaser.scene.bringToTop(this.#activeTransition);
+
+		let scene = this.phaser.scene.getScene(this.#activeTransition);
+		scene.enter(transition_name);
 	}
 
 	/**
@@ -2877,24 +4365,163 @@ class PWFramework {
 	 * @returns {void}
 	 */
 	startActualGame(manifest) {
-		// clear out any existing input handlers so they don't break the new game
-		this.input.reset();
 
-		// start the actual game with Phaser
-		this.phaser.scene.start(manifest.sceneClass);
+		let _this = this;
+
+		this.#newGame = true;
+
+		// clear out any existing input handlers so they don't break the new game
+		this.#input.reset();
+
+		this.#activeGameScene = manifest.sceneClass;
+		this.phaser.scene.start(this.#activeGameScene);
 	}
 
 	//============================================ game hooks ================================================//
 
 	/**
+	 * Queues an array of manifests for preloading
+	 * @param {Array.<object>} manifests - An array of manifest objects to preload
+	 * @returns {void}
+	 */
+	queuePreloadManifests(manifests, prepend = false) {
+		let _this = this;
+		manifests.forEach(manifest => {
+			PWGameSceneloader.manifests.push(manifest);
+		});
+	}
+
+	/**
+	 * loads a manifest and registeres any scenes withhin
+	 * @param array required_properties - An array of properties that must be present in the manifest
+	 * @param object manifest - The manifest object to load
+	 * @param string dir - The directory the manifest is in
+	 * @param function callback - A callback function to run when the manifest has loaded
+	 * @param function error_callback - A callback function to run if there are any problems loading the manifest
+	 * @returns {void}
+	 */
+	doLoadManifest(required_properties, manifest, dir, callback, error_callback) {
+
+		var _this = this;
+
+		let finishLoad = function () {
+
+			// make sure all the required manifest properties have been set
+			let errors = [];
+			required_properties.forEach(function (val) {
+				if (typeof (manifest[val]) == 'undefined') {
+					errors.push("Missing required property in manifest.json: '" + val + "'");
+				}
+			});
+
+			// if anything is missing, call the error handler and exit
+			if (errors.length > 0) {
+				error_callback(errors.join("\n"));
+				return;
+			}
+
+			// get a reference to the scene class for this microgame if it's already been loaded.
+			let _sceneClass;
+
+			try {
+				_sceneClass = _this.getSceneClass(manifest.sceneClass);
+			}
+			catch (e) {
+				_sceneClass = null;
+			}
+
+			// Looks like we'll need to load the js file for this game scene
+			if (!_sceneClass) {
+
+				// make a note of how many JS files we need to load
+				let scripts_remaining = manifest.jsFiles.length;
+
+				// start loading each js file asynchronously
+				manifest.jsFiles.forEach(url => {
+
+					// load the js file in a <script> tag
+					loaderScript(dir + url) // see utils.js
+
+						// and after it's loaded...
+						.then(() => {
+
+							// knock one off our scripts remaining count
+							scripts_remaining--;
+
+							// all the scripts have loaded!!!
+							if (scripts_remaining <= 0) {
+
+								// attempt to get a reference to the class and register it
+								try {
+
+									// get a reference to the newly loaded scene
+									_sceneClass = _this.getSceneClass(manifest.sceneClass);
+
+									// add this to the list of scenes Phaser can currently load
+									_this.registerScene(_sceneClass, manifest);
+
+									// get the manifest for the scene
+									_this.queuePreloadManifests([manifest]);
+
+									callback(manifest);
+								}
+								catch (e) {
+
+									// oh no, something didn't work! (probably a bad js file, invalid class name or path)
+									// fire the error callback
+									error_callback(e);
+								}
+							}
+						})
+
+						// script failed to load, fire the error callback
+						.catch((e) => {
+							console.error(e);
+							error_callback(e);
+						});
+				});
+
+			}
+			// This game scene was already loaded once, so we can go ahead with registering it and preloading any assets!
+			else {
+				_this.registerScene(_sceneClass, manifest);
+				_this.queuePreloadManifests([manifest]);
+				callback(manifest);
+			}
+		};
+
+		if (manifest.parent) {
+			let parent = _Manifests[manifest.type][manifest.parent.team][manifest.parent.name];
+			this.doLoadManifest(required_properties, parent, parent.path, finishLoad, error_callback);
+		} else {
+			finishLoad();
+		}
+
+	}
+
+	loadTransition(info, callback, error_callback, force) {
+		let _this = this;
+
+		this.loadTransitionManifest(
+			info,
+			function (manifest, dir) {
+				_this.doLoadManifest(['name', 'jsFiles', 'sceneClass'], manifest, dir, callback, error_callback);
+			},
+			error_callback,
+			force
+		);
+	}
+
+	/**
 	 * Loads a microgame and all of it's assets before starting it.
-	 * @param {string} path - The path/key of the micrograme.
+	 * @param {object} gameInfo - An object with a team and game key to identify the microgame..
 	 * @param {function} callback - A callback function to run when the microgame has loaded.
 	 * @param {function} error_callback - A callback function to run if there are any problems loading the microgame.
 	 * @param {boolean} force - set to true to load all files instead of using cached/compiled data.
 	 * @returns {void}
 	 */
-	loadMicroGame(path, callback, error_callback, force) {
+	loadMicroGame(gameInfo, callback, error_callback, force) {
+
 		// reference for functions/closures
 		let _this = this;
 
@@ -2905,12 +4532,15 @@ class PWFramework {
 		}
 
 		// if we don't have an error callback, have it do a generic alert
-		error_callback = typeof (error_callback) !== 'undefined' ? error_callback : function (error) { alert(error); };
+		error_callback = typeof (error_callback) !== 'undefined' ? error_callback : function (error) {
+			console.error(error);
+			alert(error);
+		};
 
 		// start by loading the manifest for this game
 		this.loadMicroGameManifest(
 
-			path,
+			gameInfo,
 
 			/**
 			 * Handles when the manifest is loaded
@@ -2918,91 +4548,51 @@ class PWFramework {
 			 * @param {string} dir - The directory we'll be loading any assets from.
 			 */
 			function (manifest, dir) {
+				_this.doLoadManifest(['name', 'jsFiles', 'sceneClass'], manifest, dir, callback, error_callback);
+			},
 
-				// make sure all the required manifest prperties have been set
-				let required = ['name', 'jsFiles', 'sceneClass', 'input', 'hint'];
-				let errors = [];
-				required.forEach(function (val) {
-					if (typeof (manifest[val]) == 'undefined') {
-						errors.push("Missing required property in manifest.json: '" + val + "'");
-					}
-				});
+			error_callback,
+			force
+		);
+	}
 
-				// if anything is missing, call the error handler and exit
-				if (errors.length > 0) {
-					error_callback(errors.join("\n"));
-					return;
-				}
+	/**
+	 * Loads a bossgame and all of it's assets before starting it.
+	 * @param {object} gameInfo - An object with a team and game key to identify the bossgame..
+	 * @param {function} callback - A callback function to run when the bossgame has loaded.
+	 * @param {function} error_callback - A callback function to run if there are any problems loading the bossgame.
+	 * @param {boolean} force - set to true to load all files instead of using cached/compiled data.
+	 * @returns {void}
+	 */
+	loadBossGame(gameInfo, callback, error_callback, force) {
 
-				// get a reference to the scene class for this microgame if it's already been loaded.
-				let _sceneClass;
+		// reference for functions/closures
+		let _this = this;
 
-				try {
-					_sceneClass = _this.getSceneClass(manifest.sceneClass);
-				}
-				catch (e) {
-					_sceneClass = null;
-				}
+		// if error callback is set to true, treat it as the 'force' parameter
+		if (error_callback === true) {
+			force = true;
+			error_callback = function () { };
+		}
 
-				// Looks like we'll need to load the js file for this game scene
-				if (!_sceneClass) {
+		// if we don't have an error callback, have it do a generic alert
+		error_callback = typeof (error_callback) !== 'undefined' ? error_callback : function (error) {
+			console.error(error);
+			alert(error);
+		};
 
-					// make a note of how many JS files we need to load
-					let scripts_remaining = manifest.jsFiles.length;
+		// start by loading the manifest for this game
+		this.loadBossGameManifest(
 
-					// start loading each js file asynchronously
-					manifest.jsFiles.forEach(url => {
+			gameInfo,
 
-						// load the js file in a <script> tag
-						loaderScript(dir + url) // see utils.js
-
-							// and after it's loaded...
-							.then(() => {
-
-								// knock one off our scripts remaining count
-								scripts_remaining--;
-
-								// all the scripts have loaded!!!
-								if (scripts_remaining <= 0) {
-
-									// attempt to get a reference to the class and register it
-									try {
-
-										// get a reference to the newly loaded scene
-										_sceneClass = _this.getSceneClass(manifest.sceneClass);
-
-										// add this to the list of scenes Phaser can currently load
-										_this.registerScene(_sceneClass, manifest);
-
-										// get the manifest for the scene, then start it up
-										_this.preloadManifests([manifest], () => {
-											callback(manifest);
-										});
-									}
-									catch (e) {
-
-										// oh no, something didn't work! (probably a bad js file, invalid class name or path)
-										// fire the error callback
-										error_callback(e);
-									}
-								}
-							})
-
-							// script failed to load, fire the error callback
-							.catch((e) => {
-								console.error(e);
-								error_callback(e);
-							});
-					});
-
-					// This game scene was already loaded once, so we can go ahead with registering it and preloading any assets!
-				} else {
-					_this.registerScene(_sceneClass, manifest);
-					_this.preloadManifests([manifest], () => {
-						callback(manifest);
-					});
-				}
-
+			/**
+			 * Handles when the manifest is loaded
+			 * @param {object} manifest - The manifest we just loaded. 
+			 * @param {string} dir - The directory we'll be loading any assets from.
+			 */
+			function (manifest, dir) {
+				_this.doLoadManifest(['name', 'jsFiles', 'sceneClass'], manifest, dir, callback, error_callback);
 			},
 
 			error_callback,
@@ -3015,29 +4605,22 @@ class PWFramework {
 	 * @param {Array.<object>} manifests - An array of manifest paths to load.
 	 * @param {function} callback - A callback function to run when manifests have finished loading.
 	 */
-	preloadManifests(manifests, callback) {
+	preloadManifests(callback) {
 		// sets our callback in a property that PWGameSceneloader can call
 		this.onManifestsLoaded = typeof (callback) !== 'undefined' ? callback : function () { };
 
-		// add all the manifests to the PWGameSceneloader.manifests queue
-		manifests.forEach(manifest => {
-			PWGameSceneloader.manifests.push(manifest);
-		});
+		this.manifestPreloadQueue = [];
 
 		// run the PWGameSceneloader scene.  When it's done, it'll trigger our callback
-		this.phaser.scene.start('PWGameSceneloader');
+		this.phaser.scene.start('___loaderScene___');
 	}
 
-	/**
-	 * Loads the manifest.json data for a microgame
-	 * @param {Array.<string>} path - An arry of path data pointing to the microgame, ie ['microgames','user_or_team','game_name'].
-	 * @param {function} callback - A callback function to run when the microgame has loaded.
-	 * @param {function} error_callback - A callback function to run if there are any problems loading the microgame.
-	 * @param {boolean} force - set to true to load all files instead of using cached/compiled data.
-	 */
-	loadMicroGameManifest(path, callback, error_callback, force) {
-		// make sure we have a container for the microgame's parent path
-		_Manifests.microgames[path[0]] = typeof (_Manifests.microgames[path[0]]) !== 'undefined' ? _Manifests.microgames[path[0]] : {};
+	loadTransitionManifest(info, callback, error_callback, force) {
+
+		let _this = this;
+
+		// make sure we have a container for the transition's parent path
+		_Manifests.transitions[info.team] = typeof (_Manifests.transitions[info.team]) !== 'undefined' ? _Manifests.transitions[info.team] : {};
 
 		// if error_callback is true, use that as the force property
 		if (error_callback === true) {
@@ -3046,23 +4629,35 @@ class PWFramework {
 		}
 
 		// if no error callback is defined, have it use a generic alert
-		error_callback = typeof (error_callback) !== 'undefined' ? error_callback : function (error) { alert(error); };
+		error_callback = typeof (error_callback) !== 'undefined' ? error_callback : function (error) {
+			console.error(error);
+			alert(error);
+		};
 
 		// this is the directory that the manifest file should be in
-		let dir = 'teams/' + path[0] + '/microgames/' + path[1] + '/';
+		let dir = 'teams/' + info.team + '/transitions/' + info.name + '/';
 
 		// if the manifest hasn't been loaded yet, or we're forcing a fresh load....
-		if (force || !_Manifests.microgames[path[0]][path[1]]) {
+		if (force || !_Manifests.transitions[info.team][info.name]) {
 
 			// load the manifest file into a javascript object
 			this.getJSON(dir + 'manifest.json', function (data) {
 
 				// update the manifest so it has a reference to our directory.
 				data.path = dir;
+				data.type = "transitions";
 
-				// cache the manifest so we don't have to reload it again later, and fire the callback
-				_Manifests.microgames[path[0]][path[1]] = data;
-				callback(_Manifests.microgames[path[0]][path[1]], dir);
+				let onLoaded = function () {
+					// cache the manifest so we don't have to reload it again later, and fire the callback
+					_Manifests.transitions[info.team][info.name] = data;
+					callback(_Manifests.transitions[info.team][info.name], dir);
+				}
+
+				if (data.parent && data.parent.team && data.parent.name) {
+					_this.loadTransitionManifest({ team: data.parent.team, name: data.parent.name }, onLoaded, error_callback, force);
+				} else {
+					onLoaded();
+				}
 
 				// error handling
 			}, function (e) {
@@ -3070,17 +4665,183 @@ class PWFramework {
 				// manifest failed to load or decode
 				console.error(e);
 				console.error("Couldn't find file: " + dir + '/manifest.json');
-				error_callback("Could not load game at " + path[0] + '/' + path[1]);
+				error_callback("Could not load transition at team: " + info.team + ', name: ' + info.name);
 			});
 
 			// The manifest has already been loaded and cached
 		} else {
 
-			// set a reference to our directory just in case the manifest hasn't actually been used yet (may have been compiled)
-			_Manifests.microgames[path[0]][path[1]].path = dir;
+			let onLoaded = function () {
+				// cache the manifest so we don't have to reload it again later, and fire the callback
+				_Manifests.transitions[info.team][info.name].path = dir;
+				_Manifests.transitions[info.team][info.name].type = "transitions";
+				callback(_Manifests.transitions[info.team][info.name], dir);
+			}
 
-			// fire the callback
-			callback(_Manifests.microgames[path[0]][path[1]], dir);
+			// there's a parent manifest here, lets get that loaded first
+			if (data.parent && data.parent.team && data.parent.name) {
+				_this.loadTransitionManifest({ team: data.parent.team, name: data.parent.name }, onLoaded, error_callback, force);
+			} else {
+				onLoaded();
+			}
+		}
+	}
+
+	/**
+	 * Loads the manifest.json data for a microgame
+	 * @param {object} gameInfo - An object with a team and game key to identify the microgame.
+	 * @param {function} callback - A callback function to run when the microgame has loaded.
+	 * @param {function} error_callback - A callback function to run if there are any problems loading the microgame.
+	 * @param {boolean} force - set to true to load all files instead of using cached/compiled data.
+	 */
+	loadMicroGameManifest(gameInfo, callback, error_callback, force) {
+		let _this = this;
+
+		// make sure we have a container for the microgame's parent path
+		_Manifests.microgames[gameInfo.team] = typeof (_Manifests.microgames[gameInfo.team]) !== 'undefined' ? _Manifests.microgames[gameInfo.team] : {};
+
+		// if error_callback is true, use that as the force property
+		if (error_callback === true) {
+			force = true;
+			error_callback = function () { };
+		}
+
+		// if no error callback is defined, have it use a generic alert
+		error_callback = typeof (error_callback) !== 'undefined' ? error_callback : function (error) {
+			console.error(error);
+			alert(error);
+		};
+
+		// this is the directory that the manifest file should be in
+		let dir = 'teams/' + gameInfo.team + '/microgames/' + gameInfo.game + '/';
+
+		// if the manifest hasn't been loaded yet, or we're forcing a fresh load....
+		if (force || !_Manifests.microgames[gameInfo.team][gameInfo.game]) {
+
+			// load the manifest file into a javascript object
+			this.getJSON(dir + 'manifest.json', function (data) {
+
+				// update the manifest so it has a reference to our directory.
+				data.path = dir;
+				data.type = "microgames";
+
+				let onLoaded = function () {
+					// cache the manifest so we don't have to reload it again later, and fire the callback
+					_Manifests.microgames[gameInfo.team][gameInfo.game] = data;
+					callback(_Manifests.microgames[gameInfo.team][gameInfo.game], dir);
+				}
+
+				if (data.parent && data.parent.team && data.parent.name) {
+					_this.loadMicroGameManifest({ team: data.parent.team, game: data.parent.name }, onLoaded, error_callback, force);
+				} else {
+					onLoaded();
+				}
+
+				// error handling
+			}, function (e) {
+
+				// manifest failed to load or decode
+				console.error(e);
+				console.error("Couldn't find file: " + dir + '/manifest.json');
+				error_callback("Could not load game at team: " + gameInfo.team + ', game: ' + gameInfo.game);
+			});
+
+			// The manifest has already been loaded and cached
+		} else {
+
+			let onLoaded = function () {
+				// set a reference to our directory just in case the manifest hasn't actually been used yet (may have been compiled)
+				_Manifests.microgames[gameInfo.team][gameInfo.game].path = dir;
+				_Manifests.microgames[gameInfo.team][gameInfo.game].type = "microgames";
+
+				// fire the callback
+				callback(_Manifests.microgames[gameInfo.team][gameInfo.game], dir);
+			}
+
+			if (data.parent && data.parent.team && data.parent.name) {
+				_this.loadMicroGameManifest({ team: data.parent.team, game: data.parent.name }, onLoaded, error_callback, force);
+			} else {
+				onLoaded();
+			}
+		}
+	}
+
+	/**
+	 * Loads the manifest.json data for a bossgame
+	 * @param {object} gameInfo - An object with a team and game key to identify the bossgame.
+	 * @param {function} callback - A callback function to run when the bossgame has loaded.
+	 * @param {function} error_callback - A callback function to run if there are any problems loading the bossgame.
+	 * @param {boolean} force - set to true to load all files instead of using cached/compiled data.
+	 */
+	loadBossGameManifest(gameInfo, callback, error_callback, force) {
+		let _this = this;
+
+		// make sure we have a container for the bossgame's parent path
+		_Manifests.bossgames[gameInfo.team] = typeof (_Manifests.bossgames[gameInfo.team]) !== 'undefined' ? _Manifests.bossgames[gameInfo.team] : {};
+
+		// if error_callback is true, use that as the force property
+		if (error_callback === true) {
+			force = true;
+			error_callback = function () { };
+		}
+
+		// if no error callback is defined, have it use a generic alert
+		error_callback = typeof (error_callback) !== 'undefined' ? error_callback : function (error) {
+			console.error(error);
+			alert(error);
+		};
+
+		// this is the directory that the manifest file should be in
+		let dir = 'teams/' + gameInfo.team + '/bossgames/' + gameInfo.game + '/';
+
+		// if the manifest hasn't been loaded yet, or we're forcing a fresh load....
+		if (force || !_Manifests.bossgames[gameInfo.team][gameInfo.game]) {
+
+			// load the manifest file into a javascript object
+			this.getJSON(dir + 'manifest.json', function (data) {
+
+				// update the manifest so it has a reference to our directory.
+				data.path = dir;
+				data.type = "bossgames";
+
+				let onLoaded = function () {
+					// cache the manifest so we don't have to reload it again later, and fire the callback
+					_Manifests.bossgames[gameInfo.team][gameInfo.game] = data;
+					callback(_Manifests.bossgames[gameInfo.team][gameInfo.game], dir);
+				}
+
+				if (data.parent && data.parent.team && data.parent.name) {
+					_this.loadBossGameManifest({ team: data.parent.team, game: data.parent.name }, onLoaded, error_callback, force);
+				} else {
+					onLoaded();
+				}
+
+				// error handling
+			}, function (e) {
+
+				// manifest failed to load or decode
+				console.error(e);
+				console.error("Couldn't find file: " + dir + '/manifest.json');
+				error_callback("Could not load game at team: " + gameInfo.team + ', game: ' + gameInfo.game);
+			});
+
+			// The manifest has already been loaded and cached
+		} else {
+
+			let onLoaded = function () {
+				// set a reference to our directory just in case the manifest hasn't actually been used yet (may have been compiled)
+				_Manifests.bossgames[gameInfo.team][gameInfo.game].path = dir;
+				_Manifests.bossgames[gameInfo.team][gameInfo.game].type = "bossgames";
+
+				// fire the callback
+				callback(_Manifests.bossgames[gameInfo.team][gameInfo.game], dir);
+			}
+
+			if (data.parent && data.parent.team && data.parent.name) {
+				_this.loadBossGameManifest({ team: data.parent.team, game: data.parent.name }, onLoaded, error_callback, force);
+			} else {
+				onLoaded();
+			}
 		}
 	}
 
@@ -3193,6 +4954,7 @@ class PWFramework {
 
 		// record the class as loaded, and register it with Phaser
 		PWGameSceneloader.loaded[manifest.sceneClass] = sceneClass;
+
 		this.phaser.scene.add(manifest.sceneClass, new sceneClass());
 	}
 
@@ -3214,8 +4976,10 @@ class PWFramework {
 			current_object = microgames;
 		} else if (top === 'bossgames') {
 			current_object = bossgames;
+		} else if (top === 'transitions') {
+			current_object = transitions;
 		} else {
-			throw ("Scene class must be namespaced to microgames or bossgames!");
+			throw ("Scene class must be namespaced to transitions, microgames or bossgames!");
 		}
 
 		// record the top level path
@@ -3256,7 +5020,8 @@ class PWFramework {
 	 * @return {boolean}
 	 */
 	isReady() {
-		return !this.in_transition && !this.paused;
+		let activeScene = this.phaser.scene.getScene(this.#activeGameScene);
+		return activeScene.scene.isActive() && !this.inTransition && !this.paused;
 	}
 
 	/**
@@ -3277,7 +5042,7 @@ class PWFramework {
 	 * @return {void}
 	 */
 	pause() {
-		this.paused = true;
+		this.#paused = true;
 		this.phaser.pause();
 	}
 
@@ -3286,7 +5051,7 @@ class PWFramework {
 	 * @return {void}
 	 */
 	resume() {
-		this.paused = false;
+		this.#paused = false;
 		this.phaser.resume();
 	}
 
@@ -3295,51 +5060,79 @@ class PWFramework {
 	 * @param {number} speed - Our speed modifier, where 1 = normal speed, 2 = 2x speed, etc.
 	 */
 	setGameSpeed(speed) {
-		this.gameSpeed = speed;
-		this.msPerTargetFrame = 1000 / (this.targetFPS * speed);
+		this.#gameSpeed = speed;
+		this.#msPerTargetFrame = 1000 / (this.targetFPS * speed);
+		this.#msPerStep = this.msPerTargetFrame * PWConfig.FRAMES_PER_STEP;
 	}
 
 	/**
+	 * Increases the game speed by the SPEED_MODIFIER constant
+	 * @return {void}
+	 * @see PWConfig.SPEED_MODIFIER
+	 */
+	increaseGameSpeed() {
+		this.setGameSpeed(this.gameSpeed + PWConfig.SPEED_MODIFIER);
+	}
+	/**
 	 * Call this in your game loop to get a number you can multiply any movement by so it runs with the correct timing
-	 * regardless of the end user's actual on-screen FPS.
+	 * regardless of the end user's actual on-screen FPS. This will trigger tge sendDelta() function to update the overall game timer.
 	 * @param {number} delta - The number of ms that have lapsed since the last update (comes from Phaser.Scene update function)
 	 * @return {number} - The multiplier you should use to adjust your game's timing
 	 */
-	getDeltaMultiplier(delta) {
+	getDeltaMultiplier(delta, updateGameTicker = true) {
 
-		// check the game's delta time to see if we need to update the game timer
-		if (GameWrapper.gameTimerStep < GameWrapper.gameTimerSteps + 1) {
-			this.stepTracker += delta;
-			if (this.stepTracker >= this.msPerStep) {
-				this.stepTracker -= this.msPerStep;
-				GameWrapper.gameTimerStep++;
-
-				if (GameWrapper.gameTimerStep === GameWrapper.gameTimerSteps) {
-					console.log("Time Up!", GameWrapper.gameTimerStep);
-					GameWrapper.stopGameTimer();
-				} else if (GameWrapper.gameTimerStep > GameWrapper.gameTimerSteps) {
-					console.log("Game over!", GameWrapper.gameTimerStep);
-					this.level.gameCompleted(this.winOnTimeUp);
-				} else {
-					GameWrapper.updateGameTimerFrame();
-				}
-			}
-		}
+		// bossrounds do not use the main game ticker
+		if (updateGameTicker && !this.level.bossRound) this.sendDelta(delta);
 
 		let modifier = delta / this.msPerTargetFrame;
 		return modifier;
 	}
 
 	/**
+	 * Updates the game timer and checks if the game is over
+	 * @param {number} delta - The number of ms that have lapsed since the last update (comes from Phaser.Scene update function)
+	 * @return {void}
+	 */
+	sendDelta(delta) {
+		// check the game's delta time to see if we need to update the game timer
+		if (GameWrapper.gameTimerStep < GameWrapper.gameTimerSteps + 1) {
+
+			// see if we've hit the next step in the game timer
+			this.#stepTracker += delta;
+			if (this.#stepTracker >= this.#msPerStep) {
+
+				// we hit the next step, but lets keep any overflow delta time for the next step
+				this.#stepTracker -= this.#msPerStep;
+				GameWrapper.gameTimerStep++;
+
+				// the microgame ran out of time, but we want the visual of it running out to stay for a tick
+				if (GameWrapper.gameTimerStep === GameWrapper.gameTimerSteps) {
+					GameWrapper.stopGameTimer();
+				}
+
+				// now we can actually end the game
+				else if (GameWrapper.gameTimerStep > GameWrapper.gameTimerSteps) {
+					this.level.gameCompleted(this.#winOnTimeUp);
+				}
+
+				// otherwise, just tick down the timer graphic
+				else {
+					GameWrapper.updateGameTimerFrame();
+				}
+			}
+		}
+	}
+
+	/**
 	 * Call this if the player will lose the game when the timer runs out.
 	 * This could be at the start of the game if they need to accomplish something to win, or at the end if they need to survive.
 	 * 
-	 * @param {boolean} play_win_animation - If true, the character will play the lose animation instantly
+	 * @param {boolean} play_lose_animation - If true, the character will play the lose animation instantly
 	 * @return {void}
 	 */
-	lostGame(play_win_animation = false) {
-		if (play_win_animation === true) GameWrapper.characterAnimation = 3;
-		this.winOnTimeUp = false;
+	lostGame(play_lose_animation = false) {
+		if (play_lose_animation === true) GameWrapper.characterAnimation = 3;
+		this.#winOnTimeUp = false;
 	}
 
 	/**
@@ -3351,7 +5144,7 @@ class PWFramework {
 	 */
 	wonGame(play_win_animation = false) {
 		if (play_win_animation === true) GameWrapper.characterAnimation = 2;
-		this.winOnTimeUp = true;
+		this.#winOnTimeUp = true;
 	}
 }
 // global vars
@@ -3362,12 +5155,16 @@ const microgames = {};
 /** Top-level namespace for all bossgames */
 const bossgames = {};
 
+/** Top-level namespace for all transitions */
+const transitions = {};
+
+/** Top-level namespace for all levels */
+const levels = {};
+
 /** Config constants **/
 const PWConfig = {
-	SPEED_NORMAL: 1,
-	SPEED_FASTER: 1.25,
-	SPEED_FASTEST: 1.5,
-	FRAMES_PER_STEP: 20
+	SPEED_MODIFIER: 0.25,
+	FRAMES_PER_STEP: 20         // our base framertate is 60fps, so this is 1/3 of a second, or 180 beats per minute
 };
 
 /** 
@@ -3376,373 +5173,3 @@ const PWConfig = {
  * @type {PWFramework}
  */
 const PWGame = new PWFramework();
-class PWCharacter {
-    // TODO - create this class, should handle character presentation and animation
-}
-/** 
- * class for managing levels 
- */
-class PWLevel {
-
-	/**
-	 * @param {object} manifest - the manifest object containing the level configuration
-	 * @param {string} manifest.character - the character animation sheet to use, ie "character_stub/character_sheet.XXX". (XXX = gif, png, webp)
-	 * @param {string} manifest.transition - the transition animation sheet to use, ie "transition_stub/transition_sheet.XXX". (XXX = gif, png, webp)
-	 * @param {string} manifest.logo - the logo image to use
-	 * @param {number} manifest.gamesPerRound - the number of microgames to play in each round
-	 * @param {array} manifest.microgames - an array of microgame paths to use
-	 * @param {object} manifest.bossgame - the bossgame manifest to use
-	 * @param {boolean|string} manifest.devMode - can be false, 'game', 'bossgame' or 'level'. Either string will enable developer mode, but 'game' will allow testing a microgame with no boss level, and 'bossgame' will allow testing a boss level with no microgames.
-	 */
-	constructor(manifest) {
-
-		if (!manifest) throw ("Missing required manifest!");
-
-		/** 
-		 * @type {boolean} if true, level is running in developer mode
-		 */
-		this.devMode = false;
-
-		if (manifest.devMode) {
-
-			this.devMode = manifest.devMode;
-
-			// while developing, the manifest can be incomplete. But we still need to pull all the defaults
-			for (const [key, val] of Object.entries(PWLevel.default_manifest)) {
-				if (typeof (manifest[key]) === 'undefined') manifest[key] = val;
-			}
-		}
-
-		// check for required items
-		if (!manifest.character) throw ("Missing required character!");
-		if (!manifest.logo) throw ("Missing required logo!");
-		if (!manifest.transition) throw ("Missing required transition!");
-		if (!manifest.microgames && manifest.devMode !== 'bossgame') throw ("Missing required microgame array!");
-		if (!manifest.bossgame && manifest.devMode !== 'game') throw ("Missing required bossgame!");
-
-		/** 
-		 * current round (1 = normal speed, 2 & 3 = faster speeds, 4 = boss) 
-		 * @type {number}
-		 */
-		this.round = 1;
-
-		/** 
-		 * The number of microgames to play in each non-boss round 
-		 * @type {number}
-		 */
-		this.gamesPerRound = typeof (manifest.gamesPerRound) !== 'undefined' ? manifest.gamesPerRound : 5;
-
-		/** 
-		 * The current number of games played  
-		 * @type {number}
-		 */
-		this.currentGame = 0;
-
-		/** 
-		 * The number of games remaining in the curren round 
-		 * @type {number}
-		 */
-		this.gamesRemaining = this.gamesPerRound;
-
-		/** 
-		 * container for manifests that haven't been used yet 
-		 * @type {array}
-		 */
-		this.microgame_manifests = [];
-
-		/** 
-		 * container for manifests that have been used (may be recycled) 
-		 * @type {array}
-		 */
-		this.microgame_manifests_used = [];
-
-		/** 
-		 * The level manifest 
-		 * @type {object}
-		 */
-		this.manifest = manifest;
-
-		/** 
-		 * Container for wrapper images 
-		 * @type {object}
-		 * @property {Image} logo - level logo image
-		 * @property {Image} character - character animation sheet
-		 * @property {Image} transition - transition animation sheet
-		 */
-		this.imgs = {
-			logo: new Image(),
-			character: new Image(),
-			transition: new Image()
-		};
-	}
-
-	/**
-	 * Gets the next phase of the level
-	 * @param {function} callback - A handler function that will recieve 2 params: mode and data.
-	 * @returns {void}
-	 */
-	getNext(callback) {
-
-		// we're currently in the microgame phase...
-		if (this.round < 4) {
-
-			// except, we have no microgames...
-			if (!this.manifest.microgames || this.manifest.microgames.length === 0) {
-
-				// if we're testing a biss game, just jump ahead
-				if (this.manifest.devMode === 'bossgame') {
-					console.log('skipping microgames');
-					this.round = 4;
-
-					// in any other case, this is an error
-				} else {
-					console.error("No microgames!");
-					callback('error', "No microgames!");
-					return;
-				}
-
-				// we haven't played the full number of games for this round yet
-			} else if (this.gamesRemaining > 0) {
-				console.log("next micro!");
-				this.gamesRemaining--;
-
-				// we've played all the games for this round, start a new round
-			} else {
-				this.round++;
-				this.gamesRemaining = this.gamesPerRound;
-				console.log("newround!!!");
-
-				// trigger the callback to show the proper message text before starting the next thing
-
-				// it's a micro-game round, show the 'faster' message
-				if (this.round < 4) {
-
-					callback("newround", "microgame");
-
-					// we're just testing a microgame, so we can be a winner now
-				} else if (this.manifest.devMode === 'game') {
-
-					callback("finish", 'devmode');
-
-					// show the 'boss level' message
-				} else {
-
-					callback("newround", "bossgame");
-				}
-				return;
-			}
-		}
-
-		if (this.round < 4) {
-			console.log("start micro!");
-			callback('microgame', this.getRandomMicrogameManifest());
-		} else if (this.round === 4) {
-			if (this.manifest.bossgame) {
-				console.log("start boss!");
-				callback('bossgame', this.getBossgameManifest());
-			} else if (this.manifest.devMode === 'game') {
-				console.log('skip bossgame');
-				this.round = 5;
-				callback('finish', null);
-			} else {
-				console.error("No bossgame!");
-				callback('error', "No bossgame!");
-			}
-		}
-	}
-
-	/**
-	 * Sets a callback handler for when the current micro/boss game is completed
-	 * @param {function} callback
-	 */
-	onGameComplete(callback) {
-		this.game_complete_callback = callback;
-	}
-
-	/**
-	 * call this when a microgame or boss game is completed
-	 * @param {boolean} success - set to true if the player won
-	 */
-	gameCompleted(success) {
-		GameWrapper.characterAnimation = success ? 2 : 3;
-		if (this.game_complete_callback) this.game_complete_callback(success);
-	}
-
-	/**
-	 * Loads any assets this level will use
-	 * @param {Function} callback - callback to execute when items are preloaded. Will pass a value between 0 and 1.
-	 * @param {boolean} force - set to true to ignore cached items
-	 */
-	preload(callback, force) {
-		let _this = this;
-
-		// logo, transition, character (TODO add skin)
-		var promises = 3;
-
-		// add one for each microgame
-		this.manifest.microgames.forEach(function (path) {
-			promises++;
-		});
-
-		var total_promises = promises;
-
-		// run this when every promise completes to see if we're done
-		function checkPromises() {
-			promises--;
-			callback((total_promises - promises) / total_promises);
-		}
-
-		// run this if something fucks up
-		function handleError(err) {
-			console.error(err);
-			promises--;
-			if (promises < 1) alert("Loaded with errors!");
-		}
-
-		// preload all the microgames asynchronously
-		this.manifest.microgames.forEach(function (path) {
-
-			let loadMicrogame = new Promise((resolve, reject) => {
-
-				PWGame.loadMicroGame(
-					path,
-					function (manifest) {
-						_this.microgame_manifests.push(manifest);
-						resolve();
-					},
-					function (err) {
-						alert("Microgame Failed:\n" + err + "\n\nDid you use the correct path?");
-						reject();
-					},
-					typeof (force) !== 'undefined' ? force : false
-				);
-
-			});
-
-			loadMicrogame.then(checkPromises, handleError);
-
-		});
-
-		// preload and remember all the images we need for the skin stuff
-		this.imgs.logo = new Image();
-		this.imgs.logo.src = "teams/" + this.manifest.logo.team + "/logos/" + this.manifest.logo.image;
-		this.imgs.logo.onload = checkPromises;
-
-		this.imgs.charsheet = new Image();
-		this.imgs.charsheet.src = "teams/" + this.manifest.character.team + "/characters/" + this.manifest.character.sheet;
-		this.imgs.charsheet.onload = checkPromises;
-
-		this.imgs.transsheet = new Image();
-		this.imgs.transsheet.src = "teams/" + this.manifest.transition.team + "/transitions/" + this.manifest.transition.sheet;
-		this.imgs.transsheet.onload = checkPromises;
-	}
-
-	/**
-	 * Returns true if level has an into movie
-	 * @return {boolean}
-	 */
-	hasIntro() {
-		return false;
-	}
-
-	/**
-	 * Returns a random microgame manifest, or false if no microgames exist in the level set 
-	 * (Will go through every game before returning a duplicate)
-	 * @return {(object|boolean)}
-	 */
-	getRandomMicrogameManifest() {
-		if (!this.manifest.microgames || this.manifest.microgames.length === 0) return false;
-
-		var i;
-
-		if (this.microgame_manifests.length < 1) {
-			this.microgame_manifests = this.microgame_manifests_used;
-			this.microgame_manifests_used = [];
-		}
-		if (this.microgame_manifests.length < 1) throw ("Level has no microgame manifests loaded");
-
-		let used = this.microgame_manifests.splice(Math.floor(Math.random() * this.microgame_manifests.length), 1)[0];
-
-		this.microgame_manifests_used.push(used);
-		return used;
-	}
-
-	/**
-	 * Returns the boss game manifest for this level, or false if none exists
-	 * @return {(object|boolen)}
-	 */
-	getBossgameManifest() {
-		return this.manifest.bossgame ? this.manifest.bossgame : false;
-	}
-}
-
-/** Default Level Manifest (used when testing) */
-PWLevel.default_manifest = {
-	logo: {
-		team: "psychogoldfish",
-		image: "sir_reginald_emojiman.png"
-	},
-	character: {
-		team: "psychogoldfish",
-		sheet: "sir_reginald_emojiman_sheet.webp",
-		icon: "sir_reginald_emojiman_icon.png"
-	},
-	transition: {
-		team: "psychogoldfish",
-		sheet: "yellow_bricks.webp"
-	},
-	gamesPerRound: 1,
-	microgames: null,
-	bossgame: null
-};
-/** A scene that preloads other scenes using data from manifests */
-class PWGameSceneloader extends Phaser.Scene {
-
-	/**
-	 * registers PWGameSceneloader scene key via parent constructor
-	 */
-	constructor() {
-		super({ key: 'PWGameSceneloader' });
-	}
-
-	/**
-	 * Uses Phaser to preload items from pending manifests
-	 */
-	preload() {
-		let _this = this;
-
-		// cycle through any manifests for the scene we are preloading
-		PWGameSceneloader.manifests.forEach(manifest => {
-
-			// add any images we need to load
-			if (manifest.images) {
-				manifest.images.forEach(image => {
-					_this.load.image(manifest.sceneClass + '.' + image.key, manifest.path + image.image);
-				});
-			}
-
-			// add any spritesheets
-
-			// add any textures/atlases
-
-			// add any sounds
-
-		});
-	}
-
-	/**
-	 * Once this scene is fully loaded, tell the framework to move on.
-	 */
-	create() {
-		PWGame.onManifestsLoaded(this);
-	}
-}
-
-// container for loaded scene classes
-PWGameSceneloader.loaded = {};
-
-// queue manifests that need to have assets loaded in here
-PWGameSceneloader.manifests = [];
-class PWTransition {
-    // TODO - write a handler class for transitions
-}

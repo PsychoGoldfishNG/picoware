@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0"
+		id="viewport">
+
+	<!-- IF DEV -->
+	<title>Picoware Developer Mode</title>
+	<!-- ENDIF -->
+
+	<!-- IF PROD -->
+	<title>Picoware</title>
+	<!-- ENDIF -->
+
+	<script src="./phaser/phaser.min.js"></script>
+	<link rel="stylesheet" href="./css/framework.css" />
+
+	<style>
+		label {
+			display: inline-block;
+			min-width: 128px;
+		}
+
+		button {
+			cursor: pointer;
+		}
+
+		form {
+			display: block;
+		}
+
+		form>div {
+			margin: 8px 0px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="gameText" style="opacity:0; pointer-events:none; position:fixed">Picoware Inc</div>
+
+	<!-- IF DEV -->
+	<!-- Start HTML for Developer Mode -->
+
+	<div id="dev-interface"
+		style="display:none; position: absolute; top: 0px; left: 0px; padding: 18px; width: calc(100% - 36px)">
+		<form>
+			<h3 class="gamefont">Phaser Options:</h3>
+			<div>
+				<input type="checkbox" id="debug-physics" value="1">
+				<label for="debug-physics">Enable Physics Debugging</label>
+			</div>
+		</form>
+		<hr />
+		<!-- for for testing a microgame -->
+		<form>
+			<h3 class="gamefont">Test Your Microgame</h3>
+			<div>
+				<label for="microgame-team">Team:</label>
+				<input type="text" placeholder="team" id="microgame-team" value="">
+			</div>
+			<div>
+				<label for="microgame-dir">Microgame:</label>
+				<input type="text" placeholder="microgame" id="microgame-dir" value="">
+			</div>
+			<div>
+				<button id="microgame-btn">Start Test</button>
+			</div>
+		</form>
+		<hr />
+		<!-- for for testing a bossgame -->
+		<form>
+			<h3 class="gamefont">Test Your Bossgame</h3>
+			<div>
+				<label for="bossgame-team">Team:</label>
+				<input type="text" placeholder="team" id="bossgame-team" value="">
+			</div>
+			<div>
+				<label for="bossgame-dir">Bossgame:</label>
+				<input type="text" placeholder="bossgame" id="bossgame-dir" value="">
+			</div>
+			<div>
+				<button id="bossgame-btn">Start Test</button>
+			</div>
+		</form>
+
+	</div>
+
+	<!-- End HTML for Developer Mode -->
+	<!-- ENDIF -->
+
+	<!-- Start HTML for fader effect -->
+	<div id="fader"></div>
+	<!-- End HTML for fader effect -->
+
+	<!-- Start HTML for loading screen -->
+	<div id="loading-skin" style="display:none">
+		<div class="bookend"></div>
+		<div class="loadElem">
+			<div class="loaderText">
+				<h1 class="gameText">LOADING...</h1>
+				<div class="loader"></div>
+			</div>
+			<div class="loaderBar">
+				<div id="loader-bar"></div>
+			</div>
+		</div>
+		<div class="bookend"></div>
+	</div>
+	<!-- End HTML for loading screen -->
+
+	<!-- Start HTML for core game -->
+
+	<div id="gameplay-skin" style="display:none">
+		<div id="deco">
+			<div class="top">
+				<div class="left-corner"></div>
+				<div class="left"></div>
+				<div class="middle"></div>
+				<div class="right"></div>
+				<div class="right-corner"></div>
+			</div>
+			<div class="center">
+				<div class="left"></div>
+				<div class="middle"></div>
+				<div class="right"></div>
+			</div>
+			<div class="bottom">
+				<div class="left-corner"></div>
+				<div class="left"></div>
+				<div class="middle"></div>
+				<div class="right"></div>
+				<div class="right-corner"></div>
+			</div>
+		</div>
+		<div id="ui-elements" style="display:none">
+			<div id="screenframe"></div>
+			<div id="screen">
+				<div id="screenTransition"></div>
+				<div id="screenHint" style="display: none;">
+					<div class="hintAlign">
+						<div id="hintShadow">PLAY!</div>
+						<div id="hintText">PLAY!</div>
+					</div>
+				</div>
+				<div id="hintControls" style="display:none">
+					<div id="hintControlsInner"></div>
+				</div>
+				<div class="screen-frame"></div>
+				<div id="gameTimer" style="display:none"></div>
+				<div id="gameTimeOver" style="display:none"></div>
+			</div>
+			<div id="led"></div>
+			<div id="dpad-frame">
+				<div id="dpad">
+					<div id="dpad-highlight" style="display:none"></div>
+				</div>
+			</div>
+			<div id="ab-buttons-frame">
+				<div id="ab-buttons">
+					<div id="b-button" style="display:none"></div>
+					<div id="a-button" style="display:none"></div>
+				</div>
+			</div>
+			<div id="start-select-buttons-frame">
+				<div id="start-select-buttons">
+					<div id="start-button" style="display:none"></div>
+					<div id="select-button" style="display:none"></div>
+				</div>
+			</div>
+			<div id="speaker-frame">
+				<div id="speaker"></div>
+			</div>
+			<div id="logo"></div>
+			<div id="character"></div>
+		</div>
+	</div>
+	<!-- End HTML for core game -->
+
+	<!-- load and start the framework in developer mode -->
+	<script src="js/framework.js"></script>
+	<!-- IF DEV -->
+	<script>
+		PWGame.start('dev');
+	</script>
+	<!-- ENDIF -->
+	<!-- IF PROD -->
+	<script>
+		PWGame.start();
+	</script>
+	<!-- ENDIF -->
+
+
+</body>

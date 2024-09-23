@@ -1,0 +1,103 @@
+{
+	"textures": [
+		{
+			"image": "gameSprites",
+			"format": "RGBA8888",
+			"size": {
+				"w": 324,
+				"h": 847
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "thwomp",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 412,
+						"h": 337
+					},
+					"spriteSourceSize": {
+						"x": 42,
+						"y": 0,
+						"w": 320,
+						"h": 337
+					},
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 320,
+						"h": 337
+					}
+				},
+				{
+					"filename": "thwomp_angry",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 412,
+						"h": 337
+					},
+					"spriteSourceSize": {
+						"x": 42,
+						"y": 0,
+						"w": 320,
+						"h": 337
+					},
+					"frame": {
+						"x": 2,
+						"y": 343,
+						"w": 320,
+						"h": 337
+					}
+				},
+				{
+					"filename": "goomba",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 200,
+						"h": 123
+					},
+					"spriteSourceSize": {
+						"x": 30,
+						"y": 0,
+						"w": 140,
+						"h": 123
+					},
+					"frame": {
+						"x": 2,
+						"y": 684,
+						"w": 140,
+						"h": 123
+					}
+				},
+				{
+					"filename": "goomba_squished",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 200,
+						"h": 123
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 89,
+						"w": 200,
+						"h": 34
+					},
+					"frame": {
+						"x": 2,
+						"y": 811,
+						"w": 200,
+						"h": 34
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "http://free-tex-packer.com",
+		"version": "0.6.7"
+	}
+}

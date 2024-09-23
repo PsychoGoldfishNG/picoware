@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "version": "0.6.7"
+  },
+  "savePath": "C:\\GameDev\\PicoWare\\game\\htdocs\\teams\\psychogoldfish\\microgames\\thwomp-stomp",
+  "images": [
+    {
+      "name": "goomba.png",
+      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/microgames/thwomp-stomp/goomba.png",
+      "folder": ""
+    },
+    {
+      "name": "goomba_squished.png",
+      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/microgames/thwomp-stomp/goomba_squished.png",
+      "folder": ""
+    },
+    {
+      "name": "thwomp.png",
+      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/microgames/thwomp-stomp/thwomp.png",
+      "folder": ""
+    },
+    {
+      "name": "thwomp_angry.png",
+      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/microgames/thwomp-stomp/thwomp_angry.png",
+      "folder": ""
+    }
+  ],
+  "folders": [],
+  "packOptions": {
+    "textureName": "gameSprites",
+    "textureFormat": "png",
+    "removeFileExtension": true,
+    "prependFolderName": false,
+    "base64Export": false,
+    "tinify": false,
+    "tinifyKey": "",
+    "scale": 1,
+    "filter": "none",
+    "exporter": "Phaser 3",
+    "fileName": "pack-result",
+    "savePath": "C:\\GameDev\\PicoWare\\game\\htdocs\\teams\\psychogoldfish\\microgames\\thwomp-stomp",
+    "width": 2048,
+    "height": 2048,
+    "fixedSize": false,
+    "powerOfTwo": false,
+    "padding": 1,
+    "extrude": 1,
+    "allowRotation": false,
+    "allowTrim": true,
+    "trimMode": "trim",
+    "alphaThreshold": "0",
+    "detectIdentical": true,
+    "packer": "MaxRectsBin",
+    "packerMethod": "BestShortSideFit"
+  }
+}

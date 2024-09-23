@@ -8,13 +8,34 @@ const path = require('path');
 
 const www_root = "../../game/htdocs";
 
-console.log("Compiling manifests... (note, you will need to re-run this tool to rebuild these again!)");
+let manifestTimeout = null;
 
-build.processManifests();
+// listen for changes to compiled manifests
+function watchManifests() {
+	build.manifests_compiled.forEach(manifest => {
+
+		fs.watch(manifest, (eventType, filename) => {
+			if (manifestTimeout) return
+			manifestTimeout = setTimeout(() => {
+				manifestTimeout = null;
+				processManifests();
+			}, 200);
+		});
+	});
+}
+
+function processManifests() {
+	console.log("Compiling manifests...");
+	build.processManifests(function () {
+		watchManifests();
+	});
+}
+processManifests();
 
 var scanned = false;
 var queued_js = false;
 var queued_sass = false;
+var queued_html = false;
 
 function onJSChanged(path) {
 	if (!scanned || queued_js) return;
@@ -44,6 +65,20 @@ function onSASSChanged(path) {
 	}, 100);
 }
 
+function onHTMLChanged(path) {
+	if (!scanned || queued_html) return;
+
+	queued_html = true;
+	setTimeout(() => {
+		build.compileHTML(() => {
+			queued_html = false;
+			var d = new Date();
+			d = d.getFullYear() + "-" + ('0' + (d.getMonth() + 1)).slice(-2) + "-" + ('0' + d.getDate()).slice(-2) + " " + ('0' + d.getHours()).slice(-2) + ":" + ('0' + d.getMinutes()).slice(-2) + ":" + ('0' + d.getSeconds()).slice(-2);
+			console.log('Compiled HTML @ ' + d);
+		});
+	}, 100);
+}
+
 let js_watcher = chokidar.watch(__dirname + "/" + build.js_src, { persistent: true });
 
 js_watcher
@@ -59,13 +94,21 @@ sass_watcher
 	.on('change', onSASSChanged)
 	;
 
+let html_watcher = chokidar.watch(__dirname + "/" + build.html_src, { persistent: true });
+
+html_watcher
+	.on('change', onHTMLChanged)
+	;
+
 console.log("Watching " + __dirname + "/" + build.js_src + " for changes...");
 console.log("Watching " + __dirname + "/" + build.sass_to_watch + " for changes...");
+console.log("Watching " + __dirname + "/" + build.html_src + " for changes...");
 
 setTimeout(() => {
 	scanned = true;
 	onJSChanged();
 	onSASSChanged();
+	onHTMLChanged();
 }, 500);
 
 // serve the game
@@ -158,7 +201,12 @@ http.createServer(function (req, res) {
 
 console.log("Serving game at http://localhost:8080/");
 
-fs.watch(__filename, (eventType, filename) => {
-	console.log("Daemon script changed, exiting...");
-	process.exit(0);
+let watch_core = [__filename, __dirname + "/build-module.js"];
+
+watch_core.forEach(watch => {
+	fs.watch(watch, (eventType, filename) => {
+		console.log("Core script changed: " + filename);
+		console.log("Exiting...");
+		process.exit(0);
+	});
 });

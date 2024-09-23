@@ -1,0 +1,24 @@
+{
+	"name": "Thwomp Stomp",
+	"sceneClass": "microgames.psychogoldfish.thwomp_stomp",
+	"parent": {
+		"team": "psychogoldfish",
+		"name": "push_the_button"
+	},
+	"jsFiles": [
+		"thwomp-stomp.js"
+	],
+	"atlases": [
+		{
+			"key": "gameSprites",
+			"texture": "gameSprites.png",
+			"atlas": "gameSprites.json"
+		}
+	],
+	"credits": [
+		{
+			"credit": "designer",
+			"name": "PsychoGoldfish"
+		}
+	]
+}

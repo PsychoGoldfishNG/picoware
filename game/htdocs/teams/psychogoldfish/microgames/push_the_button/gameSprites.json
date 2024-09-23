@@ -1,0 +1,82 @@
+{
+	"textures": [
+		{
+			"image": "gameSprites",
+			"format": "RGBA8888",
+			"size": {
+				"w": 972,
+				"h": 341
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "finger",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 412,
+						"h": 337
+					},
+					"spriteSourceSize": {
+						"x": 92,
+						"y": 0,
+						"w": 320,
+						"h": 337
+					},
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 320,
+						"h": 337
+					}
+				},
+				{
+					"filename": "button_up",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 320,
+						"h": 115
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 320,
+						"h": 115
+					},
+					"frame": {
+						"x": 326,
+						"y": 2,
+						"w": 320,
+						"h": 115
+					}
+				},
+				{
+					"filename": "button_down",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 320,
+						"h": 95
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 320,
+						"h": 95
+					},
+					"frame": {
+						"x": 650,
+						"y": 2,
+						"w": 320,
+						"h": 95
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "http://free-tex-packer.com",
+		"version": "0.6.7"
+	}
+}

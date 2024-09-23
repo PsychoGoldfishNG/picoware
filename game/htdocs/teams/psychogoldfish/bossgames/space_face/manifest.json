@@ -1,0 +1,20 @@
+{
+	"name": "Space Face",
+	"sceneClass": "bossgames.psychogoldfish.space_face",
+	"jsFiles": [
+		"space-face.js"
+	],
+	"atlases": [
+		{
+			"key": "gameSprites",
+			"texture": "gameSprites.png",
+			"atlas": "gameSprites.json"
+		}
+	],
+	"credits": [
+		{
+			"credit": "designer",
+			"name": "PsychoGoldfish"
+		}
+	]
+}

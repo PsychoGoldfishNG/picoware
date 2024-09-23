@@ -1,0 +1,376 @@
+{
+	"textures": [
+		{
+			"image": "gameSprites",
+			"format": "RGBA8888",
+			"size": {
+				"w": 2038,
+				"h": 310
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "speed",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 556,
+						"h": 175
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 556,
+						"h": 175
+					},
+					"frame": {
+						"x": 2,
+						"y": 2,
+						"w": 556,
+						"h": 175
+					}
+				},
+				{
+					"filename": "warp",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 535,
+						"h": 175
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 535,
+						"h": 175
+					},
+					"frame": {
+						"x": 562,
+						"y": 2,
+						"w": 535,
+						"h": 175
+					}
+				},
+				{
+					"filename": "rock5",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 314,
+						"h": 314
+					},
+					"spriteSourceSize": {
+						"x": 7,
+						"y": 5,
+						"w": 302,
+						"h": 306
+					},
+					"frame": {
+						"x": 1101,
+						"y": 2,
+						"w": 302,
+						"h": 306
+					}
+				},
+				{
+					"filename": "rock4",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 237,
+						"h": 211
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 1,
+						"w": 235,
+						"h": 209
+					},
+					"frame": {
+						"x": 1407,
+						"y": 2,
+						"w": 235,
+						"h": 209
+					}
+				},
+				{
+					"filename": "ship",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 214,
+						"h": 113
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 9,
+						"w": 213,
+						"h": 97
+					},
+					"frame": {
+						"x": 1646,
+						"y": 2,
+						"w": 213,
+						"h": 97
+					}
+				},
+				{
+					"filename": "rock3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 157,
+						"h": 101
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 3,
+						"w": 154,
+						"h": 97
+					},
+					"frame": {
+						"x": 1863,
+						"y": 2,
+						"w": 154,
+						"h": 97
+					}
+				},
+				{
+					"filename": "star1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 12,
+						"h": 12
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 0,
+						"w": 11,
+						"h": 11
+					},
+					"frame": {
+						"x": 2021,
+						"y": 2,
+						"w": 11,
+						"h": 11
+					}
+				},
+				{
+					"filename": "star2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 12,
+						"h": 12
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 0,
+						"w": 11,
+						"h": 11
+					},
+					"frame": {
+						"x": 2021,
+						"y": 17,
+						"w": 11,
+						"h": 11
+					}
+				},
+				{
+					"filename": "star3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 12,
+						"h": 12
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 0,
+						"w": 11,
+						"h": 11
+					},
+					"frame": {
+						"x": 2021,
+						"y": 32,
+						"w": 11,
+						"h": 11
+					}
+				},
+				{
+					"filename": "explode_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 214,
+						"h": 113
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 4,
+						"w": 201,
+						"h": 107
+					},
+					"frame": {
+						"x": 1646,
+						"y": 103,
+						"w": 201,
+						"h": 107
+					}
+				},
+				{
+					"filename": "explode_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 214,
+						"h": 113
+					},
+					"spriteSourceSize": {
+						"x": 35,
+						"y": 16,
+						"w": 123,
+						"h": 75
+					},
+					"frame": {
+						"x": 1851,
+						"y": 103,
+						"w": 123,
+						"h": 75
+					}
+				},
+				{
+					"filename": "flame_2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 61,
+						"h": 60
+					},
+					"spriteSourceSize": {
+						"x": 5,
+						"y": 19,
+						"w": 53,
+						"h": 31
+					},
+					"frame": {
+						"x": 1978,
+						"y": 103,
+						"w": 53,
+						"h": 31
+					}
+				},
+				{
+					"filename": "flame_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 61,
+						"h": 60
+					},
+					"spriteSourceSize": {
+						"x": 10,
+						"y": 13,
+						"w": 51,
+						"h": 37
+					},
+					"frame": {
+						"x": 1978,
+						"y": 138,
+						"w": 51,
+						"h": 37
+					}
+				},
+				{
+					"filename": "flame_1",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 61,
+						"h": 60
+					},
+					"spriteSourceSize": {
+						"x": 11,
+						"y": 3,
+						"w": 49,
+						"h": 53
+					},
+					"frame": {
+						"x": 1978,
+						"y": 179,
+						"w": 49,
+						"h": 53
+					}
+				},
+				{
+					"filename": "rock2",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 92,
+						"h": 78
+					},
+					"spriteSourceSize": {
+						"x": 1,
+						"y": 2,
+						"w": 90,
+						"h": 75
+					},
+					"frame": {
+						"x": 1851,
+						"y": 182,
+						"w": 90,
+						"h": 75
+					}
+				},
+				{
+					"filename": "explode_3",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 214,
+						"h": 113
+					},
+					"spriteSourceSize": {
+						"x": 70,
+						"y": 42,
+						"w": 48,
+						"h": 38
+					},
+					"frame": {
+						"x": 1945,
+						"y": 236,
+						"w": 48,
+						"h": 38
+					}
+				},
+				{
+					"filename": "rock1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 39,
+						"h": 26
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 39,
+						"h": 26
+					},
+					"frame": {
+						"x": 1997,
+						"y": 236,
+						"w": 39,
+						"h": 26
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "http://free-tex-packer.com",
+		"version": "0.6.7"
+	}
+}

@@ -15,6 +15,12 @@ const GameWrapper = {
 	view: 'game',
 
 	/** 
+	 * size of the gameplay screen when scales to 100% 
+	 * @type {number}
+	 */
+	screenSize: 524,
+
+	/** 
 	 * Config for desktop view 
 	 * @type {object}
 	 */
@@ -31,12 +37,6 @@ const GameWrapper = {
 		 * @type {number}
 		 */
 		baseHeight: 540,
-
-		/** 
-		 * size of inner game screen (it's a square) at 100% 
-		 * @type {number}
-		 */
-		screenSize: 524,
 
 		/** 
 		 * distance of screen from top of page 100% 
@@ -98,12 +98,6 @@ const GameWrapper = {
 		 * @type {number}
 		 */
 		baseHeight: 1280,
-
-		/** 
-		 * size of the game screen (it's a square) at 100% 
-		 * @type {number}
-		 */
-		screenSize: 524,
 
 		/** 
 		 * distance of screen from top of the GBC at 100% 
@@ -238,12 +232,6 @@ const GameWrapper = {
 		 * @type {number}
 		 */
 		baseHeight: 720,
-
-		/** 
-		 * size of the game screen (it's a square) at 100% 
-		 * @type {number}
-		 */
-		screenSize: 524,
 
 		/** 
 		 * distance of screen from top of the GBA at 100% 
@@ -639,6 +627,18 @@ const GameWrapper = {
 		this.hintShadow = document.getElementById('hintShadow');
 
 		/**
+		 * The control hint container
+		 * @type {HTMLElement}
+		 */
+		this.hintControls = document.getElementById('hintControls');
+
+		/**
+		 * The control hint graphic
+		 * @type {HTMLElement}
+		 */
+		this.hintControlsInner = document.getElementById('hintControlsInner');
+
+		/**
 		 * The bomb/fuse animation container
 		 * @type {HTMLElement}
 		 */
@@ -685,6 +685,8 @@ const GameWrapper = {
 		 * @property {boolean} B - true if the B button is pressed
 		 * @property {boolean} select - true if the select button is pressed
 		 * @property {boolean} start - true if the start button is pressed
+		 * @property {boolean} action - true if A or B is pressed
+		 * @property {boolean} pause - true if the start button is pressed
 		 */
 		this.ui = {
 			up: false,
@@ -694,7 +696,10 @@ const GameWrapper = {
 			A: false,
 			B: false,
 			select: false,
-			start: false
+			start: false,
+
+			action: false,
+			pause: false
 		};
 
 		/**
@@ -712,7 +717,9 @@ const GameWrapper = {
 			A: { x: 0, y: 0, size: 0, touch: false },
 			B: { x: 0, y: 0, size: 0, touch: false },
 			select: { x: 0, y: 0, size: 0, touch: false },
-			start: { x: 0, y: 0, size: 0, touch: false }
+			start: { x: 0, y: 0, size: 0, touch: false },
+			action: { x: 0, y: 0, size: 0, touch: false },
+			pause: { x: 0, y: 0, size: 0, touch: false }
 		};
 
 		// handle screen size changes and orientation updates
@@ -786,6 +793,9 @@ const GameWrapper = {
 				let elem = key.toLowerCase() + "Button";
 				_this[elem].style.display = "block";
 				_this.ui[key] = true;
+
+				if (['A', 'B'].includes(key)) _this.ui.action = true;
+				if (key === 'start') _this.ui.pause = true;
 			}
 
 			// fire any callback functions with the current UI states and return true.
@@ -819,6 +829,9 @@ const GameWrapper = {
 				let elem = key.toLowerCase() + "Button";
 				_this[elem].style.display = "none";
 				_this.ui[key] = false;
+
+				if (['A', 'B'].includes(key)) _this.ui.action = false;
+				if (key === 'start') _this.ui.pause = false;
 			}
 
 			// fire any callback functions with the current UI states and return true.
@@ -979,7 +992,7 @@ const GameWrapper = {
 		// record the game screen size and position
 		let screen = {
 			// make sure the size is a factor of 2 to avoid blurring the canvas when centering
-			size: Math.round((lo.screenSize * scale) / 2) * 2
+			size: Math.round((this.screenSize * scale) / 2) * 2
 		};
 		screen.top = skinMarginY + Math.round(lo.screenTop * scale);
 		screen.left = Math.round(((size.ew - screen.size) / 2));
@@ -1130,7 +1143,7 @@ const GameWrapper = {
 		// update the game screen 
 		let screen = {
 			// make sure the size is a factor of 2 to avoid blurring the canvas when centering
-			size: Math.round((lo.screenSize * scale) / 2) * 2
+			size: Math.round((this.screenSize * scale) / 2) * 2
 		};
 		screen.top = skinMarginY + Math.round(lo.screenTop * scale);
 		screen.left = Math.round(((size.ew - screen.size) / 2));
@@ -1252,7 +1265,7 @@ const GameWrapper = {
 		// update the game screen 
 		let screen = {
 			// make sure the size is a factor of 2 to avoid blurring the canvas when centering
-			size: Math.round((lo.screenSize * scale) / 2) * 2
+			size: Math.round((this.screenSize * scale) / 2) * 2
 		};
 		screen.top = skinMarginY + Math.round(lo.screenTop * scale);
 		screen.left = Math.round(((size.ew - screen.size) / 2));
@@ -1454,317 +1467,104 @@ const GameWrapper = {
 	/**
 	 * Sets the text of the hint element and animates it
 	 * @param {string} hintText - The text to display
+	 * @param {string} controls - The control type to display
+	 * @param {function} hintDisplayedCallback - A function to call when the hint is in the middle of the screen
+	 * @param {function} hintCompleteCallback - A function to call when the animation is complete
 	 * @returns {void}
 	 */
-	setHintText: function (hintText) {
+	setHintText: function (hintText, controls, hintDisplayedCallback, hintCompleteCallback) {
+
+		controls = PWGame.input.getControlHint(controls);
+
+		let controlHints = [
+			'wasd',
+			'arrows',
+			'gamepad',
+			'mouse',
+			'touch'
+		];
+
+		let controlIndex = controlHints.indexOf(controls);
+
+		let _this = this;
+
+		// get the screen scale
+		let scale = parseInt(this.screen.style.width.replace("px", "")) / this.screenSize;
+
+		// update hint control graphic size
+		let hintControlSize = { width: Math.round(210 * scale), height: Math.round(100 * scale) };
+
+		this.hintControlsInner.style.width = hintControlSize.width + "px";
+		this.hintControlsInner.style.height = hintControlSize.height + "px";
+		this.hintControlsInner.style.backgroundSize = hintControlSize.width + "px " + (hintControlSize.height * 5) + "px";
+		this.hintControlsInner.style.backgroundPosition = "0px -" + (hintControlSize.height * controlIndex) + "px";
+
+		// space between hint elements
+		let margin = Math.round(30 * scale);
+
+		// approximate text height
+		let size = Math.floor(36 * scale);
+
+		// set the hint text
+		this.screenHint.style.fontSize = size + "px";
 		this.hintText.innerHTML = this.hintShadow.innerHTML = "";
-		this.screenHint.style.fontSize = "";
+		this.hintText.textContent = this.hintShadow.textContent = hintText;
+
+		// get the starting position of the hint elements
+		let hintControlsTop = -(hintControlSize.height + margin);
+		let hintTextTop = hintControlsTop - margin - hintControlSize.height;
+
+		// reset the element positions and transitions
 		this.screenHint.style.display = "";
 		this.screenHint.style.transition = "";
 		this.screenHint.style.transitionTimingFunction = "";
+		this.screenHint.style.top = hintTextTop + "px";
 
-		let size = Math.floor(this.screenHint.offsetHeight);
-		this.screenHint.style.fontSize = size + "px";
-		this.hintText.textContent = this.hintShadow.textContent = hintText;
+		this.hintControls.style.display = "";
+		this.hintControls.style.transition = "";
+		this.hintControls.style.transitionTimingFunction = "";
+		this.hintControls.style.top = hintControlsTop + "px";
 
-		this.screenHint.style.top = "-" + (size * 2) + "px";
-		let _this = this;
+		// ms of ease animation
+		let ease_time = 260;
+		let display_time = 1000;
+		let ease_css = (ease_time / 1000) + "s";
 
+		// TODO - apply the gamespeed to these animations
+
+		// start reasing in the hint elements right away
 		setTimeout(() => {
-			_this.screenHint.style.transition = "0.2s";
+			_this.screenHint.style.transition = ease_css;
 			_this.screenHint.style.transitionTimingFunction = "ease-out";
-			_this.screenHint.style.top = "";
+			_this.screenHint.style.top = "calc(46% - " + size + "px)";
+
+			_this.hintControls.style.transition = ease_css;
+			_this.hintControls.style.transitionTimingFunction = "ease-out";
+			_this.hintControls.style.top = "calc(46% + " + margin + "px)";
 		}, 1);
 
+		// after we've eased in and passed our display time, ease out
 		setTimeout(() => {
-			_this.screenHint.style.transition = "0.2s";
+			_this.screenHint.style.transition = ease_css;
 			_this.screenHint.style.transitionTimingFunction = "ease-in";
-			_this.screenHint.style.top = "-" + (size * 2) + "px";
+			_this.screenHint.style.top = hintTextTop + "px";
+
+			_this.hintControls.style.transition = ease_css;
+			_this.hintControls.style.transitionTimingFunction = "ease-in";
+			_this.hintControls.style.top = hintControlsTop + "px";
 
 			// reset the character animation
 			GameWrapper.characterAnimation = 1;
-		}, 800);
-	},
 
-	/** 
-	 * The current transition image 
-	 * @type {Image}
-	 */
-	transitionImage: new Image(),
+			// we can call the displayed callback
+			if (typeof (hintDisplayedCallback) === 'function') hintDisplayedCallback();
 
-	/** 
-	 * The base width/height of each transition frame 
-	 * @type {number}
-	 */
-	transitionSize: 524,
+		}, ease_time + display_time);
 
-	/** 
-	 * The zoom level of the transition
-	 * @type {number}
-	 */
-	transitionZoom: 1,
-
-	/** 
-	 * The current animation frame of the transition
-	 * @type {number}
-	 */
-	transitionFrame: 1,
-
-	/** 
-	 * Used to manage the framerate of the 2 transition animations
-	 * @type {object}
-	 * @property {number} a - The framerate of the first animation
-	 * @property {number} b - The framerate of the second animation
-	 */
-	transitionFramerates: { a: 8, b: 8 },
-
-	/**
-	 * Exits a transition by setting it to frame 5, then zooming in
-	 * @param {function} callback - A function to call when zooming in is complete
-	 * @param {zoom} number - The zoom level to end at (default = 2)
-	 * @param {time} number - The duration of the zoom animation in milliseconds
-	 * @returns {void}
-	 */
-	exitTransition: function (callback, zoom, time) {
-		if (!callback) throw ("Missing required callback");
-
-		this.screenTransition.style.display = "";
-
-		if (!zoom) zoom = 2;
-		if (!time) time = 250;
-
-		let fps = 1000 / 60;
-		let range = zoom - 1;
-		let frames = time / fps;
-		let step = range / frames;
-
-		let _this = this;
-
-		_this.setTransitionZoom(1, 5);
-
-		let zoomInterval = setInterval(
-
-			function () {
-				if (_this.transitionZoom >= zoom) {
-					clearInterval(zoomInterval);
-					callback();
-				} else {
-					_this.setTransitionZoom(_this.transitionZoom + step, 5);
-				}
-			},
-
-			fps
-		)
-	},
-
-	/**
-	 * Enters a transition by setting it to frame 5 zoomed in, then zooming out to 100%
-	 * @param {function} callback - A function to call when zooming out is complete
-	 * @param {zoom} number - The zoom level to start at (default = 2)
-	 * @param {time} number - The duration of the zoom animation in milliseconds
-	 * @returns {void}
-	 */
-	enterTransition: function (callback, zoom, time) {
-		if (!callback) throw ("Missing required callback");
-
-		this.screenTransition.style.display = "";
-
-		if (!zoom) zoom = 2;
-		if (!time) time = 250;
-
-		let fps = 1000 / 60;
-		let range = zoom - 1;
-		let frames = time / fps;
-		let step = range / frames;
-
-		let _this = this;
-
-		_this.setTransitionZoom(zoom, 5);
-
-		let zoomInterval = setInterval(
-
-			function () {
-				if (zoom === 1) {
-					clearInterval(zoomInterval);
-					callback();
-				} else {
-					zoom -= step;
-					if (zoom < 1) zoom = 1;
-					_this.setTransitionZoom(zoom, 5);
-				}
-			},
-
-			fps
-		)
-	},
-
-	/**
-	 * Plays the idle animation for the transition 
-	 * (frames 1 and 2 on a loop)
-	 * @param {function} callback - A function to execute when the animation time expires
-	 * @param {number} framerate - The framerate to animate at normal speed (default=8)
-	 * @param {number} time - The number of milliseconds to play this animation for at normal speed (default=1500)
-	 * @returns {void}
-	 */
-	playTransitionIdle: function (callback, framerate, time) {
-		if (!callback) throw ("Missing required callback");
-
-		this.screenTransition.style.display = "";
-
-		if (!time) time = 1500;
-		if (!framerate) framerate = 8;
-		let _this = this;
-
-		let animationInterval = setInterval(
-
-			function () {
-				_this.setTransitionFrame(_this.transitionFrame === 1 ? 2 : 1);
-			},
-
-			1000 / framerate
-		);
-
-		let animationTimer = setTimeout(
-			function () {
-				clearInterval(animationInterval);
-				callback();
-			},
-
-			time
-		)
-	},
-
-	/**
-	 * Plays the 'open' animation that exposes the next game
-	 * (frames 2, 3 and 4)
-	 * @param {function} callback - A function to execute when the animation time expires
-	 * @param {number} framerate - The framerate to animate at normal speed (default=15)
-	 * @param {number} time - The number of milliseconds to wait before running the callback (default = 500)
-	 * @returns {void}
-	 */
-	playTransitionOpen: function (callback, framerate, time) {
-		if (!callback) throw ("Missing required callback");
-
-		this.screenTransition.style.display = "";
-
-		if (!time) time = 500;
-		if (!framerate) framerate = 15;
-		let _this = this;
-
-		this.setTransitionFrame(3);
-
-		let animationInterval = setInterval(
-
-			function () {
-				_this.setTransitionFrame(_this.transitionFrame + 1);
-				if (_this.transitionFrame > 4) clearInterval(animationInterval);
-			},
-
-			1000 / framerate
-		);
-
-		let animationTimer = setTimeout(
-			function () {
-				clearInterval(animationInterval);
-				callback();
-			},
-
-			time
-		)
-	},
-
-	/**
-	 * Plays the 'close' animation that exposes the next game
-	 * (frames 4, 3 and 2)
-	 * @param {function} callback - A function to execute when the animation ends
-	 * @param {number} framerate - The framerate to animate at normal speed (default=15)
-	 * @returns {void}
-	 */
-	playTransitionClose: function (callback, framerate, time) {
-		if (!callback) throw ("Missing required callback");
-
-		this.screenTransition.style.display = "";
-
-		if (!time) time = 500;
-		if (!framerate) framerate = 15;
-		let _this = this;
-
-		this.setTransitionFrame(5);
-
-		let animationInterval = setInterval(
-
-			function () {
-				_this.setTransitionFrame(_this.transitionFrame - 1);
-				if (_this.transitionFrame < 3) {
-					clearInterval(animationInterval);
-					callback();
-				}
-			},
-
-			1000 / framerate
-		);
-	},
-
-	/** 
-	 * Set the Image file that will be used for transition animations
-	 * @param {HTMLImageElement} image - A preloaded Image element
-	 * @returns {void}
-	 */
-	setTransitionImage: function (image) {
-		if (!image.src || !image.naturalHeight) throw ("Image not loaded!");
-		this.transitionImage = image;
-		this.screenTransition.style.background = 'url("' + this.transitionImage.src + '")';
-		this.screenTransition.style.backgroundColor = 'rgba(0,0,0,0.01)';
-		this.setTransitionZoom(1);
-	},
-
-	/**
-	 * Set the zoom level of the transition
-	 * @param {number} zoom - The zoom level (1 = 100%)
-	 * @param {number} frame - A number between 1 and 5 (optional)
-	 * @returns {void}
-	 */
-	setTransitionZoom(zoom, frame) {
-		if (!this.transitionImage.src || !this.transitionImage.naturalHeight) throw ("Image not loaded!");
-
-		this.transitionZoom = zoom;
-
-		this.transitionSize = Math.ceil(this.screenTransition.offsetHeight * zoom);
-
-		let width = this.transitionSize * 5;
-		let height = this.transitionSize;
-
-		this.screenTransition.style.backgroundSize = width + "px " + height + "px";
-
-		this.setTransitionFrame(typeof (frame) !== 'undefined' ? frame : null);
-	},
-
-	/**
-	 * Set the current animation frame of the transition Element
-	 * @param {number} frame - A number between 1 and 5
-	 * @returns {void}
-	 */
-	setTransitionFrame: function (frame) {
-		if (!this.transitionImage.src || !this.transitionImage.naturalHeight) throw ("Image not loaded!");
-
-		if (frame === null) frame = 1;
-		if (frame < 1 || frame > 5) throw ("Frame must be a number between 1 and 5");
-		this.transitionFrame = frame;
-
-		let margin = (this.screenTransition.offsetHeight - this.transitionSize) / 2;
-
-		let x = -(((this.transitionFrame - 1) * this.transitionSize) - margin);
-		let y = margin;
-
-		this.screenTransition.style.backgroundPosition = "top " + y + "px left " + x + "px";
-	},
-
-	/**
-	 * Hides the transition element
-	 * @returns {void}
-	 */
-	endTransition: function () {
-		this.screenTransition.style.display = "none";
+		// whan all of this is done, we can call the complete callback
+		setTimeout(() => {
+			if (typeof (hintCompleteCallback) === 'function') hintCompleteCallback();
+		}, (ease_time * 2) + display_time);
 	},
 
 	/**

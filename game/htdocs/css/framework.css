@@ -156,6 +156,19 @@ body {
   border-radius: 13px;
   pointer-events: none;
 }
+#ui-elements #screen #hintControls {
+  position: absolute;
+  display: bock;
+  width: 100%;
+  top: -50px;
+}
+#ui-elements #screen #hintControls #hintControlsInner {
+  margin: 0px auto;
+  width: 420px;
+  height: 100px;
+  background: url("../img/inputIcons.png");
+  background-size: 420px 1000px;
+}
 #ui-elements #screen #screenHint {
   pointer-events: all;
   position: absolute;
@@ -163,7 +176,7 @@ body {
   width: 100%;
   height: 8%;
   left: 0px;
-  top: 46%;
+  top: -90px;
   text-align: center;
 }
 #ui-elements #screen #screenHint .hintAlign {

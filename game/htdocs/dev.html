@@ -6,7 +6,9 @@
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0"
 		id="viewport">
 
-	<title>Picoware</title>
+	<title>Picoware Developer Mode</title>
+
+
 	<script src="./phaser/phaser.min.js"></script>
 	<link rel="stylesheet" href="./css/framework.css" />
 
@@ -38,23 +40,46 @@
 
 	<div id="dev-interface"
 		style="display:none; position: absolute; top: 0px; left: 0px; padding: 18px; width: calc(100% - 36px)">
-
-
+		<form>
+			<h3 class="gamefont">Phaser Options:</h3>
+			<div>
+				<input type="checkbox" id="debug-physics" value="1">
+				<label for="debug-physics">Enable Physics Debugging</label>
+			</div>
+		</form>
+		<hr />
 		<!-- for for testing a microgame -->
 		<form>
 			<h3 class="gamefont">Test Your Microgame</h3>
 			<div>
 				<label for="microgame-team">Team:</label>
-				<input type="text" placeholder="team" id="microgame-team" value="psychogoldfish">
+				<input type="text" placeholder="team" id="microgame-team" value="">
 			</div>
 			<div>
 				<label for="microgame-dir">Microgame:</label>
-				<input type="text" placeholder="microgame" id="microgame-dir" value="push_the_button">
+				<input type="text" placeholder="microgame" id="microgame-dir" value="">
 			</div>
 			<div>
 				<button id="microgame-btn">Start Test</button>
 			</div>
 		</form>
+		<hr />
+		<!-- for for testing a bossgame -->
+		<form>
+			<h3 class="gamefont">Test Your Bossgame</h3>
+			<div>
+				<label for="bossgame-team">Team:</label>
+				<input type="text" placeholder="team" id="bossgame-team" value="">
+			</div>
+			<div>
+				<label for="bossgame-dir">Bossgame:</label>
+				<input type="text" placeholder="bossgame" id="bossgame-dir" value="">
+			</div>
+			<div>
+				<button id="bossgame-btn">Start Test</button>
+			</div>
+		</form>
+
 	</div>
 
 	<!-- End HTML for Developer Mode -->
@@ -113,6 +138,9 @@
 						<div id="hintText">PLAY!</div>
 					</div>
 				</div>
+				<div id="hintControls" style="display:none">
+					<div id="hintControlsInner"></div>
+				</div>
 				<div class="screen-frame"></div>
 				<div id="gameTimer" style="display:none"></div>
 				<div id="gameTimeOver" style="display:none"></div>
@@ -149,4 +177,6 @@
 	<script>
 		PWGame.start('dev');
 	</script>
+
+
 </body>

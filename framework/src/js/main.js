@@ -6,12 +6,16 @@ const microgames = {};
 /** Top-level namespace for all bossgames */
 const bossgames = {};
 
+/** Top-level namespace for all transitions */
+const transitions = {};
+
+/** Top-level namespace for all levels */
+const levels = {};
+
 /** Config constants **/
 const PWConfig = {
-	SPEED_NORMAL: 1,
-	SPEED_FASTER: 1.25,
-	SPEED_FASTEST: 1.5,
-	FRAMES_PER_STEP: 20
+	SPEED_MODIFIER: 0.25,
+	FRAMES_PER_STEP: 20         // our base framertate is 60fps, so this is 1/3 of a second, or 180 beats per minute
 };
 
 /** 
