@@ -2,21 +2,26 @@
   "meta": {
     "version": "0.6.7"
   },
-  "savePath": "C:\\GameDev\\PicoWare\\game\\htdocs\\teams\\psychogoldfish\\microgames\\push_the_button",
+  "savePath": "C:\\GameDev\\PicoWare\\game\\htdocs\\teams\\psychogoldfish\\microgames\\thwomp-stomp",
   "images": [
     {
-      "name": "button_down.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/microgames/push_the_button/button_down.png",
+      "name": "goomba.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/microgames/thwomp-stomp/goomba.png",
       "folder": ""
     },
     {
-      "name": "button_up.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/microgames/push_the_button/button_up.png",
+      "name": "goomba_squished.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/microgames/thwomp-stomp/goomba_squished.png",
       "folder": ""
     },
     {
-      "name": "finger.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/microgames/push_the_button/finger.png",
+      "name": "thwomp.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/microgames/thwomp-stomp/thwomp.png",
+      "folder": ""
+    },
+    {
+      "name": "thwomp_angry.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/microgames/thwomp-stomp/thwomp_angry.png",
       "folder": ""
     }
   ],
@@ -33,7 +38,7 @@
     "filter": "none",
     "exporter": "Phaser 3",
     "fileName": "pack-result",
-    "savePath": "C:\\GameDev\\PicoWare\\game\\htdocs\\teams\\psychogoldfish\\microgames\\push_the_button",
+    "savePath": "C:\\GameDev\\PicoWare\\game\\htdocs\\teams\\psychogoldfish\\microgames\\thwomp-stomp",
     "width": 2048,
     "height": 2048,
     "fixedSize": false,

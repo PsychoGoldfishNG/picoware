@@ -1,10 +1,8 @@
 var _Manifests = {
      "levels": {
-          "dingus": {},
           "psychogoldfish": {}
      },
      "microgames": {
-          "dingus": {},
           "psychogoldfish": {
                "push_the_button": {
                     "name": "Push the Button",
@@ -53,7 +51,6 @@ var _Manifests = {
           }
      },
      "bossgames": {
-          "dingus": {},
           "psychogoldfish": {
                "space_face": {
                     "name": "Space Face",
@@ -78,7 +75,6 @@ var _Manifests = {
           }
      },
      "transitions": {
-          "dingus": {},
           "psychogoldfish": {
                "emojis": {
                     "name": "Emojis",
@@ -92,48 +88,13 @@ var _Manifests = {
                               "image": "numberStrip.png",
                               "frameWidth": 90,
                               "frameHeight": 140
-                         },
-                         {
-                              "key": "hearts",
-                              "image": "hearts.png",
-                              "frameWidth": 120,
-                              "frameHeight": 120
-                         },
-                         {
-                              "key": "levelPhrases",
-                              "image": "levelPhrases.png",
-                              "frameWidth": 500,
-                              "frameHeight": 80
                          }
                     ],
-                    "images": [
+                    "atlases": [
                          {
-                              "key": "happyface",
-                              "image": "happyface.png"
-                         },
-                         {
-                              "key": "catface",
-                              "image": "catface.png"
-                         },
-                         {
-                              "key": "angryface",
-                              "image": "angryface.png"
-                         },
-                         {
-                              "key": "sadface",
-                              "image": "sadface.png"
-                         },
-                         {
-                              "key": "evilface",
-                              "image": "evilface.png"
-                         },
-                         {
-                              "key": "brickhole",
-                              "image": "brickhole.png"
-                         },
-                         {
-                              "key": "gameOver",
-                              "image": "gameOver.png"
+                              "key": "emojiSprites",
+                              "texture": "emojiSprites.png",
+                              "atlas": "emojiSprites.json"
                          }
                     ],
                     "credits": [

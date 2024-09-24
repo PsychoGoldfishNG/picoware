@@ -843,17 +843,28 @@ class PWFramework {
 	}
 
 	stopGame() {
+
+		let _this = this;
+
 		if (this.#activeGameScene) {
-			this.phaser.scene.stop(this.#activeGameScene);
+			this.phaser.scene.pause(this.#activeGameScene);
+			setTimeout(() => {
+				_this.phaser.scene.stop(_this.#activeGameScene);
+			}, 20);
 		}
 	}
 
 	endTransition() {
 
+		let _this = this;
+
 		this.#inTransition = false;
 
 		if (this.#activeTransition) {
-			this.phaser.scene.stop(this.#activeTransition);
+			_this.phaser.scene.pause(_this.#activeTransition);
+			setTimeout(() => {
+				this.phaser.scene.stop(this.#activeTransition);
+			}, 20);
 		}
 
 		// start the game timer if we're playing microgames

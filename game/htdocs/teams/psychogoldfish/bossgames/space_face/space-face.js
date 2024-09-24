@@ -113,10 +113,8 @@ bossgames.psychogoldfish.space_face = class extends Phaser.Scene {
 			large: this.baseObstacleSize + 3
 		};
 
-		this.obstacleSpeed = (400 + (PWGame.level.difficulty * 40)) * PWGame.gameSpeed;
-		this.playerSpeed = (700 + (PWGame.level.difficulty * 40)) * PWGame.gameSpeed;
-		this.playerThrust = (32 + (PWGame.level.difficulty * 8)) * PWGame.gameSpeed;
-		this.playerDecel = (20) * PWGame.gameSpeed;
+		this.obstacleSpeed = 400 * PWGame.gameSpeed;
+		this.playerSpeed = 400 * PWGame.gameSpeed;
 
 		this.obstacleGap = this.obstacleSpeed * 60;
 
@@ -366,10 +364,12 @@ bossgames.psychogoldfish.space_face = class extends Phaser.Scene {
 					let obstacle = this.obstacles[size][i];
 
 					if (obstacle.active) {
-						if (obstacle.y < obstacle.displayHeight / 2) {
+
+						// bounce opp top and bottom of screen
+						if (obstacle.body.velocity.y < 0 && obstacle.y < obstacle.displayHeight / 2) {
 							obstacle.y = obstacle.displayHeight / 2;
 							obstacle.body.velocity.y *= -1;
-						} else if (obstacle.y > PWGame.screenSize - obstacle.displayHeight / 2) {
+						} else if (obstacle.body.velocity.y > 0 && obstacle.y > PWGame.screenSize - obstacle.displayHeight / 2) {
 							obstacle.y = PWGame.screenSize - obstacle.displayHeight / 2;
 							obstacle.body.velocity.y *= -1;
 						}
@@ -429,34 +429,22 @@ bossgames.psychogoldfish.space_face = class extends Phaser.Scene {
 	updatePlayer(delta, modifer) {
 
 		if (PWGame.input.isDown(PWInput.UP)) {
-			if (this.playerSprite.body.velocity.y > -this.playerSpeed) {
-				this.playerSprite.body.velocity.y -= this.playerThrust * modifer;
-			} else {
-				this.playerSprite.body.velocity.y = -this.playerSpeed;
-			}
+			this.playerSprite.body.velocity.y = -this.playerSpeed;
 		}
 		else if (PWGame.input.isDown(PWInput.DOWN)) {
-			if (this.playerSprite.body.velocity.y < this.playerSpeed) {
-				this.playerSprite.body.velocity.y += this.playerThrust * modifer;
-			} else {
-				this.playerSprite.body.velocity.y = this.playerSpeed;
-			}
-		} else if (this.playerSprite.body.velocity.y > 0) {
-			this.playerSprite.body.velocity.y -= this.playerDecel * modifer;
-			if (this.playerSprite.body.velocity.y < 0) this.playerSprite.body.velocity.y = 0;
-		} else if (this.playerSprite.body.velocity.y < 0) {
-			this.playerSprite.body.velocity.y += this.playerDecel * modifer;
-			if (this.playerSprite.body.velocity.y > 0) this.playerSprite.body.velocity.y = 0
+			this.playerSprite.body.velocity.y = this.playerSpeed;
+		} else {
+			this.playerSprite.body.velocity.y = 0;
 		}
 
 		if (this.playerSprite.y < this.playerHeight / 2) {
 			this.playerSprite.y = this.playerHeight / 2;
-			this.playerSprite.body.velocity.y *= -0.5;
+			this.playerSprite.body.velocity.y = 0;
 		}
 
 		if (this.playerSprite.y > PWGame.screenSize - this.playerHeight / 2) {
 			this.playerSprite.y = PWGame.screenSize - this.playerHeight / 2;
-			this.playerSprite.body.velocity.y *= -0.5;
+			this.playerSprite.body.velocity.y = 0;
 		}
 	}
 }

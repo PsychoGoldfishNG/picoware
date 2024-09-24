@@ -470,7 +470,6 @@ class PWLevel {
 
 		// handle microgame rounds if we're not playing boss rush
 		if (this.#mode !== PWLevel.MODE_BOSSRUSH) {
-
 			// record what the last round was for comparisons in our scenes
 			this.#lastRound = this.#round;
 
@@ -489,7 +488,6 @@ class PWLevel {
 
 				// we haven't played the full number of games for this round yet
 				if (this.#gamesRemaining > 0) {
-
 					// count down the games remaining
 					this.#gamesRemaining--;
 				}
@@ -498,6 +496,7 @@ class PWLevel {
 				else {
 
 					this.#round++;
+					console.log('new round', this.#round);
 
 					// if we played through all the defined rounds in endless mode, start it all over
 					if (this.#round >= this.#microgameRounds && this.#mode === PWLevel.MODE_ENDLESS) {
@@ -524,7 +523,7 @@ class PWLevel {
 						microgames = this.#manifest.microgames[index];
 
 						// update the number of games this round wants us to play
-						this.#gamesRemaining = microgames.numGames;
+						this.#gamesRemaining = microgames.numGames - 1; // we're starting a game now, so we'll subtract one from the total
 
 						callback("newround", "microgame");
 

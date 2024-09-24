@@ -1,0 +1,334 @@
+{
+	"textures": [
+		{
+			"image": "emojiSprites",
+			"format": "RGBA8888",
+			"size": {
+				"w": 2854,
+				"h": 2035
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "brickhole",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 1048,
+						"h": 1048
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 1048,
+						"h": 1048
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 1048,
+						"h": 1048
+					}
+				},
+				{
+					"filename": "angryface",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 1048,
+						"h": 1048
+					},
+					"spriteSourceSize": {
+						"x": 74,
+						"y": 74,
+						"w": 900,
+						"h": 900
+					},
+					"frame": {
+						"x": 1,
+						"y": 1051,
+						"w": 900,
+						"h": 900
+					}
+				},
+				{
+					"filename": "level_up_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 359,
+						"h": 69
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 359,
+						"h": 69
+					},
+					"frame": {
+						"x": 1,
+						"y": 1953,
+						"w": 359,
+						"h": 69
+					}
+				},
+				{
+					"filename": "level_up_2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 359,
+						"h": 69
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 359,
+						"h": 69
+					},
+					"frame": {
+						"x": 362,
+						"y": 1953,
+						"w": 359,
+						"h": 69
+					}
+				},
+				{
+					"filename": "boss_battle_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 493,
+						"h": 68
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 493,
+						"h": 68
+					},
+					"frame": {
+						"x": 723,
+						"y": 1953,
+						"w": 493,
+						"h": 68
+					}
+				},
+				{
+					"filename": "catface",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 1048,
+						"h": 1048
+					},
+					"spriteSourceSize": {
+						"x": 74,
+						"y": 74,
+						"w": 900,
+						"h": 900
+					},
+					"frame": {
+						"x": 903,
+						"y": 1051,
+						"w": 900,
+						"h": 900
+					}
+				},
+				{
+					"filename": "boss_battle_2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 493,
+						"h": 68
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 493,
+						"h": 68
+					},
+					"frame": {
+						"x": 1218,
+						"y": 1953,
+						"w": 493,
+						"h": 68
+					}
+				},
+				{
+					"filename": "faster_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 325,
+						"h": 68
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 325,
+						"h": 68
+					},
+					"frame": {
+						"x": 1713,
+						"y": 1953,
+						"w": 325,
+						"h": 68
+					}
+				},
+				{
+					"filename": "evilface",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 1048,
+						"h": 1048
+					},
+					"spriteSourceSize": {
+						"x": 74,
+						"y": 74,
+						"w": 900,
+						"h": 900
+					},
+					"frame": {
+						"x": 1051,
+						"y": 1,
+						"w": 900,
+						"h": 900
+					}
+				},
+				{
+					"filename": "heart",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 120,
+						"h": 115
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 120,
+						"h": 115
+					},
+					"frame": {
+						"x": 1051,
+						"y": 903,
+						"w": 120,
+						"h": 115
+					}
+				},
+				{
+					"filename": "broken_heart",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 120,
+						"h": 113
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 120,
+						"h": 113
+					},
+					"frame": {
+						"x": 1173,
+						"y": 903,
+						"w": 120,
+						"h": 113
+					}
+				},
+				{
+					"filename": "faster_2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 325,
+						"h": 68
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 325,
+						"h": 68
+					},
+					"frame": {
+						"x": 1295,
+						"y": 903,
+						"w": 325,
+						"h": 68
+					}
+				},
+				{
+					"filename": "happyface",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 1048,
+						"h": 1048
+					},
+					"spriteSourceSize": {
+						"x": 74,
+						"y": 74,
+						"w": 900,
+						"h": 900
+					},
+					"frame": {
+						"x": 1805,
+						"y": 903,
+						"w": 900,
+						"h": 900
+					}
+				},
+				{
+					"filename": "sadface",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 1048,
+						"h": 1048
+					},
+					"spriteSourceSize": {
+						"x": 74,
+						"y": 74,
+						"w": 900,
+						"h": 900
+					},
+					"frame": {
+						"x": 1953,
+						"y": 1,
+						"w": 900,
+						"h": 900
+					}
+				},
+				{
+					"filename": "gameOver",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 343,
+						"h": 229
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 343,
+						"h": 229
+					},
+					"frame": {
+						"x": 2040,
+						"y": 1805,
+						"w": 343,
+						"h": 229
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "http://free-tex-packer.com",
+		"version": "0.6.7"
+	}
+}

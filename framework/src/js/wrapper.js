@@ -844,6 +844,10 @@ const GameWrapper = {
 		 * @param {TouchEvent} e - The touch event we need to check
 		 */
 		function checkTouch(e) {
+
+			// if gameplaySkin is hidden, we're not in the game view, so we can leave now
+			if (_this.gameplaySkin.style.display === "none") return;
+
 			// Check for any changed touches in the event
 			for (var i = 0; i < e.changedTouches.length; i++) {
 
@@ -1022,15 +1026,22 @@ const GameWrapper = {
 		let ledTop = Math.round(lo.ledTop * scale);
 		let ledSize = Math.round(lo.ledSize * scale);
 
+		let dPadMargin = 60 * scale;
+
 		// set sizes of input containers
-		this.dPadFrame.style.width = this.AbButtonsFrame.style.width = this.startSelectButtonsFrame.style.width = this.speakerFrame.style.width = uiFrameWidth + "px";
-		this.dPadFrame.style.height = this.AbButtonsFrame.style.height = topInputHeight + "px";
+		this.dPadFrame.style.width = (uiFrameWidth + (dPadMargin * 2)) + "px";
+		this.dPadFrame.style.height = (topInputHeight + (dPadMargin * 2)) + "px";
+		this.AbButtonsFrame.style.width = this.startSelectButtonsFrame.style.width = this.speakerFrame.style.width = uiFrameWidth + "px";
+		this.AbButtonsFrame.style.height = topInputHeight + "px";
 		this.startSelectButtonsFrame.style.height = this.speakerFrame.style.height = bottomInputHeight + "px";
 
 		// position containers
-		this.dPadFrame.style.top = this.AbButtonsFrame.style.top = inputTop + "px";
+		this.dPadFrame.style.top = (inputTop - dPadMargin) + "px";
+		this.dPadFrame.style.left = (inputMarginX - dPadMargin) + "px";
+
+		this.AbButtonsFrame.style.top = inputTop + "px";
 		this.startSelectButtonsFrame.style.top = this.speakerFrame.style.top = (inputTop + topInputHeight) + "px";
-		this.dPadFrame.style.left = this.startSelectButtonsFrame.style.left = inputMarginX + "px";
+		this.startSelectButtonsFrame.style.left = inputMarginX + "px";
 		this.AbButtonsFrame.style.right = this.speakerFrame.style.right = inputMarginX + "px";
 
 		// set size of d-pad
@@ -1066,7 +1077,7 @@ const GameWrapper = {
 		// update positions and sizes in our input objects (used for touch detection)
 		this.inputs.dpad.x = inputMarginX + (uiFrameWidth / 2) + skinMarginX;
 		this.inputs.dpad.y = inputTop + (topInputHeight / 2) + skinMarginY;
-		this.inputs.dpad.size = dPadSize;
+		this.inputs.dpad.size = dPadSize + (dPadMargin * 2);
 		this.inputs.dpad.deadzone = Math.floor(lo.dPadDeadzone * scale);
 
 		this.inputs.start.x = inputMarginX + smallButtonLeft + ((smallButtonSize + uiFrameWidth - smallButtonWidth) / 2) + skinMarginX;
@@ -1169,10 +1180,24 @@ const GameWrapper = {
 		let speakerWidth = Math.round(lo.speakerWidth * scale);
 		let speakerHeight = Math.round(lo.speakerHeight * scale);
 
+		let dPadMargin = 40 * scale;
+
 		// position and size the d-pad and a/b button containers
-		this.dPadFrame.style.top = this.AbButtonsFrame.style.top = mainButtonFrameTop + "px";
-		this.dPadFrame.style.height = this.AbButtonsFrame.style.height = mainButtonFrameHeight + "px";
-		this.dPadFrame.style.left = inputMarginX + "px";
+
+		let frame = {
+			top: Math.round(mainButtonFrameTop - dPadDeadzone),
+			left: Math.round(inputMarginX - dPadDeadzone),
+			height: Math.round(mainButtonFrameHeight + (dPadDeadzone * 2)),
+			width: Math.round(mainButtonFrameHeight + (dPadDeadzone * 2))
+		}
+
+		this.dPadFrame.style.top = frame.top + "px";
+		this.dPadFrame.style.left = frame.left + "px";
+		this.dPadFrame.style.height = frame.height + "px";
+		this.dPadFrame.style.width = frame.width + "px";
+
+		this.AbButtonsFrame.style.top = mainButtonFrameTop + "px";
+		this.AbButtonsFrame.style.height = mainButtonFrameHeight + "px";
 		this.AbButtonsFrame.style.right = inputMarginX + "px";
 
 
@@ -1199,9 +1224,9 @@ const GameWrapper = {
 		this.speaker.style.right = inputMarginX + "px";
 
 		// update positions and sizes in our input object (used for touch detection)
-		this.inputs.dpad.x = inputMarginX + (dPadSize / 2) + skinMarginX;
+		this.inputs.dpad.x = inputMarginX + ((dPadSize + (dPadMargin / 2)) / 2) + skinMarginX;
 		this.inputs.dpad.y = mainButtonFrameTop + (mainButtonFrameHeight / 2) + skinMarginY;
-		this.inputs.dpad.size = dPadSize;
+		this.inputs.dpad.size = dPadSize + (dPadMargin * 2);
 		this.inputs.dpad.deadzone = Math.floor(lo.dPadDeadzone * scale);
 
 		this.inputs.select.x = ((size.ew - smallButtonWidth + smallButtonSize) / 2);

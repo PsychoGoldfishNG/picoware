@@ -6,87 +6,87 @@
   "images": [
     {
       "name": "explode_1.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/explode_1.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/explode_1.png",
       "folder": ""
     },
     {
       "name": "explode_2.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/explode_2.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/explode_2.png",
       "folder": ""
     },
     {
       "name": "explode_3.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/explode_3.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/explode_3.png",
       "folder": ""
     },
     {
       "name": "flame_1.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/flame_1.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/flame_1.png",
       "folder": ""
     },
     {
       "name": "flame_2.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/flame_2.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/flame_2.png",
       "folder": ""
     },
     {
       "name": "flame_3.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/flame_3.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/flame_3.png",
       "folder": ""
     },
     {
       "name": "rock1.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/rock1.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/rock1.png",
       "folder": ""
     },
     {
       "name": "rock2.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/rock2.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/rock2.png",
       "folder": ""
     },
     {
       "name": "rock3.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/rock3.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/rock3.png",
       "folder": ""
     },
     {
       "name": "rock4.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/rock4.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/rock4.png",
       "folder": ""
     },
     {
       "name": "rock5.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/rock5.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/rock5.png",
       "folder": ""
     },
     {
       "name": "ship.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/ship.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/ship.png",
       "folder": ""
     },
     {
       "name": "speed.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/speed.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/speed.png",
       "folder": ""
     },
     {
       "name": "star1.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/star1.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/star1.png",
       "folder": ""
     },
     {
       "name": "star2.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/star2.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/star2.png",
       "folder": ""
     },
     {
       "name": "star3.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/star3.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/star3.png",
       "folder": ""
     },
     {
       "name": "warp.png",
-      "path": "C:/GameDev/PicoWare/game/htdocs/teams/psychogoldfish/bossgames/space_face/warp.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/bossgames/space_face/warp.png",
       "folder": ""
     }
   ],

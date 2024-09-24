@@ -60,18 +60,18 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 		// This lets the game run at higher resolutions without making the art look super blurry
 
 		// add the background brick image
-		this.bricks = this.add.sprite(0, 0, this.prefix + "brickhole");
+		this.bricks = this.add.sprite(0, 0, this.prefix + 'emojiSprites', "brickhole");
 		this.bgContainer.add(this.bricks);
 		this.bricks.setScale(0.5);
 
 		// add the "game over" text
-		this.gameOver = this.add.sprite(0, 0, this.prefix + "gameOver");
+		this.gameOver = this.add.sprite(0, 0, this.prefix + 'emojiSprites', "gameOver");
 		this.bgContainer.add(this.gameOver);
 		this.gameOver.setScale(0.5);
 		this.gameOver.visible = false; // hide it until we need it
 
 		// add the big emoji face -- he's gonna be happy by default :)
-		this.face = this.add.sprite(0, 0, this.prefix + "happyface");
+		this.face = this.add.sprite(0, 0, this.prefix + 'emojiSprites', "happyface");
 		this.bgContainer.add(this.face);
 		this.faceScale = 0.5;	// we'll use this value to reset the face to it's normal scale
 		this.face.setScale(this.faceScale);
@@ -95,26 +95,26 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 		for (let i = 0; i < PWGame.level.lastHealth; i++) {
 
 			// This is the default frame for the heart
-			let frame = 0;
+			let frame = 'heart';
 
 			// if we have less health now, render the last heart as broken, and note that we have a broken heart
 			if (PWGame.level.lastHealth !== PWGame.level.health && i === PWGame.level.lastHealth - 1) {
 
 				// This will render the broken heart frame
-				frame = 1;
+				frame = 'broken_heart';
 
 				// note that we have a broken heart so the game loop can animate it later
 				this.broken_heart = true;
 
 				// Since we lost health, let's also make the emoji face angry
-				this.face.setTexture(this.prefix + (PWGame.level.health > 0 ? "angryface" : "sadface"));
+				this.face.setTexture(this.prefix + 'emojiSprites', (PWGame.level.health > 0 ? "angryface" : "sadface"));
 			}
 
 			// add the heart sprite to the scene
 			let sprite = this.add.sprite(
 				(margin + ((healthSize + healthSpace) * i)) - screenOffset, // the x position of the heart
 				(margin) - screenOffset, 	// the y position of the heart
-				this.prefix + "hearts",  	// the spritesheet key
+				this.prefix + "emojiSprites",  	// the spritesheet key
 				frame						// the frame to display
 			);
 			this.bgContainer.add(sprite);
@@ -192,7 +192,7 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 			// create the "faster" animation
 			this.anims.create({
 				key: this.prefix + 'faster',
-				frames: this.anims.generateFrameNumbers(this.prefix + 'levelPhrases', { start: 0, end: 1 }),
+				frames: this.anims.generateFrameNames(this.prefix + 'emojiSprites', { prefix: 'faster_', start: 1, end: 2 }),
 				frameRate: 12,
 				repeat: -1
 			});
@@ -200,7 +200,7 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 			// create the "level up" animation
 			this.anims.create({
 				key: this.prefix + 'levelUp',
-				frames: this.anims.generateFrameNumbers(this.prefix + 'levelPhrases', { start: 2, end: 3 }),
+				frames: this.anims.generateFrameNames(this.prefix + 'emojiSprites', { prefix: 'level_up_', start: 1, end: 2 }),
 				frameRate: 12,
 				repeat: -1
 			});
@@ -208,7 +208,7 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 			// create the "boss battle" animation
 			this.anims.create({
 				key: this.prefix + 'bossGame',
-				frames: this.anims.generateFrameNumbers(this.prefix + 'levelPhrases', { start: 4, end: 5 }),
+				frames: this.anims.generateFrameNames(this.prefix + 'emojiSprites', { prefix: 'boss_battle_', start: 1, end: 2 }),
 				frameRate: 12,
 				repeat: -1
 			});
@@ -485,7 +485,7 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 				else {
 
 					// the face can be happy again
-					this.face.setTexture(this.prefix + "happyface");
+					this.face.setTexture(this.prefix + 'emojiSprites', "happyface");
 
 					// this will start the next game scene so we can see it behind our transition scene
 					// if the game is coded properly, it won't start updating until PWGame.endTransition() is called
@@ -568,7 +568,7 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 		this.transition_phase = PWTransitionScene.PHASE_GAME_OVER;
 
 		// set the face to the sad face
-		this.face.setTexture(this.prefix + "sadface");
+		this.face.setTexture(this.prefix + 'emojiSprites', "sadface");
 
 		this.gameOver.visible = true;
 
