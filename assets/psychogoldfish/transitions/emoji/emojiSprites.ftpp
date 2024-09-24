@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "version": "0.6.7"
+  },
+  "savePath": "C:\\GameDev\\PicoWare\\game\\htdocs\\teams\\psychogoldfish\\transitions\\emojis",
+  "images": [
+    {
+      "name": "angryface.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/angryface.png",
+      "folder": ""
+    },
+    {
+      "name": "boss_battle_1.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/boss_battle_1.png",
+      "folder": ""
+    },
+    {
+      "name": "boss_battle_2.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/boss_battle_2.png",
+      "folder": ""
+    },
+    {
+      "name": "brickhole.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/brickhole.png",
+      "folder": ""
+    },
+    {
+      "name": "broken_heart.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/broken_heart.png",
+      "folder": ""
+    },
+    {
+      "name": "catface.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/catface.png",
+      "folder": ""
+    },
+    {
+      "name": "evilface.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/evilface.png",
+      "folder": ""
+    },
+    {
+      "name": "faster_1.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/faster_1.png",
+      "folder": ""
+    },
+    {
+      "name": "faster_2.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/faster_2.png",
+      "folder": ""
+    },
+    {
+      "name": "gameOver.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/gameOver.png",
+      "folder": ""
+    },
+    {
+      "name": "happyface.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/happyface.png",
+      "folder": ""
+    },
+    {
+      "name": "heart.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/heart.png",
+      "folder": ""
+    },
+    {
+      "name": "level_up_1.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/level_up_1.png",
+      "folder": ""
+    },
+    {
+      "name": "level_up_2.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/level_up_2.png",
+      "folder": ""
+    },
+    {
+      "name": "sadface.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/sadface.png",
+      "folder": ""
+    }
+  ],
+  "folders": [],
+  "packOptions": {
+    "textureName": "emojiSprites",
+    "textureFormat": "png",
+    "removeFileExtension": true,
+    "prependFolderName": false,
+    "base64Export": false,
+    "tinify": false,
+    "tinifyKey": "",
+    "scale": 1,
+    "filter": "none",
+    "exporter": "Phaser 3",
+    "fileName": "pack-result",
+    "savePath": "C:\\GameDev\\PicoWare\\game\\htdocs\\teams\\psychogoldfish\\transitions\\emojis",
+    "width": 4096,
+    "height": 2048,
+    "fixedSize": false,
+    "powerOfTwo": false,
+    "padding": 1,
+    "extrude": 0,
+    "allowRotation": false,
+    "allowTrim": true,
+    "trimMode": "trim",
+    "alphaThreshold": "0",
+    "detectIdentical": true,
+    "packer": "MaxRectsBin",
+    "packerMethod": "BestShortSideFit"
+  }
+}
