@@ -1,6 +1,50 @@
 var _Manifests = {
      "levels": {
-          "psychogoldfish": {}
+          "psychogoldfish": {
+               "emojiman": {
+                    "difficulty": 0,
+                    "logo": {
+                         "team": "psychogoldfish",
+                         "image": "sir_reginald_emojiman.png"
+                    },
+                    "character": {
+                         "team": "psychogoldfish",
+                         "sheet": "sir_reginald_emojiman_sheet.webp"
+                    },
+                    "transition": {
+                         "team": "psychogoldfish",
+                         "name": "emojis"
+                    },
+                    "intro": {
+                         "team": "psychogoldfish",
+                         "video": "intro.mp4"
+                    },
+                    "outro": {
+                         "team": "psychogoldfish",
+                         "video": "outro.mp4"
+                    },
+                    "microgames": {
+                         "rounds": [
+                              1
+                         ],
+                         "games": [
+                              {
+                                   "team": "psychogoldfish",
+                                   "game": "push_the_button"
+                              },
+                              {
+                                   "team": "psychogoldfish",
+                                   "game": "thwomp-stomp"
+                              }
+                         ]
+                    },
+                    "bossgame": {
+                         "team": "psychogoldfish",
+                         "game": "space_face"
+                    },
+                    "team": "psychogoldfish"
+               }
+          }
      },
      "microgames": {
           "psychogoldfish": {
@@ -22,7 +66,8 @@ var _Manifests = {
                               "credit": "designer",
                               "name": "PsychoGoldfish"
                          }
-                    ]
+                    ],
+                    "team": "psychogoldfish"
                },
                "thwomp-stomp": {
                     "name": "Thwomp Stomp",
@@ -46,7 +91,8 @@ var _Manifests = {
                               "credit": "designer",
                               "name": "PsychoGoldfish"
                          }
-                    ]
+                    ],
+                    "team": "psychogoldfish"
                }
           }
      },
@@ -70,7 +116,8 @@ var _Manifests = {
                               "credit": "designer",
                               "name": "PsychoGoldfish"
                          }
-                    ]
+                    ],
+                    "team": "psychogoldfish"
                }
           }
      },
@@ -102,7 +149,8 @@ var _Manifests = {
                               "credit": "designer",
                               "name": "PsychoGoldfish"
                          }
-                    ]
+                    ],
+                    "team": "psychogoldfish"
                }
           }
      }
@@ -2416,7 +2464,7 @@ class PWLevel {
 	// game plays normally with rounds of microgames and a boss level
 	static MODE_NORMAL = 'normal';
 
-	// game plays with endless microgame cycle, incementing difficulty each playthrough, then incrementing speed and resetting difficulty
+	// game plays a single microgame over and over, incementing difficulty each playthrough, then incrementing speed and resetting difficulty
 	static MODE_ENDLESS = 'endless';
 
 	// same as endless, but uses bossgames in place of microgames
@@ -2583,20 +2631,6 @@ class PWLevel {
 	get microgameRounds() { return this.#microgameRounds; }
 
 	/**
-	 * @type {number} The total number of microgames to play in the current round
-	 * @private
-	 * @default 0
-	 */
-	#gamesPerRound = 0;
-
-	/**
-	 * @type {number} The total number of microgames to play in the current round
-	 * @readonly
-	 * @default 0
-	 */
-	get gamesPerRound() { return this.#gamesPerRound; }
-
-	/**
 	 * @type {number} The total number of microgames left to play in the current round
 	 * @private
 	 * @default 0
@@ -2609,6 +2643,13 @@ class PWLevel {
 	 * @default 0
 	 */
 	get gamesRemaining() { return this.#gamesRemaining; }
+
+	/**
+	 * @type {number} The total number of microgames to play in the current round
+	 * @private
+	 * @default 0
+	 */
+	#gamesTotal = 0;
 
 	/**
 	 * @type {array} A list of microgames that haven't been used yet (may be recycled when the list is empty)
@@ -2759,8 +2800,14 @@ class PWLevel {
 		this.__setDifficulty(0, true);
 
 		// make sure we have a proper manifest object
-		if (!manifest) throw ("Missing required manifest!");
-		if (typeof (manifest) !== 'object') throw ("Manifest must be an object!");
+		if (!manifest) {
+			alert("Missing required manifest!");
+			throw ("Missing required manifest!");
+		}
+		if (typeof (manifest) !== 'object') {
+			alert("Manifest must be an object!");
+			throw ("Manifest must be an object!");
+		}
 
 		// if we have an overrides object, merge it with the manifest (without changing the original)
 		if (typeof (overrides) === 'object') {
@@ -2782,9 +2829,18 @@ class PWLevel {
 		}
 
 		// now we can make sure all the required properties are set
-		if (!manifest.character) throw ("Missing required character!");
-		if (!manifest.logo) throw ("Missing required logo!");
-		if (!manifest.transition) throw ("Missing required transition!");
+		if (!manifest.character) {
+			alert("Missing required character!");
+			throw ("Missing required character!");
+		}
+		if (!manifest.logo) {
+			alert("Missing required logo!");
+			throw ("Missing required logo!");
+		}
+		if (!manifest.transition) {
+			alert("Missing required transition!");
+			throw ("Missing required transition!");
+		}
 
 		// set the game mode
 		if (manifest.mode === PWLevel.MODE_ENDLESS || manifest.mode === PWLevel.MODE_BOSSRUSH) {
@@ -2802,35 +2858,59 @@ class PWLevel {
 		if (this.mode !== PWLevel.MODE_BOSSRUSH) {
 
 			// make sure we have a microgame array
-			if (!manifest.microgames) throw ("Missing required microgame array!");
+			if (!manifest.microgames) {
+				alert("Missing required microgame array!");
+				throw ("Missing required microgame array!");
+			}
 
 			// if this is normal mode, we need to make sure we have a bossgame defined
-			if (!manifest.bossgame && manifest.mode === PWLevel.MODE_NORMAL) throw ("Missing required bossgame!");
+			if (!manifest.bossgame && manifest.mode === PWLevel.MODE_NORMAL) {
+				alert("Missing required bossgame!");
+				throw ("Missing required bossgame!");
+			}
 
 			if (manifest.microgames) {
 
-				if (!Array.isArray(manifest.microgames)) throw ("Microgames must be an array!");
-				if (manifest.microgames.length === 0) throw ("Microgames array must have at least one item!");
+				if (typeof (manifest.microgames) !== 'object') {
+					alert("Microgames must be an object!");
+					throw ("Microgames must be an object!");
+				}
 
-				manifest.microgames.forEach(function (game, mi) {
-					if (!game.numGames) throw ("Microgame manifest[" + mi + "] missing numGames!");
-					if (!game.gameList) throw ("Microgame manifest[" + mi + "] missing gameList!");
-					if (!Array.isArray(game.gameList)) throw ("Microgame manifest[" + mi + "] gameList is not an array!");
-					if (game.gameList.length === 0) throw ("Microgame manifest[" + mi + "] gameList is empty!");
+				if (!manifest.microgames.rounds || !Array.isArray(manifest.microgames.rounds)) {
+					alert("Microgames missing or empty rounds array!");
+					throw ("Microgames missing or empty rounds array!");
+				}
 
-					game.gameList.forEach(function (game, gi) {
-						if (!game.team) throw ("Microgame manifest[" + mi + "][" + gi + "] missing team property!");
-						if (!game.game) throw ("Microgame manifest[" + mi + "][" + gi + "] missing game property!");
-					});
+				manifest.microgames.rounds.forEach(function (round) {
+					if (typeof (round) !== 'number') {
+						alert("Microgame round is not a number!");
+						throw ("Microgame round is not a number!", round);
+					}
+				});
+
+				if (!manifest.microgames.games || !Array.isArray(manifest.microgames.games)) {
+					alert("Microgames missing or empty games array!");
+					throw ("Microgames missing or empty games array!");
+				}
+
+				manifest.microgames.games.forEach(function (game, mi) {
+
+					if (!game.team) {
+						alert("Microgame at index " + mi + " missing team property!");
+						throw ("Microgame at index " + mi + " missing team property!");
+					}
+					if (!game.game) {
+						alert("Microgame at index " + mi + " missing game property!");
+						throw ("Microgame at index " + mi + " missing game property!");
+					}
 				});
 			}
 
 			// Get the number of microgame rounds in this level
-			this.#microgameRounds = manifest.microgames.length;
-			this.#gamesPerRound = manifest.microgames[0].numGames
+			this.#microgameRounds = manifest.microgames.rounds.length;
 
-			// this is also the same number of games we have left to play in this round, imagine that!
-			this.#gamesRemaining = this.#gamesPerRound;
+			// Get the number of games in the first round
+			this.#gamesTotal = this.#gamesRemaining = manifest.microgames.rounds[0];
 
 		}
 
@@ -2874,126 +2954,137 @@ class PWLevel {
 		// If we're at a stage where we're laying a boss game we'll update this
 		let bossgame = null;
 
-		// handle microgame rounds if we're not playing boss rush
+		// Handle whatever round we're in, assuming we're not playing boss rush mode
 		if (this.#mode !== PWLevel.MODE_BOSSRUSH) {
-			// record what the last round was for comparisons in our scenes
-			this.#lastRound = this.#round;
 
-			let index = this.#round - 1;
-			let microgames = typeof (this.#manifest.microgames[index]) !== 'undefined' ? this.#manifest.microgames[index] : null;
+			// if we're in the boss round, just use the boss game
+			if (this.#bossRound) {
+				bossgame = this.#bossgameManifests[0];
 
-			// we're currently in the microgame phase...
-			if (index < this.#microgameRounds) {
+				// otherwise, figure out what to do next
+			} else {
 
-				// except, we have no microgames...
-				if (!microgames || microgames.length === 0) {
-					console.error("No microgames!");
-					callback('error', "No microgames!");
-					return;
-				}
+				// record what the last round was for comparisons in our scenes
+				this.#lastRound = this.#round;
 
-				// we haven't played the full number of games for this round yet
-				if (this.#gamesRemaining > 0) {
-					// count down the games remaining
-					this.#gamesRemaining--;
-				}
+				// reference the microgame games list
+				let microgames = this.#manifest.microgames.games;
+				let rounds = this.#manifest.microgames.rounds;
 
-				// we've played all the games for this round, start a new round
-				else {
+				// we got here while in a microgame round...
+				if (this.#round <= this.#microgameRounds) {
 
-					this.#round++;
-					console.log('new round', this.#round);
+					// we haven't played the full number of games for this round yet
+					if (this.#gamesRemaining > 0) {
 
-					// if we played through all the defined rounds in endless mode, start it all over
-					if (this.#round >= this.#microgameRounds && this.#mode === PWLevel.MODE_ENDLESS) {
+						// if we're in endless mode, we'll increase the difficulty each time we play all the games, but not on the first game
+						if (this.mode === PWLevel.MODE_ENDLESS && this.#gamesTotal !== this.#gamesRemaining) {
+							this.__setDifficulty(this.difficulty + 1, false);
+						}
 
-						// reset the round counter
-						this.#round = 1;
-
-						// we need to make this zero so the transition scene can still tell this is a new round
-						this.#lastRound = 0;
-
-						// reset the difficulty
-						this.__setDifficulty(0, true);
+						// count down the games remaining
+						this.#gamesRemaining--;
 					}
 
-					// get the index for this round's microgames
-					index = this.#round - 1;
-
-					// see if we have any microgames defined for this new round number...
-
-					// we do, so start the new round
-					if (index < this.#microgameRounds) {
-
-						// grab the manifest info for the current round of microgames
-						microgames = this.#manifest.microgames[index];
-
-						// update the number of games this round wants us to play
-						this.#gamesRemaining = microgames.numGames - 1; // we're starting a game now, so we'll subtract one from the total
-
-						callback("newround", "microgame");
-
-						// we're done here
-						return;
-					}
-
-					// if we get here, we're playing a normal mode game and have reached the boss level
+					// we've played all the games for this round, start a new round
 					else {
-						// TODO - define the boss game
+
+						this.#round++;
+
+						// in endless mode, we have to reset things when they hit any sort of limit
+						if (this.#mode === PWLevel.MODE_ENDLESS) {
+
+							// The new round will play faster, so we'll reset the difficulty back to zero
+							this.__setDifficulty(0, true);
+
+							// we've played all teh defined rounds, so start back at the beginning
+							if (this.#round > this.#microgameRounds) {
+
+								// reset the round counter
+								this.#round = 1;
+
+								// We're setting this to zero so round comparisons will work in the transition scenes
+								this.#lastRound = 0;
+							}
+						}
+
+						// We still have at least one microgame round to play
+						if (this.#round <= this.#microgameRounds) {
+
+							// update the number of games this round wants us to play
+							this.#gamesTotal = rounds[this.#round - 1];
+
+							// we're starting a game now, so we'll subtract one from the total
+							this.#gamesRemaining = this.#gamesTotal - 1;
+
+							callback("newround", "microgame");
+
+							// we're done here
+							return;
+
+							// we are out of microgames, switch to boss mode
+						} else {
+							this.#bossRound = true;
+							this.#lastRound = this.#round;
+							bossgame = this.#bossgameManifests[0];
+						}
 					}
 				}
 			}
 		}
 
-		// this is a buss rush game
+		// this is a buss rush game, we'll have to figure out what boss game to play
 		else {
 
+			// note what round we came from
 			this.#lastRound = this.#round;
 
-			// if our unused games list is empty, we'll recycle the used list
+			// We have played every game, so we'll need to mix things up to increase the challenge
 			if (this.#bossgameManifests.length < 1) {
 
-				// if we're at the higest difficulty, we'll start a new round at a faster speed
+				// put all the boss games back into the list
+				this.#bossgameManifests = this.#bossgameManifestsUsed;
+				this.#bossgameManifestsUsed = [];
+
+				// If the last round was at the highest difficulty, we'll start a new round
+				// at difficulty 0, but increase the game speed
 				if (this.difficulty === 2) {
 
-					// reset the round counter
+					// reset the difficulty level
 					this.__setDifficulty(0, true);
 
-					// update the round
+					// update the round (will trigger faster game speed)
 					this.#round++;
 
 					// fire the callback in newround mode
-					callback("newround", "microgame");
+					callback("newround", "bossgame");
 
-					// we're done here
+					// We don't need to do anything else until the next time this method is called
 					return;
 				}
-				// we can increase the difficylty still
+				// otherwise, we'll just increase the difficulty and stay in the same round
 				else {
-
-					// reset the manifest lists
-					this.#bossgameManifests = this.#bossgameManifestsUsed;
-					this.#bossgameManifestsUsed = [];
-
 					// increase the difficulty
 					this.__setDifficulty(this.difficulty + 1, false);
 				}
 			}
 
-			// now, pull a random manifest from the list of boss games
+			// Pull a random game from the bossgame list
 			bossgame = this.#bossgameManifests.splice(Math.floor(Math.random() * this.#bossgameManifests.length), 1)[0];
 
-			// and put it into the used list
+			// Store the game in the used list so we can recycle it later
 			this.#bossgameManifestsUsed.push(bossgame);
 		}
 
-		// if we have a boss game, play that
+		// when we get here we'll either have a bossgame, or we'll need to pull a microgame from the list
+
+		// We have a boss game, play that
 		if (bossgame) {
 			this.#bossRound = true;
 			callback('bossgame', bossgame);
 		}
 
-		// otherwise start the next microgame
+		// Grab a random microgame and play that
 		else {
 			callback('microgame', this.getRandomMicrogameManifest());
 		}
@@ -3020,10 +3111,11 @@ class PWLevel {
 		this.#score++;
 		if (!success) this.#health--;
 
-		if (this.bossRound && this.#mode !== PWLevel.MODE_BOSSRUSH) {
-			this.complete = true;
+		if (this.bossRound && this.#mode !== PWLevel.MODE_BOSSRUSH && success) {
+			this.#complete = true;
 		}
-		if (this.game_complete_callback) this.game_complete_callback(success);
+
+		if (this.game_complete_callback) this.game_complete_callback(success, this.complete);
 	}
 
 	/**
@@ -3083,40 +3175,37 @@ class PWLevel {
 
 		// preload all the microgames asynchronously
 		if (this.#manifest.microgames) {
-			this.#manifest.microgames.forEach(function (microgames) {
+			this.#manifest.microgames.games.forEach(function (gameInfo) {
 
-				microgames.gameList.forEach(function (gameInfo) {
+				let path = gameInfo.team + "/microgames/" + gameInfo.game;
 
-					let path = gameInfo.team + "/microgames/" + gameInfo.game;
+				// check if we've started loading this already
+				if (loaded.indexOf(path) >= 0) return;
 
-					// check if we've started loading this already
-					if (loaded.indexOf(path) >= 0) return;
+				// if we haven't, make a note that we are now
+				loaded.push(path);
+				promises++;
 
-					// if we haven't, make a note that we are now
-					loaded.push(path);
-					promises++;
+				// wrap the microgame loading in a new promise
+				let loadMicrogame = new Promise((resolve, reject) => {
 
-					// wrap the microgame loading in a new promise
-					let loadMicrogame = new Promise((resolve, reject) => {
+					PWGame.loadMicroGame(
+						gameInfo,
+						function (manifest) {
+							_this.#microgameManifests.push(manifest);
+							resolve();
+						},
+						function (err) {
+							console.error(err);
+							alert("Microgame Failed:\n" + err + "\n\nCheck dev console for more info.");
+							reject();
+						},
+						typeof (force) !== 'undefined' ? force : false
+					);
 
-						PWGame.loadMicroGame(
-							gameInfo,
-							function (manifest) {
-								_this.#microgameManifests.push(manifest);
-								resolve();
-							},
-							function (err) {
-								console.error(err);
-								alert("Microgame Failed:\n" + err + "\n\nCheck dev console for more info.");
-								reject();
-							},
-							typeof (force) !== 'undefined' ? force : false
-						);
-
-					});
-
-					loadMicrogame.then(checkPromises, handleError);
 				});
+
+				loadMicrogame.then(checkPromises, handleError);
 			});
 		}
 
@@ -3202,7 +3291,10 @@ class PWLevel {
 			this.#microgameManifests = this.#microgameManifestsUsed;
 			this.#microgameManifestsUsed = [];
 		}
-		if (this.#microgameManifests.length < 1) throw ("Level has no microgame manifests loaded");
+		if (this.#microgameManifests.length < 1) {
+			alert("Level has no microgame manifests loaded");
+			throw ("Level has no microgame manifests loaded");
+		}
 
 		let used = this.#microgameManifests.splice(Math.floor(Math.random() * this.#microgameManifests.length), 1)[0];
 
@@ -3229,8 +3321,7 @@ PWLevel.default_manifest = {
 	},
 	character: {
 		team: "psychogoldfish",
-		sheet: "sir_reginald_emojiman_sheet.webp",
-		icon: "sir_reginald_emojiman_icon.png"
+		sheet: "sir_reginald_emojiman_sheet.webp"
 	},
 	transition: {
 		team: "psychogoldfish",
@@ -3288,6 +3379,46 @@ class PWTransitionScene extends Phaser.Scene {
 			alert("ERROR: " + err);
 			throw err;
 		}
+	}
+
+	/**
+	 * Returns true if the player still has health
+	 * @returns {boolean}
+	 */
+	playerAlive() {
+		return PWGame.level.health > 0;
+	}
+
+	/**
+	 * Returns true if we're starting a new round at a faster speed
+	 * @returns {boolean}
+	 */
+	isFaster() {
+		return PWGame.level.round !== PWGame.level.lastRound;
+	}
+
+	/**
+	 * Returns true if the difficulty has increased
+	 * @returns {boolean}
+	 */
+	isHarder() {
+		return PWGame.level.difficulty > PWGame.level.lastDifficulty;
+	}
+
+	/**
+	 * Returns true if we're starting a new boss level
+	 * @returns {boolean}
+	 */
+	isBossLevel() {
+		return PWGame.level.bossRound;
+	}
+
+	/**
+	 * Returns true if the player has won the whole level
+	 * @returns {boolean}
+	 */
+	levelCompleted() {
+		return PWGame.level.complete;
 	}
 }
 /** A scene that preloads other scenes using data from manifests */
@@ -3768,6 +3899,7 @@ class PWFramework {
 	start(usermode = PWFramework.USERMODE_PROD) {
 
 		if ([PWFramework.USERMODE_PROD, PWFramework.USERMODE_DEBUG, PWFramework.USERMODE_DEV].indexOf(usermode) === -1) {
+			alert("Invalid usermode: " + usermode);
 			throw ("Invalid usermode: " + usermode);
 		}
 
@@ -3885,6 +4017,47 @@ class PWFramework {
 			e.stopPropagation();
 		}
 
+		// form segments
+		let microgameForm = document.getElementById("microgame-form");
+		let bossgameForm = document.getElementById("bossgame-form");
+		let levelForm = document.getElementById("level-form");
+		let transitionSettings = document.getElementById("transition-settings");
+
+		let testSelect = document.getElementById("test-select");
+		lsVal = localStorage.getItem("test-select");
+		if (lsVal) testSelect.value = lsVal;
+
+		function testSelectChange(e) {
+			if (e) e.stopPropagation();
+
+			microgameForm.style.display = "none";
+			bossgameForm.style.display = "none";
+			levelForm.style.display = "none";
+			transitionSettings.style.display = "none";
+
+			switch (testSelect.value) {
+				case "microgame":
+					microgameForm.style.display = "";
+					transitionSettings.style.display = "";
+					break;
+				case "bossgame":
+					bossgameForm.style.display = "";
+					transitionSettings.style.display = "";
+					break;
+				case "level":
+					levelForm.style.display = "";
+					break;
+				default:
+					localStorage.removeItem("test-select");
+					return;
+			}
+
+			localStorage.setItem("test-select", testSelect.value);
+		}
+
+		testSelect.onchange = testSelectChange;
+		testSelectChange();
+
 		let debugPhysics = document.getElementById("debug-physics");
 		lsVal = localStorage.getItem("debug-physics");
 		if (lsVal) debugPhysics.checked = true;
@@ -3899,6 +4072,26 @@ class PWFramework {
 			// refresh page
 			location.reload();
 		}
+
+		/**
+		 * @type HTMLElement
+		 * The input for team dir to use when loading a level
+		 */
+		let levelTeam = document.getElementById("level-team");
+
+		// check if there is a team in local storage and set it as the default value
+		lsVal = localStorage.getItem("level-team");
+		if (lsVal) levelTeam.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for team dir to use when loading a level
+		 */
+		let levelName = document.getElementById("level-name");
+
+		// check if there is a name in local storage and set it as the default value
+		lsVal = localStorage.getItem("level-name");
+		if (lsVal) levelName.value = lsVal;
 
 		/**
 		 * @type HTMLElement
@@ -3925,13 +4118,14 @@ class PWFramework {
 		 * @type HTMLElement
 		 * The button to load a microgame
 		 */
-		let microgameBtn = document.getElementById("microgame-btn");
+		let testGameBtn = document.getElementById("test-game-btn");
 
 		/**
 		 * @type HTMLElement
 		 * The input for team dir to use when loading a boss game
 		 */
 		let bossgameTeam = document.getElementById("bossgame-team");
+
 
 		// check if there is a team in local storage and set it as the default value
 		lsVal = localStorage.getItem("bossgame-team");
@@ -3949,9 +4143,104 @@ class PWFramework {
 
 		/**
 		 * @type HTMLElement
-		 * The button to load a boss game
+		 * The input for team dir to use when loading a transition
 		 */
-		let bossgameBtn = document.getElementById("bossgame-btn");
+		let transitionTeam = document.getElementById("transition-team");
+
+		// check if there is a team in local storage and set it as the default value
+		lsVal = localStorage.getItem("transition-team");
+		if (lsVal) transitionTeam.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for transition name to use
+		 */
+		let transitionName = document.getElementById("transition-name");
+
+		// check if there is a dir in local storage and set it as the default value
+		lsVal = localStorage.getItem("transition-name");
+		if (lsVal) transitionName.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for team dir to use when loading a logo
+		 */
+		let logoTeam = document.getElementById("logo-team");
+
+		// check if there is a team in local storage and set it as the default value
+		lsVal = localStorage.getItem("logo-team");
+		if (lsVal) logoTeam.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for logo image to use
+		 */
+		let logoImage = document.getElementById("logo-image");
+
+		// check if there is a dir in local storage and set it as the default value
+		lsVal = localStorage.getItem("logo-image");
+		if (lsVal) logoImage.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for team dir to use when loading a character
+		 */
+		let characterTeam = document.getElementById("character-team");
+
+		// check if there is a team in local storage and set it as the default value
+		lsVal = localStorage.getItem("character-team");
+		if (lsVal) characterTeam.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for character spritesheet to use
+		 */
+		let characterSpritesheet = document.getElementById("character-spritesheet");
+
+		// check if there is a dir in local storage and set it as the default value
+		lsVal = localStorage.getItem("character-spritesheet");
+		if (lsVal) characterSpritesheet.value = lsVal;
+
+		function injectManifestOptions(manifest) {
+
+			let transition_team = transitionTeam.value;
+			let transition_name = transitionName.value;
+
+			if (transition_team && transition_name) {
+				manifest.transition = { team: transition_team, name: transition_name };
+				localStorage.setItem("transition-team", transition_team);
+				localStorage.setItem("transition-name", transition_name);
+			} else {
+				localStorage.removeItem("transition-team");
+				localStorage.removeItem("transition-name");
+			}
+
+			let logo_team = logoTeam.value;
+			let logo_image = logoImage.value;
+
+			if (logo_team && logo_image) {
+				manifest.logo = { team: logo_team, image: logo_image };
+				localStorage.setItem("logo-team", logo_team);
+				localStorage.setItem("logo-image", logo_image);
+			} else {
+				localStorage.removeItem("logo-team");
+				localStorage.removeItem("logo-image");
+			}
+
+			let character_team = characterTeam.value;
+			let character_spritesheet = characterSpritesheet.value;
+
+			if (character_team && character_spritesheet) {
+				manifest.character = { team: character_team, sheet: character_spritesheet };
+				localStorage.setItem("character-team", character_team);
+				localStorage.setItem("character-spritesheet", character_spritesheet);
+			} else {
+				localStorage.removeItem("character-team");
+				localStorage.removeItem("character-spritesheet");
+			}
+
+			return manifest;
+		}
 
 		// show the developer options
 		devFrame.style.display = "";
@@ -3978,23 +4267,44 @@ class PWFramework {
 			return [path[1], path[3]];
 		}
 
-		/**
-		 * Handle the Load Microgame button
-		 * @param {Event} click_event - The click event
-		 * @callback
-		 * @returns {void}
-		 */
-		microgameBtn.onclick = function (click_event) {
-			if (loading) return; // ignore clicks if we're already loading the game
+		function testLevel() {
+
+			localStorage.setItem("level-team", levelTeam.value);
+			localStorage.setItem("level-name", levelName.value);
+
+			// disable pointer events to lock the developer forms for now
+			devFrame.style.pointerEvents = "none";
+
+
+			_this.loadLevel(
+				{ team: levelTeam.value, name: levelName.value },
+				function (manifest) {
+					// do our fade out/fade in effect, and then...
+					GameWrapper.crossFade(function () {
+
+						// hide the developer menu while we're playing.
+						devFrame.style.display = "none";
+
+						// turn pointer events back on so the dev menu will work when we go back to it later
+						devFrame.style.pointerEvents = "";
+
+						// start our fake level
+						_this.startLevel(manifest, true);
+					});
+				},
+				function (err) {
+					alert("Error loading level manifest: " + err);
+				},
+				true
+			);
+
+		}
+
+		function testMicrogame() {
 
 			// save the team and microgame so we can quickly use them next time
 			localStorage.setItem("microgame-team", microgameTeam.value);
 			localStorage.setItem("microgame-dir", microgameDir.value);
-
-
-			// cancel out the click event so nothing else can get triggered
-			click_event.preventDefault();
-			click_event.stopPropagation();
 
 			// check if user inputed a valid path. Return if it's invalid
 			let path = "teams/" + microgameTeam.value + "/microgames/" + microgameDir.value;
@@ -4005,18 +4315,18 @@ class PWFramework {
 			// Note: missing properties will be filled in by the PWLevel.default_manifest object
 			let manifest = {
 				mode: PWLevel.MODE_ENDLESS,
-				microgames: [
-					{
-						numGames: 3,
-						gameList: [
-							{ team: microgameTeam.value, game: microgameDir.value }
-						]
-					}
-				],
+				microgames: {
+					rounds: [2, 3, 4],
+					games: [
+						{ team: microgameTeam.value, game: microgameDir.value }
+					]
+				},
 				devMode: 'game'
 			};
 
-			// disable pointer events to loack the developer forms for now
+			manifest = injectManifestOptions(manifest);
+
+			// disable pointer events to lock the developer forms for now
 			devFrame.style.pointerEvents = "none";
 
 			// do our fade out/fade in effect, and then...
@@ -4029,18 +4339,11 @@ class PWFramework {
 				devFrame.style.pointerEvents = "";
 
 				// start our fake level
-				_this.startLevel(manifest);
+				_this.startLevel(manifest, true);
 			});
 		}
 
-		/**
-		 * Handle the Load Microgame button
-		 * @param {Event} click_event - The click event
-		 * @callback
-		 * @returns {void}
-		 */
-		bossgameBtn.onclick = function (click_event) {
-			if (loading) return; // ignore clicks if we're already loading the game
+		function testBossgame(click_event) {
 
 			// save the team and bossgame so we can quickly use them next time
 			localStorage.setItem("bossgame-team", bossgameTeam.value);
@@ -4064,7 +4367,9 @@ class PWFramework {
 				devMode: 'bossgame'
 			};
 
-			// disable pointer events to loack the developer forms for now
+			manifest = injectManifestOptions(manifest);
+
+			// disable pointer events to lock the developer forms for now
 			devFrame.style.pointerEvents = "none";
 
 			// do our fade out/fade in effect, and then...
@@ -4077,24 +4382,114 @@ class PWFramework {
 				devFrame.style.pointerEvents = "";
 
 				// start our fake level
-				_this.startLevel(manifest);
+				_this.startLevel(manifest, true);
 			});
 		}
-	}
 
+		/**
+		 * Handle the Load Microgame button
+		 * @param {Event} click_event - The click event
+		 * @callback
+		 * @returns {void}
+		 */
+		testGameBtn.onclick = function (click_event) {
+			// cancel out the click event so nothing else can get triggered
+			click_event.preventDefault();
+			click_event.stopPropagation();
+
+			if (loading) return; // ignore clicks if we're already loading the game
+
+			switch (testSelect.value) {
+				case "microgame":
+					testMicrogame();
+					break;
+				case "bossgame":
+					testBossgame(click_event);
+					break;
+				case "level":
+					testLevel();
+					break;
+				default:
+					alert("Invalid test type: " + testSelect.value);
+					break;
+			}
+		};
+	}
 
 	/**
 	 * Starts a level
 	 * @param {object} manifest - The manifest assciated with the level
+	 * @param {boolean} force - If true, the level will be reloaded even if it's already loaded
 	 * @returns {void}
 	 */
-	startLevel(manifest) {
+	startLevel(manifest, force = false) {
 
 		// Levels will always start with either a cutscene or a transition animation
 		this.#inTransition = true;
 
 		// referenece to self for use in closures and functions
 		let _this = this;
+
+		let _team = manifest.team;
+
+		if (_team) {
+
+			if (manifest.character && typeof (manifest.character.team) === 'undefined') {
+				if (typeof (manifest.character) === 'string') {
+					manifest.character = { sheet: manifest.character };
+				}
+				manifest.character.team = _team;
+			}
+
+			if (manifest.logo && typeof (manifest.logo.team) === 'undefined') {
+				if (typeof (manifest.logo) === 'string') {
+					manifest.logo = { image: manifest.logo };
+				}
+				manifest.logo.team = _team;
+			}
+
+			if (manifest.transition && typeof (manifest.transition.team) === 'undefined') {
+				if (typeof (manifest.transition) === 'string') {
+					manifest.transition = { name: manifest.transition };
+				}
+				manifest.transition.team = _team;
+			}
+
+			// make sure all the manifest areas have team data
+			if (manifest.bossgame && typeof (manifest.bossgame.team) === 'undefined') {
+				if (typeof (manifest.bossgame) === 'string') {
+					manifest.bossgame = { game: manifest.bossgame };
+				}
+				manifest.bossgame.team = _team;
+			} else if (Array.isArray(manifest.bossgames)) {
+
+				for (let i = 0; i < manifest.bossgames.length; i++) {
+					let bossgame = manifest.bossgames[i];
+					if (typeof (bossgame.team) === 'undefined') {
+
+						if (typeof (bossgame) === 'string') {
+							manifest.bossgames[i] = bossgame = { game: bossgame };
+
+						}
+						bossgame.team = _team;
+					}
+				};
+			}
+
+			if (manifest.microgames && Array.isArray(manifest.microgames.games)) {
+				for (let i = 0; i < manifest.microgames.games.length; i++) {
+					let microgame = manifest.microgames.games[i];
+					if (typeof (microgame.team) === 'undefined') {
+						if (typeof (microgame) === 'string') {
+							manifest.microgames.games[i] = microgame = { game: microgame };
+						}
+						microgame.team = _team;
+					}
+				}
+			}
+		}
+
+		console.log(manifest);
 
 		// get our actual level instance (see level.js)
 		this.level = new PWLevel(manifest);
@@ -4108,7 +4503,6 @@ class PWFramework {
 		GameWrapper.showLoadScreen();
 		GameWrapper.setLoadedValue(0);
 
-
 		// run this function as our level is preloading all of its required files and assets
 		this.level.preload(function (complete) {
 
@@ -4118,34 +4512,42 @@ class PWFramework {
 			// if complete equals 1, we've loaded everything
 			if (complete === 1) {
 
+				function doStartLevel() {
 
-				// do our fade out/fade in effect
-				GameWrapper.crossFade(() => {
+					// do our fade out/fade in effect
+					GameWrapper.crossFade(() => {
 
-					// hide the preloader screen
-					GameWrapper.hideLoadScreen();
+						// hide the preloader screen
+						GameWrapper.hideLoadScreen();
 
-					// tell the wrapper what character sheet to use
-					GameWrapper.setCharacterImage(_this.level.imgs.charsheet);
+						// tell the wrapper what character sheet to use
+						GameWrapper.setCharacterImage(_this.level.imgs.charsheet);
 
-					// tell the wrapper what character sheet to use
-					GameWrapper.setLogoImage(_this.level.imgs.logo);
+						// tell the wrapper what character sheet to use
+						GameWrapper.setLogoImage(_this.level.imgs.logo);
 
-					_this.#activeTransition = 'transitions.' + manifest.transition.team + '.' + manifest.transition.name;
+						_this.#activeTransition = 'transitions.' + manifest.transition.team + '.' + manifest.transition.name;
 
-					// if the level has an intro movie, play it, then start the next phase
-					if (_this.level.hasIntro()) {
-						_this.level.playIntro(function () {
+						// if the level has an intro movie, play it, then start the next phase
+						if (_this.level.hasIntro()) {
+							_this.level.playIntro(function () {
+								_this.nextPhase();
+							});
+
+							// if there is no intro movie, start the next phase now
+						} else {
 							_this.nextPhase();
-						});
+						}
+					});
+				}
 
-						// if there is no intro movie, start the next phase now
-					} else {
-						_this.nextPhase();
-					}
-				});
+				if (manifest.intro) {
+					_this.startIntro(doStartLevel);
+				} else {
+					doStartLevel();
+				}
 			}
-		}, true);
+		}, force);
 
 		// tell the level what to do when a game is completed
 		this.level.onGameComplete(function () {
@@ -4153,6 +4555,24 @@ class PWFramework {
 			// and that would be... go to the next phase, and start our transition animation
 			_this.nextPhase(true);
 		});
+	}
+
+	endLevel() {
+		let _this = this;
+		GameWrapper.crossFade(function () {
+			_this.stopGame();
+			_this.stopTransition();
+
+			if (_this.usermode === PWFramework.USERMODE_DEV) {
+				_this.startDevScreen();
+			}
+		});
+	}
+
+	startIntro(callback) {
+		let _this = this;
+		console.log("Starting intro movie:", this.level.manifest.intro);
+		callback();
 	}
 
 	/** 
@@ -4196,7 +4616,6 @@ class PWFramework {
 
 			// check the current phase
 			switch (phase) {
-				// TODO - add a case for end of level
 
 				case 'bossgame':
 					new_round = "Boss Level!";
@@ -4205,12 +4624,6 @@ class PWFramework {
 
 				// we are still in the same round, and starting another microgame, so we need to record the manifest
 				case 'microgame':
-
-					// if we're in endless mode, we need to increase the difficulty on each play
-					// (we can skip this for the very first game, since the difficulty is already set)
-					if (_this.level.mode === PWLevel.MODE_ENDLESS && !_this.newLevel) {
-						_this.level.__setDifficulty(_this.level.difficulty + 1);
-					}
 					game_manifest = data;
 					break;
 
@@ -4236,30 +4649,7 @@ class PWFramework {
 			else if (new_round) {
 
 				// start the transition
-				_this.showTransactionScene(PWTransitionScene.PHASE_NEXT_GAME);
-
-
-				/**
-				// looks like they won the game?
-				if (phase === 'finish') {
-	
-					// TODO - wrap this in a transition?
-	
-					GameWrapper.crossFade(function () {
-	
-						GameWrapper.stopCharacterAnimation();
-	
-						if (data === 'devmode') {
-							_this.startDevScreen();
-						} else {
-							// TODO - show the win screen
-						}
-					});
-				} else {
-					_this.nextPhase(false);
-				}
-				*/
-
+				_this.showTransactionScene(PWTransitionScene.PHASE_ENTER);
 			}
 
 			_this.#newGame = false;
@@ -4277,7 +4667,7 @@ class PWFramework {
 	nextGame(game_manifest, transition_in) {
 		let _this = this;
 		this.activeManifest = game_manifest;
-		this.showTransactionScene(transition_in ? PWTransitionScene.PHASE_NEXT_GAME : PWTransitionScene.PHASE_START);
+		this.showTransactionScene(transition_in ? PWTransitionScene.PHASE_ENTER : PWTransitionScene.PHASE_START);
 	}
 
 	stopGame() {
@@ -4285,25 +4675,40 @@ class PWFramework {
 		let _this = this;
 
 		if (this.#activeGameScene) {
-			this.phaser.scene.pause(this.#activeGameScene);
+
+			// pause execution if the scene is active
+			if (this.phaser.scene.isActive(this.#activeGameScene)) {
+				this.phaser.scene.pause(this.#activeGameScene);
+			}
+
+			// take a slight delay so any frame ticks the above pause didn't stop can finish running
 			setTimeout(() => {
+				// stop the scene
 				_this.phaser.scene.stop(_this.#activeGameScene);
 			}, 20);
 		}
 	}
 
-	endTransition() {
+	stopTransition() {
 
 		let _this = this;
 
 		this.#inTransition = false;
 
 		if (this.#activeTransition) {
-			_this.phaser.scene.pause(_this.#activeTransition);
+			if (this.phaser.scene.isActive(this.#activeTransition)) {
+				this.phaser.scene.pause(this.#activeTransition);
+			}
 			setTimeout(() => {
 				this.phaser.scene.stop(this.#activeTransition);
 			}, 20);
 		}
+	}
+
+	endTransition() {
+
+		// stop the transition scene
+		this.stopTransition();
 
 		// start the game timer if we're playing microgames
 		if (!this.level.bossRound) GameWrapper.startGameTimer();
@@ -4334,8 +4739,6 @@ class PWFramework {
 
 		// start the actual game, and show it's hint text
 		this.startActualGame(this.activeManifest);
-
-		// TODO - do we need to completely end the transition now?
 
 		// reset the step tracker
 		this.#msPerStep = this.msPerTargetFrame * PWConfig.FRAMES_PER_STEP;
@@ -4416,72 +4819,84 @@ class PWFramework {
 				return;
 			}
 
-			// get a reference to the scene class for this microgame if it's already been loaded.
-			let _sceneClass;
+			/** 
+			 * This manifest is associated with a Phaser Scene
+			 * We'll need to get the JS files for the scene loaded before we can start the game
+			 */
+			if (manifest.sceneClass) {
+				// get a reference to the scene class for this microgame if it's already been loaded.
+				let _sceneClass;
 
-			try {
-				_sceneClass = _this.getSceneClass(manifest.sceneClass);
-			}
-			catch (e) {
-				_sceneClass = null;
-			}
+				try {
+					_sceneClass = _this.getSceneClass(manifest.sceneClass);
+				}
+				catch (e) {
+					_sceneClass = null;
+				}
 
-			// Looks like we'll need to load the js file for this game scene
-			if (!_sceneClass) {
+				// Looks like we'll need to load the js file for this game scene
+				if (!_sceneClass) {
 
-				// make a note of how many JS files we need to load
-				let scripts_remaining = manifest.jsFiles.length;
+					// make a note of how many JS files we need to load
+					let scripts_remaining = manifest.jsFiles.length;
 
-				// start loading each js file asynchronously
-				manifest.jsFiles.forEach(url => {
+					// start loading each js file asynchronously
+					manifest.jsFiles.forEach(url => {
 
-					// load the js file in a <script> tag
-					loaderScript(dir + url) // see utils.js
+						// load the js file in a <script> tag
+						loaderScript(dir + url) // see utils.js
 
-						// and after it's loaded...
-						.then(() => {
+							// and after it's loaded...
+							.then(() => {
 
-							// knock one off our scripts remaining count
-							scripts_remaining--;
+								// knock one off our scripts remaining count
+								scripts_remaining--;
 
-							// all the scripts have loaded!!!
-							if (scripts_remaining <= 0) {
+								// all the scripts have loaded!!!
+								if (scripts_remaining <= 0) {
 
-								// attempt to get a reference to the class and register it
-								try {
+									// attempt to get a reference to the class and register it
+									try {
 
-									// get a reference to the newly loaded scene
-									_sceneClass = _this.getSceneClass(manifest.sceneClass);
+										// get a reference to the newly loaded scene
+										_sceneClass = _this.getSceneClass(manifest.sceneClass);
 
-									// add this to the list of scenes Phaser can currently load
-									_this.registerScene(_sceneClass, manifest);
+										// add this to the list of scenes Phaser can currently load
+										_this.registerScene(_sceneClass, manifest);
 
-									// get the manifest for the scene
-									_this.queuePreloadManifests([manifest]);
+										// get the manifest for the scene
+										_this.queuePreloadManifests([manifest]);
 
-									callback(manifest);
+										callback(manifest);
+									}
+									catch (e) {
+
+										// oh no, something didn't work! (probably a bad js file, invalid class name or path)
+										// fire the error callback
+										error_callback(e);
+									}
 								}
-								catch (e) {
+							})
 
-									// oh no, something didn't work! (probably a bad js file, invalid class name or path)
-									// fire the error callback
-									error_callback(e);
-								}
-							}
-						})
+							// script failed to load, fire the error callback
+							.catch((e) => {
+								console.error(e);
+								error_callback(e);
+							});
+					});
 
-						// script failed to load, fire the error callback
-						.catch((e) => {
-							console.error(e);
-							error_callback(e);
-						});
-				});
-
+				}
+				// This game scene was already loaded once, so we can go ahead with registering it and preloading any assets!
+				else {
+					_this.registerScene(_sceneClass, manifest);
+					_this.queuePreloadManifests([manifest]);
+					callback(manifest);
+				}
 			}
-			// This game scene was already loaded once, so we can go ahead with registering it and preloading any assets!
+			/**
+			 * This is a non-Phaser manifest, likely a level
+			 */
 			else {
-				_this.registerScene(_sceneClass, manifest);
-				_this.queuePreloadManifests([manifest]);
 				callback(manifest);
 			}
 		};
@@ -4493,6 +4908,20 @@ class PWFramework {
 			finishLoad();
 		}
 
+	}
+
+	loadLevel(info, callback, error_callback, force) {
+
+		let _this = this;
+
+		this.loadLevelManifest(
+			info,
+			function (manifest, dir) {
+				_this.doLoadManifest(['logo', 'character', 'transition'], manifest, dir, callback, error_callback);
+			},
+			error_callback,
+			force
+		);
 	}
 
 	loadTransition(info, callback, error_callback, force) {
@@ -4611,6 +5040,75 @@ class PWFramework {
 		this.phaser.scene.start('___loaderScene___');
 	}
 
+	/**
+	 * Loads the manifest for a level
+	 * @param {object} info - The team and name of the level to load
+	 * @param {function} callback - The callback function to run when the manifest has loaded
+	 * @param {function} error_callback - The callback function to run if there are any problems loading the manifest
+	 * @param {boolean} force - set to true to load all files instead of using cached/compiled data.
+	 */
+	loadLevelManifest(info, callback, error_callback, force) {
+		let _this = this;
+
+		// make sure we have a container for the transition's parent path
+		_Manifests.levels[info.team] = typeof (_Manifests.levels[info.team]) !== 'undefined' ? _Manifests.levels[info.team] : {};
+
+		// if error_callback is true, use that as the force property
+		if (error_callback === true) {
+			force = true;
+			error_callback = function () { };
+		}
+
+		// if no error callback is defined, have it use a generic alert
+		error_callback = typeof (error_callback) !== 'undefined' ? error_callback : function (error) {
+			console.error(error);
+			alert(error);
+		};
+
+		// this is the directory that the manifest file should be in
+		let dir = 'teams/' + info.team + '/levels/' + info.name + '/';
+
+		// if the manifest hasn't been loaded yet, or we're forcing a fresh load....
+		if (force || !_Manifests.levels[info.team][info.name]) {
+
+			// load the manifest file into a javascript object
+			this.getJSON(dir + 'manifest.json', function (data) {
+
+				// update the manifest so it has a reference to our directory.
+				data.path = dir;
+				data.type = "levels";
+
+				if (typeof (data.team) === 'undefined') {
+					data.team = info.team;
+				}
+
+				// cache the manifest so we don't have to reload it again later, and fire the callback
+				_Manifests.levels[info.team][info.name] = data;
+				callback(_Manifests.levels[info.team][info.name], dir);
+
+				// error handling
+			}, function (e) {
+
+				// manifest failed to load or decode
+				console.error(e);
+				console.error("Couldn't find file: " + dir + 'manifest.json');
+				error_callback("Could not load level at team: " + info.team + ', name: ' + info.name);
+			});
+
+		}
+		// The manifest has already been loaded and cached
+		else {
+
+			_Manifests.levels[info.team][info.name].path = dir;
+			_Manifests.levels[info.team][info.name].type = "levels";
+
+			if (typeof (_Manifests.levels[info.team][info.name].team) === 'undefined') {
+				_Manifests.levels[info.team][info.name].team = info.team;
+			}
+			callback(_Manifests.levels[info.team][info.name], dir);
+		}
+	}
+
 	loadTransitionManifest(info, callback, error_callback, force) {
 
 		let _this = this;
@@ -4664,8 +5162,9 @@ class PWFramework {
 				error_callback("Could not load transition at team: " + info.team + ', name: ' + info.name);
 			});
 
-			// The manifest has already been loaded and cached
-		} else {
+		}
+		// The manifest has already been loaded and cached
+		else {
 
 			let onLoaded = function () {
 				// cache the manifest so we don't have to reload it again later, and fire the callback
@@ -4722,6 +5221,7 @@ class PWFramework {
 				data.type = "microgames";
 
 				let onLoaded = function () {
+
 					// cache the manifest so we don't have to reload it again later, and fire the callback
 					_Manifests.microgames[gameInfo.team][gameInfo.game] = data;
 					callback(_Manifests.microgames[gameInfo.team][gameInfo.game], dir);
@@ -4742,8 +5242,9 @@ class PWFramework {
 				error_callback("Could not load game at team: " + gameInfo.team + ', game: ' + gameInfo.game);
 			});
 
-			// The manifest has already been loaded and cached
-		} else {
+		}
+		// The manifest has already been loaded and cached
+		else {
 
 			let onLoaded = function () {
 				// set a reference to our directory just in case the manifest hasn't actually been used yet (may have been compiled)
@@ -4821,8 +5322,9 @@ class PWFramework {
 				error_callback("Could not load game at team: " + gameInfo.team + ', game: ' + gameInfo.game);
 			});
 
-			// The manifest has already been loaded and cached
-		} else {
+		}
+		// The manifest has already been loaded and cached
+		else {
 
 			let onLoaded = function () {
 				// set a reference to our directory just in case the manifest hasn't actually been used yet (may have been compiled)
@@ -4868,17 +5370,16 @@ class PWFramework {
 
 			// url loaded okay, try decoding it
 			function (json) {
+				var obj;
 				try {
-					let obj = JSON.parse(json);
-
-					// success...
-					callback(obj);
+					obj = JSON.parse(json);
 				}
 				catch (e) {
-
 					// failed to decode
 					error(e);
 				}
+
+				callback(obj);
 			},
 
 			// failed to load
@@ -4975,6 +5476,7 @@ class PWFramework {
 		} else if (top === 'transitions') {
 			current_object = transitions;
 		} else {
+			alert("Scene class must be namespaced to transitions, microgames or bossgames!");
 			throw ("Scene class must be namespaced to transitions, microgames or bossgames!");
 		}
 
@@ -5005,6 +5507,7 @@ class PWFramework {
 		}
 
 		// looks like the path is bad, or the object isn't a proper Phaser.scene subclass
+		alert(classname + " is either not an extension of Phaser.Scene, or there are errors in the class file.");
 		throw (classname + " is either not an extension of Phaser.Scene, or there are errors in the class file.");
 
 	}

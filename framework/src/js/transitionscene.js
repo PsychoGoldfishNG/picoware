@@ -48,4 +48,44 @@ class PWTransitionScene extends Phaser.Scene {
 			throw err;
 		}
 	}
+
+	/**
+	 * Returns true if the player still has health
+	 * @returns {boolean}
+	 */
+	playerAlive() {
+		return PWGame.level.health > 0;
+	}
+
+	/**
+	 * Returns true if we're starting a new round at a faster speed
+	 * @returns {boolean}
+	 */
+	isFaster() {
+		return PWGame.level.round !== PWGame.level.lastRound;
+	}
+
+	/**
+	 * Returns true if the difficulty has increased
+	 * @returns {boolean}
+	 */
+	isHarder() {
+		return PWGame.level.difficulty > PWGame.level.lastDifficulty;
+	}
+
+	/**
+	 * Returns true if we're starting a new boss level
+	 * @returns {boolean}
+	 */
+	isBossLevel() {
+		return PWGame.level.bossRound;
+	}
+
+	/**
+	 * Returns true if the player has won the whole level
+	 * @returns {boolean}
+	 */
+	levelCompleted() {
+		return PWGame.level.complete;
+	}
 }

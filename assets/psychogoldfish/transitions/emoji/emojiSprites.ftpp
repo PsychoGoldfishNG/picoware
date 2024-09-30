@@ -78,6 +78,16 @@
       "name": "sadface.png",
       "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/sadface.png",
       "folder": ""
+    },
+    {
+      "name": "winner_1.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/winner_1.png",
+      "folder": ""
+    },
+    {
+      "name": "winner_2.png",
+      "path": "C:/GameDev/PicoWare/assets/psychogoldfish/transitions/emoji/winner_2.png",
+      "folder": ""
     }
   ],
   "folders": [],

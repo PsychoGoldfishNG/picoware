@@ -38,10 +38,6 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 
 		/** The prefix all our assets are using in their cache keys */
 		this.prefix = config.key + ".";
-
-		this.score = 0;
-
-		this.setupComplete = false;
 	}
 
 	/**
@@ -127,27 +123,23 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 			this.hearts.push(sprite);
 		}
 
-		// For the score counter, we also need to pull a bit of info from the level object
-
-		// this is the actual, current score
-		this.score = PWGame.level.score;
-
-		// this is the score as it was before the last game started
-		this.lastScore = PWGame.level.lastScore;
-
 		// positional info for rendering our score numbers
+		// we're scaling to 50% of the original size, but using hard values so we can position things easily
 		margin = 20;
-		let numWidth = 45;  // these are 50% of the actual art size
+		let numWidth = 45;
 		let numHeight = 70;
 		let bottom = screenOffset - margin;
 		let left = bottom - 10 - (numWidth * 2);
 
-		// You could just use text to show the score, but I'm using a spritesheet here.
-		// The advantage is that you could animate the numbers changing, which is a nice bit of visual feedback.
-		// In this game, however, there is no fancy animaton happening
-		this.scoreFrames = this.score.toString().split('');
-		this.lastScoreFrames = this.lastScore.toString().split('');
+		// I'm using a spritesheet for each of the 3 numeric values.
+		// You could spice this up by having more frames and animating transitions between the numbers
+		// To set this up, I need to split the number into a 3-element array
 
+		// get each digit of the current and last score in an array
+		this.scoreFrames = PWGame.level.score.toString().split('');
+		this.lastScoreFrames = PWGame.level.lastScore.toString().split('');
+
+		// make sure each of these arrays have 3 values
 		while (this.scoreFrames.length < 3) this.scoreFrames.unshift('0');
 		while (this.lastScoreFrames.length < 3) this.lastScoreFrames.unshift('0');
 
@@ -159,15 +151,17 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 
 			// When we add the numbers, we're using the lastScore value.
 			// When startInfoView() is called, we'll switch to the current score, so there's a visual change
-			// You could do a fancy animaton there as well (I am not)
+			// This is a bit easier than doing a fancier animation, but you could do that too if you wanted.
 
-			// add the sprite 
+			// add the sprite for this digit
 			let sprite = this.add.sprite(
 				left + (numWidth * i),
 				bottom - margin,
 				this.prefix + "numberStrip",
 				parseInt(this.lastScoreFrames[i])
 			);
+
+			// add the sprite to the container
 			this.bgContainer.add(sprite);
 
 			// scale the art
@@ -187,7 +181,15 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 		// (these are all in one spritesheet, with 2 frames each, to create a flashing text effect)
 
 		// first, see if they've already been created, so we can avoid annoying console warnings
-		if (!this.anims.exists(this.prefix + 'faster')) {
+		if (!this.anims.exists(this.prefix + 'winner')) {
+
+			// create the "winner" animation
+			this.anims.create({
+				key: this.prefix + 'winner',
+				frames: this.anims.generateFrameNames(this.prefix + 'emojiSprites', { prefix: 'winner_', start: 1, end: 2 }),
+				frameRate: 12,
+				repeat: -1
+			});
 
 			// create the "faster" animation
 			this.anims.create({
@@ -216,14 +218,17 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 	}
 
 	/**
-	 * Tell the scene what view to start at
-	 * @param {string} transition_phase Will be one of the PHASE_ constants from PWTransitionScene
+	 * Tell the scene what view to start at.
+	 * 
+	 * This will be one of two values: 
+	 * 	1: PWTransitionScene.PHASE_START if the game just started.
+	 *  2: PWTransitionScene.PHASE_ENTER if we're coming in after playing a microgame or boss game.
+	 * 
+	 * @param {string} transition_phase
 	 */
 	enter(transition_phase) {
 
 		let _this = this;
-
-		transition_phase = PWTransitionScene.PHASE_ENTER;
 
 		// let the update function know it can do stuff now
 		this.active = true;
@@ -231,42 +236,39 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 		// store the transition phase for our update method to refer to
 		this.transition_phase = transition_phase;
 
+		// figure out what to do next...
 		switch (transition_phase) {
 
-			// we're comning in from a previous game, so we need a proper transition in.
+			// we're comning in from a previous game, so we need to run the "enter" view
 			case PWTransitionScene.PHASE_ENTER:
 
 				return this.startEnterView();
 
-			// the level is starting from the beginning...
+			// the game has just started, so we can run the "start" view
 			case PWTransitionScene.PHASE_START:
 
-				// the main game has a fade-from-black effect, so I'm gonna put a short delay here to account for that
+				return this.startStartView();
 
-				setTimeout(() => {
-					// start the info view
-					_this.startInfoView();
-				}, 200);
-
-				return;
-
-
-			// the above cases are really the only ones that would ever be set by the framework directly
-			// so if we get any other value, we'll just throw an error
 			default:
-				throw ("Unknown transition name: " + transition_phase);
+				throw ("Unexpected transition name:" + transition_phase);
 		}
 	}
 
 	/**
-	 * he main game loop for this scene
+	 * This is the ain game loop, called on every frame update
 	 * @param {number} time      The timestamp when this update was called 
 	 * @param {number} delta     The amount of time, in ms, since the last scene update
 	 * @returns 
 	 */
 	update(time, delta) {
 
-		// don't do anything until the framework calls our enter() method
+		/**
+		 * As soon as this scene is created, this function gets called on every frame update.
+		 * However, we don't want to actually do anything until the enter() method is called.
+		 * this.active will be false until that happens.
+		*/
+
+		// if we're not active yet, get out of here
 		if (!this.active) return;
 
 		/**
@@ -286,6 +288,10 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 		// run the correct update function based on the current transition phase
 		switch (this.transition_phase) {
 
+			// update the start view
+			case PWTransitionScene.PHASE_START:
+				return this.updateStartView(delta, multiplier);
+
 			// update the enter view
 			case PWTransitionScene.PHASE_ENTER:
 				return this.updateEnterView(delta, multiplier);
@@ -298,12 +304,40 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 			case PWTransitionScene.PHASE_EXIT:
 				return this.updateExitView(delta, multiplier);
 
-			// update the exit view
+			// update the game over view
 			case PWTransitionScene.PHASE_GAME_OVER:
 				return this.updateGameOverView(delta, multiplier);
 
+			// update the winner view
+			case PWTransitionScene.PHASE_WINNER:
+				return this.updateWinnerView(delta, multiplier);
+
 			default:
 				throw ("Unknown transition name: " + this.transition_phase);
+		}
+	}
+
+	// ----------------- START VIEW IS WHAT WE SEE WHEN THE LEVEL FIRST STARTS ----------------- \\
+
+	startStartView() {
+		/**
+		 * We don't really need to do much here, but if you wanted to have any fancy intro at
+		 * the very start of the level, this would be the place to set it up.
+		 * 
+		 * The framework itself has a little fade from black effect at the start of a game, so we're
+		 * basically just waiting that out before we start the info view.
+		 */
+		this.startDelay = 200;
+	}
+
+	updateStartView(delta, multiplier) {
+
+		/**
+		 * count down our delay, then switch to the next view
+		 */
+		this.startDelay -= delta;
+		if (this.startDelay <= 0) {
+			this.startInfoView();
 		}
 	}
 
@@ -399,17 +433,30 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 		}
 
 		// if we have no health, we'll be moving to the game over view and on't need any of this...
-		if (PWGame.level.health > 0) {
+		if (this.playerAlive()) {
 
 			// this is a new round, throw up the "faster" text
-			if (PWGame.level.round !== PWGame.level.lastRound) {
+			if (this.levelCompleted()) {
+				this.levelPhrases.visible = true;
+				this.levelPhrases.anims.play(this.prefix + 'winner');
+			}
+
+			// this is a new round, throw up the "faster" text
+			else if (this.isFaster()) {
 				this.levelPhrases.visible = true;
 				this.levelPhrases.anims.play(this.prefix + 'faster');
 			}
+
 			// the difficulty has increased, show the "level up" text
-			else if (PWGame.level.difficulty > PWGame.level.lastDifficulty) {
+			else if (this.isHarder()) {
 				this.levelPhrases.visible = true;
 				this.levelPhrases.anims.play(this.prefix + 'levelUp');
+			}
+
+			// show the bossgame text
+			else if (this.isBossLevel()) {
+				this.levelPhrases.visible = true;
+				this.levelPhrases.anims.play(this.prefix + 'bossGame');
 			}
 		}
 	}
@@ -476,8 +523,12 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 			// if the timer has expired, we can reset the face to the happy face!
 			if (this.face_reset_time <= 0) {
 
+				if (this.levelCompleted()) {
+					this.startWinnerView();
+				}
+
 				// we have no more health, this is game over folks....
-				if (PWGame.level.health < 1) {
+				else if (!this.playerAlive()) {
 					this.startGameOverView();
 				}
 
@@ -558,6 +609,30 @@ transitions.psychogoldfish.emojis = class extends PWTransitionScene {
 
 			// update the container scale
 			this.bgContainer.setScale(this.container_scale);
+		}
+	}
+
+	// ----------------- WINNER VIEW IS WHEN A PLAYER WINS EVERY GAME ----------------- \\
+
+	startWinnerView() {
+
+		this.transition_phase = PWTransitionScene.PHASE_WINNER;
+
+		// set the face to the happy face
+		this.face.setTexture(this.prefix + 'emojiSprites', "happyface");
+
+		// we'll wait this many seconds before teling the framework to play the outro cinematic
+		this.winDelay = 500;
+	}
+
+	updateWinnerView(delta, multiplier) {
+
+		// count down the delay
+		this.winDelay -= delta;
+
+		// if the delay has expired, we can tell the framework to play the outro cinematic
+		if (this.winDelay <= 0) {
+			PWGame.endLevel();
 		}
 	}
 

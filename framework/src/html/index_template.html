@@ -31,8 +31,12 @@
 			display: block;
 		}
 
-		form>div {
+		form>div[id]>div {
 			margin: 8px 0px;
+		}
+
+		form>hr {
+			margin: 32px 0px;
 		}
 	</style>
 </head>
@@ -44,19 +48,27 @@
 	<!-- IF DEV -->
 	<!-- Start HTML for Developer Mode -->
 
-	<div id="dev-interface"
+	<form id="dev-interface"
 		style="display:none; position: absolute; top: 0px; left: 0px; padding: 18px; width: calc(100% - 36px);">
-		<form>
-			<h3 class="gamefont">Phaser Options:</h3>
+
+		<!-- test selector -->
+		<div id="test-selector">
 			<div>
-				<input type="checkbox" id="debug-physics" value="1">
-				<label for="debug-physics">Enable Physics Debugging</label>
+				<label for="test-select">Choose Test:</label>
+				<select id="test-select">
+					<option value="none" disabled SELECTED>-- Select One --</option>
+					<option value="microgame">Microgame</option>
+					<option value="bossgame">Bossgame</option>
+					<option value="level">Level</option>
+				</select>
 			</div>
-		</form>
+		</div>
+
 		<hr />
+
 		<!-- for for testing a microgame -->
-		<form>
-			<h3 class="gamefont">Test Your Microgame</h3>
+		<div id="microgame-form" style="display:none">
+			<h4>Microgame Settings:</h4>
 			<div>
 				<label for="microgame-team">Team:</label>
 				<input type="text" placeholder="team" id="microgame-team" value="">
@@ -65,14 +77,11 @@
 				<label for="microgame-dir">Microgame:</label>
 				<input type="text" placeholder="microgame" id="microgame-dir" value="">
 			</div>
-			<div>
-				<button id="microgame-btn">Start Test</button>
-			</div>
-		</form>
-		<hr />
+		</div>
+
 		<!-- for for testing a bossgame -->
-		<form>
-			<h3 class="gamefont">Test Your Bossgame</h3>
+		<div id="bossgame-form" style="display:none">
+			<h4>Bossgame Settings:</h4>
 			<div>
 				<label for="bossgame-team">Team:</label>
 				<input type="text" placeholder="team" id="bossgame-team" value="">
@@ -81,12 +90,74 @@
 				<label for="bossgame-dir">Bossgame:</label>
 				<input type="text" placeholder="bossgame" id="bossgame-dir" value="">
 			</div>
-			<div>
-				<button id="bossgame-btn">Start Test</button>
-			</div>
-		</form>
+		</div>
 
-	</div>
+		<!-- for for testing a level -->
+		<div id="level-form" style="display:none">
+			<h4>Level Settings:</h4>
+			<div>
+				<label for="level-team">Team:</label>
+				<input type="text" placeholder="team" id="level-team" value="">
+			</div>
+			<div>
+				<label for="level-name">Name:</label>
+				<input type="text" placeholder="level" id="level-name" value="">
+			</div>
+		</div>
+
+		<!-- misc options -->
+		<div id="transition-settings" style="display:none">
+			<div>
+				<h4>Transition Settings:</h4>
+			</div>
+			<div>
+				<label for="transition-team">Team:</label>
+				<input type="text" id="transition-team" value="psychogoldfish">
+			</div>
+			<div>
+				<label for="transition-name">Name:</label>
+				<input type="text" id="transition-name" value="emojis">
+			</div>
+			<div>
+				<h4>Skin Logo:</h4>
+			</div>
+			<div>
+				<label for="logo-team">Team:</label>
+				<input type="text" id="logo-team" value="psychogoldfish">
+			</div>
+			<div>
+				<label for="logo-image">Image:</label>
+				<input type="text" id="logo-image" value="sir_reginald_emojiman.png">
+			</div>
+			<div>
+				<h4>Skin Character:</h4>
+			</div>
+			<div>
+				<label for="character-team">Team:</label>
+				<input type="text" id="character-team" value="psychogoldfish">
+			</div>
+			<div>
+				<label for="character-spritesheet">Spritesheet:</label>
+				<input type="text" id="character-spritesheet" value="sir_reginald_emojiman_sheet.webp">
+			</div>
+		</div>
+
+		<!-- global Phaser settings -->
+		<div id="phaser-settings">
+			<h4>Phaser Settings:</h4>
+			<div>
+				<input type="checkbox" id="debug-physics" value="1">
+				<label for="debug-physics">Enable Physics Debugging</label>
+			</div>
+		</div>
+
+		<!-- start the game -->
+		<div id="start-test">
+			<div>
+				<button id="test-game-btn">Start Test</button>
+			</div>
+		</div>
+	</form>
 
 	<!-- End HTML for Developer Mode -->
 	<!-- ENDIF -->

@@ -4,7 +4,7 @@
 			"image": "emojiSprites",
 			"format": "RGBA8888",
 			"size": {
-				"w": 2854,
+				"w": 3179,
 				"h": 2035
 			},
 			"scale": 1,
@@ -322,6 +322,48 @@
 						"y": 1805,
 						"w": 343,
 						"h": 229
+					}
+				},
+				{
+					"filename": "winner_1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 471,
+						"h": 197
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 471,
+						"h": 197
+					},
+					"frame": {
+						"x": 2385,
+						"y": 1805,
+						"w": 471,
+						"h": 197
+					}
+				},
+				{
+					"filename": "winner_2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 471,
+						"h": 197
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 471,
+						"h": 197
+					},
+					"frame": {
+						"x": 2707,
+						"y": 903,
+						"w": 471,
+						"h": 197
 					}
 				}
 			]

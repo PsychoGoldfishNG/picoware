@@ -85,6 +85,7 @@ module.exports = (() => {
 							let obj;
 							try {
 								obj = JSON.parse(raw);
+								if (typeof (obj.team) === 'undefined') obj.team = creator_dir;
 								manifest_obj[key][creator_dir][item_dir] = obj;
 
 								_this.manifests_compiled.push(manifest);

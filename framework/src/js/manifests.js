@@ -1,6 +1,50 @@
 var _Manifests = {
      "levels": {
-          "psychogoldfish": {}
+          "psychogoldfish": {
+               "emojiman": {
+                    "difficulty": 0,
+                    "logo": {
+                         "team": "psychogoldfish",
+                         "image": "sir_reginald_emojiman.png"
+                    },
+                    "character": {
+                         "team": "psychogoldfish",
+                         "sheet": "sir_reginald_emojiman_sheet.webp"
+                    },
+                    "transition": {
+                         "team": "psychogoldfish",
+                         "name": "emojis"
+                    },
+                    "intro": {
+                         "team": "psychogoldfish",
+                         "video": "intro.mp4"
+                    },
+                    "outro": {
+                         "team": "psychogoldfish",
+                         "video": "outro.mp4"
+                    },
+                    "microgames": {
+                         "rounds": [
+                              1
+                         ],
+                         "games": [
+                              {
+                                   "team": "psychogoldfish",
+                                   "game": "push_the_button"
+                              },
+                              {
+                                   "team": "psychogoldfish",
+                                   "game": "thwomp-stomp"
+                              }
+                         ]
+                    },
+                    "bossgame": {
+                         "team": "psychogoldfish",
+                         "game": "space_face"
+                    },
+                    "team": "psychogoldfish"
+               }
+          }
      },
      "microgames": {
           "psychogoldfish": {
@@ -22,7 +66,8 @@ var _Manifests = {
                               "credit": "designer",
                               "name": "PsychoGoldfish"
                          }
-                    ]
+                    ],
+                    "team": "psychogoldfish"
                },
                "thwomp-stomp": {
                     "name": "Thwomp Stomp",
@@ -46,7 +91,8 @@ var _Manifests = {
                               "credit": "designer",
                               "name": "PsychoGoldfish"
                          }
-                    ]
+                    ],
+                    "team": "psychogoldfish"
                }
           }
      },
@@ -70,7 +116,8 @@ var _Manifests = {
                               "credit": "designer",
                               "name": "PsychoGoldfish"
                          }
-                    ]
+                    ],
+                    "team": "psychogoldfish"
                }
           }
      },
@@ -102,7 +149,8 @@ var _Manifests = {
                               "credit": "designer",
                               "name": "PsychoGoldfish"
                          }
-                    ]
+                    ],
+                    "team": "psychogoldfish"
                }
           }
      }

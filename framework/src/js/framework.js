@@ -330,6 +330,7 @@ class PWFramework {
 	start(usermode = PWFramework.USERMODE_PROD) {
 
 		if ([PWFramework.USERMODE_PROD, PWFramework.USERMODE_DEBUG, PWFramework.USERMODE_DEV].indexOf(usermode) === -1) {
+			alert("Invalid usermode: " + usermode);
 			throw ("Invalid usermode: " + usermode);
 		}
 
@@ -447,6 +448,47 @@ class PWFramework {
 			e.stopPropagation();
 		}
 
+		// form segments
+		let microgameForm = document.getElementById("microgame-form");
+		let bossgameForm = document.getElementById("bossgame-form");
+		let levelForm = document.getElementById("level-form");
+		let transitionSettings = document.getElementById("transition-settings");
+
+		let testSelect = document.getElementById("test-select");
+		lsVal = localStorage.getItem("test-select");
+		if (lsVal) testSelect.value = lsVal;
+
+		function testSelectChange(e) {
+			if (e) e.stopPropagation();
+
+			microgameForm.style.display = "none";
+			bossgameForm.style.display = "none";
+			levelForm.style.display = "none";
+			transitionSettings.style.display = "none";
+
+			switch (testSelect.value) {
+				case "microgame":
+					microgameForm.style.display = "";
+					transitionSettings.style.display = "";
+					break;
+				case "bossgame":
+					bossgameForm.style.display = "";
+					transitionSettings.style.display = "";
+					break;
+				case "level":
+					levelForm.style.display = "";
+					break;
+				default:
+					localStorage.removeItem("test-select");
+					return;
+			}
+
+			localStorage.setItem("test-select", testSelect.value);
+		}
+
+		testSelect.onchange = testSelectChange;
+		testSelectChange();
+
 		let debugPhysics = document.getElementById("debug-physics");
 		lsVal = localStorage.getItem("debug-physics");
 		if (lsVal) debugPhysics.checked = true;
@@ -461,6 +503,26 @@ class PWFramework {
 			// refresh page
 			location.reload();
 		}
+
+		/**
+		 * @type HTMLElement
+		 * The input for team dir to use when loading a level
+		 */
+		let levelTeam = document.getElementById("level-team");
+
+		// check if there is a team in local storage and set it as the default value
+		lsVal = localStorage.getItem("level-team");
+		if (lsVal) levelTeam.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for team dir to use when loading a level
+		 */
+		let levelName = document.getElementById("level-name");
+
+		// check if there is a name in local storage and set it as the default value
+		lsVal = localStorage.getItem("level-name");
+		if (lsVal) levelName.value = lsVal;
 
 		/**
 		 * @type HTMLElement
@@ -487,13 +549,14 @@ class PWFramework {
 		 * @type HTMLElement
 		 * The button to load a microgame
 		 */
-		let microgameBtn = document.getElementById("microgame-btn");
+		let testGameBtn = document.getElementById("test-game-btn");
 
 		/**
 		 * @type HTMLElement
 		 * The input for team dir to use when loading a boss game
 		 */
 		let bossgameTeam = document.getElementById("bossgame-team");
+
 
 		// check if there is a team in local storage and set it as the default value
 		lsVal = localStorage.getItem("bossgame-team");
@@ -511,9 +574,104 @@ class PWFramework {
 
 		/**
 		 * @type HTMLElement
-		 * The button to load a boss game
+		 * The input for team dir to use when loading a transition
 		 */
-		let bossgameBtn = document.getElementById("bossgame-btn");
+		let transitionTeam = document.getElementById("transition-team");
+
+		// check if there is a team in local storage and set it as the default value
+		lsVal = localStorage.getItem("transition-team");
+		if (lsVal) transitionTeam.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for transition name to use
+		 */
+		let transitionName = document.getElementById("transition-name");
+
+		// check if there is a dir in local storage and set it as the default value
+		lsVal = localStorage.getItem("transition-name");
+		if (lsVal) transitionName.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for team dir to use when loading a logo
+		 */
+		let logoTeam = document.getElementById("logo-team");
+
+		// check if there is a team in local storage and set it as the default value
+		lsVal = localStorage.getItem("logo-team");
+		if (lsVal) logoTeam.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for logo image to use
+		 */
+		let logoImage = document.getElementById("logo-image");
+
+		// check if there is a dir in local storage and set it as the default value
+		lsVal = localStorage.getItem("logo-image");
+		if (lsVal) logoImage.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for team dir to use when loading a character
+		 */
+		let characterTeam = document.getElementById("character-team");
+
+		// check if there is a team in local storage and set it as the default value
+		lsVal = localStorage.getItem("character-team");
+		if (lsVal) characterTeam.value = lsVal;
+
+		/**
+		 * @type HTMLElement
+		 * The input for character spritesheet to use
+		 */
+		let characterSpritesheet = document.getElementById("character-spritesheet");
+
+		// check if there is a dir in local storage and set it as the default value
+		lsVal = localStorage.getItem("character-spritesheet");
+		if (lsVal) characterSpritesheet.value = lsVal;
+
+		function injectManifestOptions(manifest) {
+
+			let transition_team = transitionTeam.value;
+			let transition_name = transitionName.value;
+
+			if (transition_team && transition_name) {
+				manifest.transition = { team: transition_team, name: transition_name };
+				localStorage.setItem("transition-team", transition_team);
+				localStorage.setItem("transition-name", transition_name);
+			} else {
+				localStorage.removeItem("transition-team");
+				localStorage.removeItem("transition-name");
+			}
+
+			let logo_team = logoTeam.value;
+			let logo_image = logoImage.value;
+
+			if (logo_team && logo_image) {
+				manifest.logo = { team: logo_team, image: logo_image };
+				localStorage.setItem("logo-team", logo_team);
+				localStorage.setItem("logo-image", logo_image);
+			} else {
+				localStorage.removeItem("logo-team");
+				localStorage.removeItem("logo-image");
+			}
+
+			let character_team = characterTeam.value;
+			let character_spritesheet = characterSpritesheet.value;
+
+			if (character_team && character_spritesheet) {
+				manifest.character = { team: character_team, sheet: character_spritesheet };
+				localStorage.setItem("character-team", character_team);
+				localStorage.setItem("character-spritesheet", character_spritesheet);
+			} else {
+				localStorage.removeItem("character-team");
+				localStorage.removeItem("character-spritesheet");
+			}
+
+			return manifest;
+		}
 
 		// show the developer options
 		devFrame.style.display = "";
@@ -540,23 +698,44 @@ class PWFramework {
 			return [path[1], path[3]];
 		}
 
-		/**
-		 * Handle the Load Microgame button
-		 * @param {Event} click_event - The click event
-		 * @callback
-		 * @returns {void}
-		 */
-		microgameBtn.onclick = function (click_event) {
-			if (loading) return; // ignore clicks if we're already loading the game
+		function testLevel() {
+
+			localStorage.setItem("level-team", levelTeam.value);
+			localStorage.setItem("level-name", levelName.value);
+
+			// disable pointer events to lock the developer forms for now
+			devFrame.style.pointerEvents = "none";
+
+
+			_this.loadLevel(
+				{ team: levelTeam.value, name: levelName.value },
+				function (manifest) {
+					// do our fade out/fade in effect, and then...
+					GameWrapper.crossFade(function () {
+
+						// hide the developer menu while we're playing.
+						devFrame.style.display = "none";
+
+						// turn pointer events back on so the dev menu will work when we go back to it later
+						devFrame.style.pointerEvents = "";
+
+						// start our fake level
+						_this.startLevel(manifest, true);
+					});
+				},
+				function (err) {
+					alert("Error loading level manifest: " + err);
+				},
+				true
+			);
+
+		}
+
+		function testMicrogame() {
 
 			// save the team and microgame so we can quickly use them next time
 			localStorage.setItem("microgame-team", microgameTeam.value);
 			localStorage.setItem("microgame-dir", microgameDir.value);
-
-
-			// cancel out the click event so nothing else can get triggered
-			click_event.preventDefault();
-			click_event.stopPropagation();
 
 			// check if user inputed a valid path. Return if it's invalid
 			let path = "teams/" + microgameTeam.value + "/microgames/" + microgameDir.value;
@@ -567,18 +746,18 @@ class PWFramework {
 			// Note: missing properties will be filled in by the PWLevel.default_manifest object
 			let manifest = {
 				mode: PWLevel.MODE_ENDLESS,
-				microgames: [
-					{
-						numGames: 3,
-						gameList: [
-							{ team: microgameTeam.value, game: microgameDir.value }
-						]
-					}
-				],
+				microgames: {
+					rounds: [2, 3, 4],
+					games: [
+						{ team: microgameTeam.value, game: microgameDir.value }
+					]
+				},
 				devMode: 'game'
 			};
 
-			// disable pointer events to loack the developer forms for now
+			manifest = injectManifestOptions(manifest);
+
+			// disable pointer events to lock the developer forms for now
 			devFrame.style.pointerEvents = "none";
 
 			// do our fade out/fade in effect, and then...
@@ -591,18 +770,11 @@ class PWFramework {
 				devFrame.style.pointerEvents = "";
 
 				// start our fake level
-				_this.startLevel(manifest);
+				_this.startLevel(manifest, true);
 			});
 		}
 
-		/**
-		 * Handle the Load Microgame button
-		 * @param {Event} click_event - The click event
-		 * @callback
-		 * @returns {void}
-		 */
-		bossgameBtn.onclick = function (click_event) {
-			if (loading) return; // ignore clicks if we're already loading the game
+		function testBossgame(click_event) {
 
 			// save the team and bossgame so we can quickly use them next time
 			localStorage.setItem("bossgame-team", bossgameTeam.value);
@@ -626,7 +798,9 @@ class PWFramework {
 				devMode: 'bossgame'
 			};
 
-			// disable pointer events to loack the developer forms for now
+			manifest = injectManifestOptions(manifest);
+
+			// disable pointer events to lock the developer forms for now
 			devFrame.style.pointerEvents = "none";
 
 			// do our fade out/fade in effect, and then...
@@ -639,24 +813,114 @@ class PWFramework {
 				devFrame.style.pointerEvents = "";
 
 				// start our fake level
-				_this.startLevel(manifest);
+				_this.startLevel(manifest, true);
 			});
 		}
-	}
 
+		/**
+		 * Handle the Load Microgame button
+		 * @param {Event} click_event - The click event
+		 * @callback
+		 * @returns {void}
+		 */
+		testGameBtn.onclick = function (click_event) {
+			// cancel out the click event so nothing else can get triggered
+			click_event.preventDefault();
+			click_event.stopPropagation();
+
+			if (loading) return; // ignore clicks if we're already loading the game
+
+			switch (testSelect.value) {
+				case "microgame":
+					testMicrogame();
+					break;
+				case "bossgame":
+					testBossgame(click_event);
+					break;
+				case "level":
+					testLevel();
+					break;
+				default:
+					alert("Invalid test type: " + testSelect.value);
+					break;
+			}
+		};
+	}
 
 	/**
 	 * Starts a level
 	 * @param {object} manifest - The manifest assciated with the level
+	 * @param {boolean} force - If true, the level will be reloaded even if it's already loaded
 	 * @returns {void}
 	 */
-	startLevel(manifest) {
+	startLevel(manifest, force = false) {
 
 		// Levels will always start with either a cutscene or a transition animation
 		this.#inTransition = true;
 
 		// referenece to self for use in closures and functions
 		let _this = this;
+
+		let _team = manifest.team;
+
+		if (_team) {
+
+			if (manifest.character && typeof (manifest.character.team) === 'undefined') {
+				if (typeof (manifest.character) === 'string') {
+					manifest.character = { sheet: manifest.character };
+				}
+				manifest.character.team = _team;
+			}
+
+			if (manifest.logo && typeof (manifest.logo.team) === 'undefined') {
+				if (typeof (manifest.logo) === 'string') {
+					manifest.logo = { image: manifest.logo };
+				}
+				manifest.logo.team = _team;
+			}
+
+			if (manifest.transition && typeof (manifest.transition.team) === 'undefined') {
+				if (typeof (manifest.transition) === 'string') {
+					manifest.transition = { name: manifest.transition };
+				}
+				manifest.transition.team = _team;
+			}
+
+			// make sure all the manifest areas have team data
+			if (manifest.bossgame && typeof (manifest.bossgame.team) === 'undefined') {
+				if (typeof (manifest.bossgame) === 'string') {
+					manifest.bossgame = { game: manifest.bossgame };
+				}
+				manifest.bossgame.team = _team;
+			} else if (Array.isArray(manifest.bossgames)) {
+
+				for (let i = 0; i < manifest.bossgames.length; i++) {
+					let bossgame = manifest.bossgames[i];
+					if (typeof (bossgame.team) === 'undefined') {
+
+						if (typeof (bossgame) === 'string') {
+							manifest.bossgames[i] = bossgame = { game: bossgame };
+
+						}
+						bossgame.team = _team;
+					}
+				};
+			}
+
+			if (manifest.microgames && Array.isArray(manifest.microgames.games)) {
+				for (let i = 0; i < manifest.microgames.games.length; i++) {
+					let microgame = manifest.microgames.games[i];
+					if (typeof (microgame.team) === 'undefined') {
+						if (typeof (microgame) === 'string') {
+							manifest.microgames.games[i] = microgame = { game: microgame };
+						}
+						microgame.team = _team;
+					}
+				}
+			}
+		}
+
+		console.log(manifest);
 
 		// get our actual level instance (see level.js)
 		this.level = new PWLevel(manifest);
@@ -670,7 +934,6 @@ class PWFramework {
 		GameWrapper.showLoadScreen();
 		GameWrapper.setLoadedValue(0);
 
-
 		// run this function as our level is preloading all of its required files and assets
 		this.level.preload(function (complete) {
 
@@ -680,34 +943,42 @@ class PWFramework {
 			// if complete equals 1, we've loaded everything
 			if (complete === 1) {
 
+				function doStartLevel() {
 
-				// do our fade out/fade in effect
-				GameWrapper.crossFade(() => {
+					// do our fade out/fade in effect
+					GameWrapper.crossFade(() => {
 
-					// hide the preloader screen
-					GameWrapper.hideLoadScreen();
+						// hide the preloader screen
+						GameWrapper.hideLoadScreen();
 
-					// tell the wrapper what character sheet to use
-					GameWrapper.setCharacterImage(_this.level.imgs.charsheet);
+						// tell the wrapper what character sheet to use
+						GameWrapper.setCharacterImage(_this.level.imgs.charsheet);
 
-					// tell the wrapper what character sheet to use
-					GameWrapper.setLogoImage(_this.level.imgs.logo);
+						// tell the wrapper what character sheet to use
+						GameWrapper.setLogoImage(_this.level.imgs.logo);
 
-					_this.#activeTransition = 'transitions.' + manifest.transition.team + '.' + manifest.transition.name;
+						_this.#activeTransition = 'transitions.' + manifest.transition.team + '.' + manifest.transition.name;
 
-					// if the level has an intro movie, play it, then start the next phase
-					if (_this.level.hasIntro()) {
-						_this.level.playIntro(function () {
+						// if the level has an intro movie, play it, then start the next phase
+						if (_this.level.hasIntro()) {
+							_this.level.playIntro(function () {
+								_this.nextPhase();
+							});
+
+							// if there is no intro movie, start the next phase now
+						} else {
 							_this.nextPhase();
-						});
+						}
+					});
+				}
 
-						// if there is no intro movie, start the next phase now
-					} else {
-						_this.nextPhase();
-					}
-				});
+				if (manifest.intro) {
+					_this.startIntro(doStartLevel);
+				} else {
+					doStartLevel();
+				}
 			}
-		}, true);
+		}, force);
 
 		// tell the level what to do when a game is completed
 		this.level.onGameComplete(function () {
@@ -715,6 +986,24 @@ class PWFramework {
 			// and that would be... go to the next phase, and start our transition animation
 			_this.nextPhase(true);
 		});
+	}
+
+	endLevel() {
+		let _this = this;
+		GameWrapper.crossFade(function () {
+			_this.stopGame();
+			_this.stopTransition();
+
+			if (_this.usermode === PWFramework.USERMODE_DEV) {
+				_this.startDevScreen();
+			}
+		});
+	}
+
+	startIntro(callback) {
+		let _this = this;
+		console.log("Starting intro movie:", this.level.manifest.intro);
+		callback();
 	}
 
 	/** 
@@ -758,7 +1047,6 @@ class PWFramework {
 
 			// check the current phase
 			switch (phase) {
-				// TODO - add a case for end of level
 
 				case 'bossgame':
 					new_round = "Boss Level!";
@@ -767,12 +1055,6 @@ class PWFramework {
 
 				// we are still in the same round, and starting another microgame, so we need to record the manifest
 				case 'microgame':
-
-					// if we're in endless mode, we need to increase the difficulty on each play
-					// (we can skip this for the very first game, since the difficulty is already set)
-					if (_this.level.mode === PWLevel.MODE_ENDLESS && !_this.newLevel) {
-						_this.level.__setDifficulty(_this.level.difficulty + 1);
-					}
 					game_manifest = data;
 					break;
 
@@ -798,30 +1080,7 @@ class PWFramework {
 			else if (new_round) {
 
 				// start the transition
-				_this.showTransactionScene(PWTransitionScene.PHASE_NEXT_GAME);
-
-
-				/**
-				// looks like they won the game?
-				if (phase === 'finish') {
-	
-					// TODO - wrap this in a transition?
-	
-					GameWrapper.crossFade(function () {
-	
-						GameWrapper.stopCharacterAnimation();
-	
-						if (data === 'devmode') {
-							_this.startDevScreen();
-						} else {
-							// TODO - show the win screen
-						}
-					});
-				} else {
-					_this.nextPhase(false);
-				}
-				*/
-
+				_this.showTransactionScene(PWTransitionScene.PHASE_ENTER);
 			}
 
 			_this.#newGame = false;
@@ -839,7 +1098,7 @@ class PWFramework {
 	nextGame(game_manifest, transition_in) {
 		let _this = this;
 		this.activeManifest = game_manifest;
-		this.showTransactionScene(transition_in ? PWTransitionScene.PHASE_NEXT_GAME : PWTransitionScene.PHASE_START);
+		this.showTransactionScene(transition_in ? PWTransitionScene.PHASE_ENTER : PWTransitionScene.PHASE_START);
 	}
 
 	stopGame() {
@@ -847,25 +1106,40 @@ class PWFramework {
 		let _this = this;
 
 		if (this.#activeGameScene) {
-			this.phaser.scene.pause(this.#activeGameScene);
+
+			// pause execution if the scene is active
+			if (this.phaser.scene.isActive(this.#activeGameScene)) {
+				this.phaser.scene.pause(this.#activeGameScene);
+			}
+
+			// take a slight delay so any frame ticks the above pause didn't stop can finish running
 			setTimeout(() => {
+				// stop the scene
 				_this.phaser.scene.stop(_this.#activeGameScene);
 			}, 20);
 		}
 	}
 
-	endTransition() {
+	stopTransition() {
 
 		let _this = this;
 
 		this.#inTransition = false;
 
 		if (this.#activeTransition) {
-			_this.phaser.scene.pause(_this.#activeTransition);
+			if (this.phaser.scene.isActive(this.#activeTransition)) {
+				this.phaser.scene.pause(this.#activeTransition);
+			}
 			setTimeout(() => {
 				this.phaser.scene.stop(this.#activeTransition);
 			}, 20);
 		}
+	}
+
+	endTransition() {
+
+		// stop the transition scene
+		this.stopTransition();
 
 		// start the game timer if we're playing microgames
 		if (!this.level.bossRound) GameWrapper.startGameTimer();
@@ -896,8 +1170,6 @@ class PWFramework {
 
 		// start the actual game, and show it's hint text
 		this.startActualGame(this.activeManifest);
-
-		// TODO - do we need to completely end the transition now?
 
 		// reset the step tracker
 		this.#msPerStep = this.msPerTargetFrame * PWConfig.FRAMES_PER_STEP;
@@ -978,72 +1250,84 @@ class PWFramework {
 				return;
 			}
 
-			// get a reference to the scene class for this microgame if it's already been loaded.
-			let _sceneClass;
+			/** 
+			 * This manifest is associated with a Phaser Scene
+			 * We'll need to get the JS files for the scene loaded before we can start the game
+			 */
+			if (manifest.sceneClass) {
+				// get a reference to the scene class for this microgame if it's already been loaded.
+				let _sceneClass;
 
-			try {
-				_sceneClass = _this.getSceneClass(manifest.sceneClass);
-			}
-			catch (e) {
-				_sceneClass = null;
-			}
+				try {
+					_sceneClass = _this.getSceneClass(manifest.sceneClass);
+				}
+				catch (e) {
+					_sceneClass = null;
+				}
 
-			// Looks like we'll need to load the js file for this game scene
-			if (!_sceneClass) {
+				// Looks like we'll need to load the js file for this game scene
+				if (!_sceneClass) {
 
-				// make a note of how many JS files we need to load
-				let scripts_remaining = manifest.jsFiles.length;
+					// make a note of how many JS files we need to load
+					let scripts_remaining = manifest.jsFiles.length;
 
-				// start loading each js file asynchronously
-				manifest.jsFiles.forEach(url => {
+					// start loading each js file asynchronously
+					manifest.jsFiles.forEach(url => {
 
-					// load the js file in a <script> tag
-					loaderScript(dir + url) // see utils.js
+						// load the js file in a <script> tag
+						loaderScript(dir + url) // see utils.js
 
-						// and after it's loaded...
-						.then(() => {
+							// and after it's loaded...
+							.then(() => {
 
-							// knock one off our scripts remaining count
-							scripts_remaining--;
+								// knock one off our scripts remaining count
+								scripts_remaining--;
 
-							// all the scripts have loaded!!!
-							if (scripts_remaining <= 0) {
+								// all the scripts have loaded!!!
+								if (scripts_remaining <= 0) {
 
-								// attempt to get a reference to the class and register it
-								try {
+									// attempt to get a reference to the class and register it
+									try {
 
-									// get a reference to the newly loaded scene
-									_sceneClass = _this.getSceneClass(manifest.sceneClass);
+										// get a reference to the newly loaded scene
+										_sceneClass = _this.getSceneClass(manifest.sceneClass);
 
-									// add this to the list of scenes Phaser can currently load
-									_this.registerScene(_sceneClass, manifest);
+										// add this to the list of scenes Phaser can currently load
+										_this.registerScene(_sceneClass, manifest);
 
-									// get the manifest for the scene
-									_this.queuePreloadManifests([manifest]);
+										// get the manifest for the scene
+										_this.queuePreloadManifests([manifest]);
 
-									callback(manifest);
+										callback(manifest);
+									}
+									catch (e) {
+
+										// oh no, something didn't work! (probably a bad js file, invalid class name or path)
+										// fire the error callback
+										error_callback(e);
+									}
 								}
-								catch (e) {
+							})
 
-									// oh no, something didn't work! (probably a bad js file, invalid class name or path)
-									// fire the error callback
-									error_callback(e);
-								}
-							}
-						})
+							// script failed to load, fire the error callback
+							.catch((e) => {
+								console.error(e);
+								error_callback(e);
+							});
+					});
 
-						// script failed to load, fire the error callback
-						.catch((e) => {
-							console.error(e);
-							error_callback(e);
-						});
-				});
-
+				}
+				// This game scene was already loaded once, so we can go ahead with registering it and preloading any assets!
+				else {
+					_this.registerScene(_sceneClass, manifest);
+					_this.queuePreloadManifests([manifest]);
+					callback(manifest);
+				}
 			}
-			// This game scene was already loaded once, so we can go ahead with registering it and preloading any assets!
+			/**
+			 * This is a non-Phaser manifest, likely a level
+			 */
 			else {
-				_this.registerScene(_sceneClass, manifest);
-				_this.queuePreloadManifests([manifest]);
 				callback(manifest);
 			}
 		};
@@ -1055,6 +1339,20 @@ class PWFramework {
 			finishLoad();
 		}
 
+	}
+
+	loadLevel(info, callback, error_callback, force) {
+
+		let _this = this;
+
+		this.loadLevelManifest(
+			info,
+			function (manifest, dir) {
+				_this.doLoadManifest(['logo', 'character', 'transition'], manifest, dir, callback, error_callback);
+			},
+			error_callback,
+			force
+		);
 	}
 
 	loadTransition(info, callback, error_callback, force) {
@@ -1173,6 +1471,75 @@ class PWFramework {
 		this.phaser.scene.start('___loaderScene___');
 	}
 
+	/**
+	 * Loads the manifest for a level
+	 * @param {object} info - The team and name of the level to load
+	 * @param {function} callback - The callback function to run when the manifest has loaded
+	 * @param {function} error_callback - The callback function to run if there are any problems loading the manifest
+	 * @param {boolean} force - set to true to load all files instead of using cached/compiled data.
+	 */
+	loadLevelManifest(info, callback, error_callback, force) {
+		let _this = this;
+
+		// make sure we have a container for the transition's parent path
+		_Manifests.levels[info.team] = typeof (_Manifests.levels[info.team]) !== 'undefined' ? _Manifests.levels[info.team] : {};
+
+		// if error_callback is true, use that as the force property
+		if (error_callback === true) {
+			force = true;
+			error_callback = function () { };
+		}
+
+		// if no error callback is defined, have it use a generic alert
+		error_callback = typeof (error_callback) !== 'undefined' ? error_callback : function (error) {
+			console.error(error);
+			alert(error);
+		};
+
+		// this is the directory that the manifest file should be in
+		let dir = 'teams/' + info.team + '/levels/' + info.name + '/';
+
+		// if the manifest hasn't been loaded yet, or we're forcing a fresh load....
+		if (force || !_Manifests.levels[info.team][info.name]) {
+
+			// load the manifest file into a javascript object
+			this.getJSON(dir + 'manifest.json', function (data) {
+
+				// update the manifest so it has a reference to our directory.
+				data.path = dir;
+				data.type = "levels";
+
+				if (typeof (data.team) === 'undefined') {
+					data.team = info.team;
+				}
+
+				// cache the manifest so we don't have to reload it again later, and fire the callback
+				_Manifests.levels[info.team][info.name] = data;
+				callback(_Manifests.levels[info.team][info.name], dir);
+
+				// error handling
+			}, function (e) {
+
+				// manifest failed to load or decode
+				console.error(e);
+				console.error("Couldn't find file: " + dir + 'manifest.json');
+				error_callback("Could not load level at team: " + info.team + ', name: ' + info.name);
+			});
+
+		}
+		// The manifest has already been loaded and cached
+		else {
+
+			_Manifests.levels[info.team][info.name].path = dir;
+			_Manifests.levels[info.team][info.name].type = "levels";
+
+			if (typeof (_Manifests.levels[info.team][info.name].team) === 'undefined') {
+				_Manifests.levels[info.team][info.name].team = info.team;
+			}
+			callback(_Manifests.levels[info.team][info.name], dir);
+		}
+	}
+
 	loadTransitionManifest(info, callback, error_callback, force) {
 
 		let _this = this;
@@ -1226,8 +1593,9 @@ class PWFramework {
 				error_callback("Could not load transition at team: " + info.team + ', name: ' + info.name);
 			});
 
-			// The manifest has already been loaded and cached
-		} else {
+		}
+		// The manifest has already been loaded and cached
+		else {
 
 			let onLoaded = function () {
 				// cache the manifest so we don't have to reload it again later, and fire the callback
@@ -1284,6 +1652,7 @@ class PWFramework {
 				data.type = "microgames";
 
 				let onLoaded = function () {
+
 					// cache the manifest so we don't have to reload it again later, and fire the callback
 					_Manifests.microgames[gameInfo.team][gameInfo.game] = data;
 					callback(_Manifests.microgames[gameInfo.team][gameInfo.game], dir);
@@ -1304,8 +1673,9 @@ class PWFramework {
 				error_callback("Could not load game at team: " + gameInfo.team + ', game: ' + gameInfo.game);
 			});
 
-			// The manifest has already been loaded and cached
-		} else {
+		}
+		// The manifest has already been loaded and cached
+		else {
 
 			let onLoaded = function () {
 				// set a reference to our directory just in case the manifest hasn't actually been used yet (may have been compiled)
@@ -1383,8 +1753,9 @@ class PWFramework {
 				error_callback("Could not load game at team: " + gameInfo.team + ', game: ' + gameInfo.game);
 			});
 
-			// The manifest has already been loaded and cached
-		} else {
+		}
+		// The manifest has already been loaded and cached
+		else {
 
 			let onLoaded = function () {
 				// set a reference to our directory just in case the manifest hasn't actually been used yet (may have been compiled)
@@ -1430,17 +1801,16 @@ class PWFramework {
 
 			// url loaded okay, try decoding it
 			function (json) {
+				var obj;
 				try {
-					let obj = JSON.parse(json);
-
-					// success...
-					callback(obj);
+					obj = JSON.parse(json);
 				}
 				catch (e) {
-
 					// failed to decode
 					error(e);
 				}
+
+				callback(obj);
 			},
 
 			// failed to load
@@ -1537,6 +1907,7 @@ class PWFramework {
 		} else if (top === 'transitions') {
 			current_object = transitions;
 		} else {
+			alert("Scene class must be namespaced to transitions, microgames or bossgames!");
 			throw ("Scene class must be namespaced to transitions, microgames or bossgames!");
 		}
 
@@ -1567,6 +1938,7 @@ class PWFramework {
 		}
 
 		// looks like the path is bad, or the object isn't a proper Phaser.scene subclass
+		alert(classname + " is either not an extension of Phaser.Scene, or there are errors in the class file.");
 		throw (classname + " is either not an extension of Phaser.Scene, or there are errors in the class file.");
 
 	}
