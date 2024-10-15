@@ -4393,6 +4393,9 @@ class PWFramework {
 		 * @returns {void}
 		 */
 		testGameBtn.onclick = function (click_event) {
+
+			PWFramework.enableMediaPlayback();
+
 			// cancel out the click event so nothing else can get triggered
 			click_event.preventDefault();
 			click_event.stopPropagation();
@@ -5645,6 +5648,39 @@ class PWFramework {
 		if (play_win_animation === true) GameWrapper.characterAnimation = 2;
 		this.#winOnTimeUp = true;
 	}
+}
+
+//============================================ static properties ================================================//
+
+/**
+ * if true, we have enabled medial playback already
+ * @type {boolean}
+ * @default false
+ * @private
+ */
+PWFramework.mediaEnabled = false;
+
+/**
+ * Call this when the user clicks to start the game, it will play blank media elements to enable media playback
+ * 
+ * @returns void
+ */
+PWFramework.enableMediaPlayback = function () {
+
+	if (PWFramework.mediaEnabled) return;
+
+	let audio = document.getElementById('init-audio-elem');
+	let video = document.getElementById('init-video-elem');
+
+	if (audio) {
+		audio.play();
+	}
+
+	if (video) {
+		video.play();
+	}
+
+	PWFramework.mediaEnabled = true;
 }
 // global vars
 
